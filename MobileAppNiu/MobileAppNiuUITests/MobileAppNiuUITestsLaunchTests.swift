@@ -1,13 +1,13 @@
 //
-//  nbmobileAppUITestsLaunchTests.swift
-//  nbmobileAppUITests
+//  MobileAppNiuUITestsLaunchTests.swift
+//  MobileAppNiuUITests
 //
-//  Created by 关昊 on 26/7/2024.
+//  Created by 关昊 on 14/9/2024.
 //
 
 import XCTest
 
-final class nbmobileAppUITestsLaunchTests: XCTestCase {
+final class MobileAppNiuUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

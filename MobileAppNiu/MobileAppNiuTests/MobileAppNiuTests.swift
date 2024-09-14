@@ -1,14 +1,14 @@
 //
-//  nbmobileAppTests.swift
-//  nbmobileAppTests
+//  MobileAppNiuTests.swift
+//  MobileAppNiuTests
 //
-//  Created by 关昊 on 26/7/2024.
+//  Created by 关昊 on 14/9/2024.
 //
 
 import XCTest
-@testable import nbmobileApp
+@testable import MobileAppNiu
 
-final class nbmobileAppTests: XCTestCase {
+final class MobileAppNiuTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
