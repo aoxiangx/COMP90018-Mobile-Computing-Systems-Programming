@@ -13,11 +13,12 @@ struct ContentView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     var body: some View {
-        if logStatus{
-            HomeView()
-        } else{
-            LoginView()
-        }
+        HomeView()
+//        if logStatus{
+//            HomeView()
+//        } else{
+//            LoginView()
+//        }
     }
 }
 
