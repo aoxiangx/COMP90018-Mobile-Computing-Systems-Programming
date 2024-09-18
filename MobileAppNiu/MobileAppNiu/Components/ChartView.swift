@@ -10,6 +10,7 @@ import Charts
 
 struct ChartView: View {
     var timePeriod: TimePeriod
+    var hideDetail:Bool
     var body: some View {
         Chart {
             ForEach(getGraph(for: timePeriod), id: \.id) { item in
@@ -19,6 +20,9 @@ struct ChartView: View {
                 )
             }
         }.frame(height: 195)
+        .chartXAxis(hideDetail ? .hidden : .visible) // Hide X-axis
+        .chartYAxis(hideDetail ? .hidden : .visible) // Hide Y-axis
+        .chartLegend(hideDetail ? .hidden : .visible) // Hide the legend if needed
     }
 }
 
@@ -67,5 +71,5 @@ private func getGraph(for period: TimePeriod) -> [LineChartData] {
 
 #Preview {
 
-    ChartView(timePeriod: .year)
+    ChartView(timePeriod: .year,hideDetail: true)
 }

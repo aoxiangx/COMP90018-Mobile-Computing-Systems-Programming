@@ -50,7 +50,7 @@ struct GroupingDataView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             
-            ChartView(timePeriod: selectedTimePeriod)
+            ChartView(timePeriod: selectedTimePeriod,hideDetail: false)
             ImproveTip()
             ExplainationView()
             Spacer()

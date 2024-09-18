@@ -34,7 +34,7 @@ struct ImproveTip: View {
                                     .frame(width: 197, height: 40)
                                     .font(.system(size: 16))
                                     .background(Color.yellow)
-                                    .foregroundColor(Color.gray)
+                                    .foregroundColor(.gray)
                                     .cornerRadius(24)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 24)
