@@ -35,7 +35,6 @@ struct LoginView: View {
                     .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
                     .offset(y: -60 )
                     .frame(width: size.width, height: size.height)
-                
             }
             .mask{
                 Rectangle()

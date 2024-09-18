@@ -13,7 +13,7 @@ struct HomeView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     var body: some View {
-        Text("Hello, Brave niuniu!")
+//        Text("Hello, Brave niuniu!")
         NavigationStack{
             Button("logOut"){
                 try? Auth.auth().signOut()
