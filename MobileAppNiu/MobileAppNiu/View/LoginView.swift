@@ -24,44 +24,60 @@ struct LoginView: View {
     @State private var isLoading: Bool = false
     
     @AppStorage("log_Status") private var logStatus: Bool = false
+/*
+ Check my precious font, Dont Move and Look for Red Hat Display Bold, Regular and Roboto Regular in Console PLZ
+ --------
+    init(){
+        for familyName in UIFont.familyNames{
+            print(familyName)
+            for fontName in UIFont.fontNames(forFamilyName: familyName){
+                print("-- \(fontName)")
+            }
+        }
+    }
+ */
     
     var body: some View {
+        
         ZStack(alignment : .bottom){
             
-            GeometryReader {
-                let size = $0.size
-                Image(.BG)
-                    .resizable()
-                    .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
-                    .offset(y: -60 )
-                    .frame(width: size.width, height: size.height)
-                
-            }
-            .mask{
-                Rectangle()
-                    .fill(.linearGradient(
-                        colors:[
-                            .white,
-                            .white,
-                            .white,
-                            .white,
-                            .white,
-                            .white.opacity(0.9),
-                            .white.opacity(0.6),
-                            .white.opacity(0.4),
-                            .white.opacity(0.2),
-                            .clear,
-                            .clear
-                        ], startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-            }
-            .ignoresSafeArea()
-            
+//            GeometryReader {
+//                let size = $0.size
+//                Image(.BG)
+//                    .resizable()
+//                    .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
+//                    .offset(y: -60 )
+//                    .frame(width: size.width, height: size.height)
+//                
+//            }
+//            .mask{
+//                Rectangle()
+//                    .fill(.linearGradient(
+//                        colors:[
+//                            .white,
+//                            .white,
+//                            .white,
+//                            .white,
+//                            .white,
+//                            .white.opacity(0.9),
+//                            .white.opacity(0.6),
+//                            .white.opacity(0.4),
+//                            .white.opacity(0.2),
+//                            .clear,
+//                            .clear
+//                        ], startPoint: .top,
+//                        endPoint: .bottom
+//                    )
+//                )
+//            }
+//            .ignoresSafeArea()
+
+
             // login button
             VStack(alignment: .leading){
-                Text("niuniu")
+                Text("Chi")
+                    .font(.custom("RedHatDisplay-Regular", size: 48))
+                
                 
                 SignInWithAppleButton(.signIn){ request in
                     let nonce = randomNonceString()

@@ -12,6 +12,14 @@
 		32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5622C96888E00F48E56 /* GraphView.swift */; };
 		32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */; };
 		32A6B5792C96BADB00F48E56 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5782C96BADB00F48E56 /* ChartView.swift */; };
+		BF0C59532C97A4D6000E0875 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59522C97A4D6000E0875 /* Font.swift */; };
+		BF0C59572C97B266000E0875 /* RedHatDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */; };
+		BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595A2C97BB7A000E0875 /* Constants.swift */; };
+		BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595D2C97BCFE000E0875 /* SuggestionsCapsules.swift */; };
+		BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */; };
+		BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59642C97F7A5000E0875 /* SmallGraph.swift */; };
+		BF0C59672C990D6F000E0875 /* Insights.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59662C990D6F000E0875 /* Insights.swift */; };
+		BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */; };
 		F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */; };
 		F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD42C9591D80021FE1D /* ContentView.swift */; };
 		F1DF4BD72C9591D90021FE1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1DF4BD62C9591D90021FE1D /* Assets.xcassets */; };
@@ -49,6 +57,17 @@
 		32A6B5622C96888E00F48E56 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		32A6B5782C96BADB00F48E56 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		BF0C59522C97A4D6000E0875 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		BF0C59552C97A5BD000E0875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Bold.ttf"; sourceTree = "<group>"; };
+		BF0C59582C97B4B4000E0875 /* RedHatDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		BF0C59592C97B4C1000E0875 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		BF0C595A2C97BB7A000E0875 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BF0C595D2C97BCFE000E0875 /* SuggestionsCapsules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsCapsules.swift; sourceTree = "<group>"; };
+		BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeInfoCard.swift; sourceTree = "<group>"; };
+		BF0C59642C97F7A5000E0875 /* SmallGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallGraph.swift; sourceTree = "<group>"; };
+		BF0C59662C990D6F000E0875 /* Insights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insights.swift; sourceTree = "<group>"; };
+		BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		F1DF4BCF2C9591D80021FE1D /* MobileAppNiu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileAppNiu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileAppNiuApp.swift; sourceTree = "<group>"; };
 		F1DF4BD42C9591D80021FE1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,6 +111,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BF0C59542C97A4E8000E0875 /* Colour and Font */ = {
+			isa = PBXGroup;
+			children = (
+				BF0C59592C97B4C1000E0875 /* Roboto-Regular.ttf */,
+				BF0C59582C97B4B4000E0875 /* RedHatDisplay-Regular.ttf */,
+				BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */,
+				BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */,
+				BF0C59522C97A4D6000E0875 /* Font.swift */,
+			);
+			path = "Colour and Font";
+			sourceTree = "<group>";
+		};
+		BF0C595C2C97BB7D000E0875 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BF0C59542C97A4E8000E0875 /* Colour and Font */,
+				BF0C595A2C97BB7A000E0875 /* Constants.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		F1DF4BC62C9591D80021FE1D = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +155,7 @@
 		F1DF4BD12C9591D80021FE1D /* MobileAppNiu */ = {
 			isa = PBXGroup;
 			children = (
+				BF0C59552C97A5BD000E0875 /* Info.plist */,
 				F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */,
 				F1DF4C082C95A1B10021FE1D /* View */,
 				F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */,
@@ -123,6 +164,7 @@
 				F1DF4BD62C9591D90021FE1D /* Assets.xcassets */,
 				F1DF4C052C959EEC0021FE1D /* MobileAppNiu.entitlements */,
 				F1DF4BD82C9591D90021FE1D /* Preview Content */,
+				BF0C595C2C97BB7D000E0875 /* Helpers */,
 			);
 			path = MobileAppNiu;
 			sourceTree = "<group>";
@@ -159,9 +201,13 @@
 				F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */,
 				32A6B55E2C96886400F48E56 /* GroupingDataView.swift */,
 				32A6B5602C96887400F48E56 /* ExplainationView.swift */,
+				BF0C595D2C97BCFE000E0875 /* SuggestionsCapsules.swift */,
 				32A6B5622C96888E00F48E56 /* GraphView.swift */,
 				32A6B5782C96BADB00F48E56 /* ChartView.swift */,
 				32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */,
+				BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */,
+				BF0C59642C97F7A5000E0875 /* SmallGraph.swift */,
+				BF0C59662C990D6F000E0875 /* Insights.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -278,6 +324,7 @@
 			files = (
 				F1DF4BDA2C9591D90021FE1D /* Preview Assets.xcassets in Resources */,
 				F1DF4BD72C9591D90021FE1D /* Assets.xcassets in Resources */,
+				BF0C59572C97B266000E0875 /* RedHatDisplay-Bold.ttf in Resources */,
 				F1DF4C142C95B88F0021FE1D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,13 +350,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */,
+				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
 				32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */,
 				32A6B5792C96BADB00F48E56 /* ChartView.swift in Sources */,
+				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
+				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
+				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
+				BF0C59532C97A4D6000E0875 /* Font.swift in Sources */,
+				BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */,
 				F1DF4C0C2C95A21F0021FE1D /* LoginView.swift in Sources */,
 				F1DF4C0E2C95AEE90021FE1D /* HomeView.swift in Sources */,
 				F1DF4C072C95A18C0021FE1D /* AppleSignInView.swift in Sources */,
@@ -479,6 +533,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -508,6 +563,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

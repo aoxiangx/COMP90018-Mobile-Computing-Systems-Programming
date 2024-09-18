@@ -32,7 +32,10 @@ struct GroupingDataView: View {
             Picker("Select Time Period", selection: $selectedTimePeriod) {
                 ForEach(TimePeriod.allCases, id: \.self) { period in
                     Text(period.rawValue).tag(period)
-                        .font(.system(size: 12))
+                        .font(Font.custom("Roboto", size: 12))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
+                        .frame(width: 18, alignment: .top)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -53,8 +56,11 @@ struct GroupingDataView: View {
 
             
             ChartView(data:data)
+            SuggestionsCapsules()
+                .padding(8)
             ExplainationView()
-            Spacer()
+                .padding(8)
+            
         }
     }
 }

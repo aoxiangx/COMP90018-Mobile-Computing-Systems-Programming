@@ -22,8 +22,14 @@ struct ChartView: View {
                     x: .value("Day", item.date),
                     y: .value("Value", item.value)
                 )
+                .interpolationMethod(.catmullRom) // Smoothing the line
+                .symbol(Circle().strokeBorder())
+                .foregroundStyle(Color.yellow.opacity(0.3))
+                
             }
-        }.frame(height: 195)
+        }.frame(width: 361,
+            height: 195)
+        .chartXAxis(.hidden)
     }
 }
 let data: [LineChartData] = [
