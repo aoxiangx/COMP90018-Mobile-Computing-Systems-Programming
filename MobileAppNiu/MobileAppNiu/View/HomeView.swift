@@ -13,14 +13,14 @@ struct HomeView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     var body: some View {
-        GroupingDataView()
+//        GroupingDataView()
 //        Text("Hello, Brave niuniu!")
-//        NavigationStack{
-//            Button("logOut"){
-//                try? Auth.auth().signOut()
-//                logStatus = false
-//            }.navigationTitle("Home")
-//        }
+        NavigationStack{
+            Button("logOut"){
+                try? Auth.auth().signOut()
+                logStatus = false
+            }
+        }
     }
 }
 

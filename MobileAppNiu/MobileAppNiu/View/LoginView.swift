@@ -27,34 +27,30 @@ struct LoginView: View {
     
     var body: some View {
         ZStack(alignment : .bottom){
-            
             GeometryReader {
                 let size = $0.size
-                Image(.BG)
-                    .resizable()
-                    .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
-                    .offset(y: -60 )
-                    .frame(width: size.width, height: size.height)
-            }
-            .mask{
-                Rectangle()
-                    .fill(.linearGradient(
-                        colors:[
-                            .white,
-                            .white,
-                            .white,
-                            .white,
-                            .white,
-                            .white.opacity(0.9),
-                            .white.opacity(0.6),
-                            .white.opacity(0.4),
-                            .white.opacity(0.2),
-                            .clear,
+//                Image(.BG)
+//                    .resizable()
+//                    .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
+//                    .offset(y: -60 )
+//                    .frame(width: size.width, height: size.height)
+                LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color
+                            .yellow.opacity(0.55),
+                            .yellow.opacity(0.5),
+                            .yellow.opacity(0.4),
+                            .yellow.opacity(0.3),
+                            .yellow.opacity(0.2),
+                            .yellow.opacity(0.1),
+                            .yellow.opacity(0.1),
+                            .yellow.opacity(0.1),
                             .clear
-                        ], startPoint: .top,
+                        ]),
+                        startPoint: .top,
                         endPoint: .bottom
                     )
-                )
+                    .frame(width: size.width, height: size.height)
             }
             .ignoresSafeArea()
             
@@ -62,27 +58,47 @@ struct LoginView: View {
             VStack(alignment: .leading){
                 Text("niuniu")
                 
-                SignInWithAppleButton(.signIn){ request in
-                    let nonce = randomNonceString()
-                    self.nonce = nonce
-                    request.requestedScopes = [.email, .fullName]
-                    request.nonce = sha256(nonce)
-                } onCompletion: { result in
-                    switch result{
-                    case .success(let auth):
-                        loginWithFirebase(auth)
-                    case .failure(let error):
-                        showErrorMessage(error.localizedDescription )
-                    }
-                    
-                }.frame(height: 45)
-                // 胶囊
-                    .clipShape(.capsule)
-                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white: .black)
+                // apple login button
+//                SignInWithAppleButton(.signIn){ request in
+//                    let nonce = randomNonceString()
+//                    self.nonce = nonce
+//                    request.requestedScopes = [.email, .fullName]
+//                    request.nonce = sha256(nonce)
+//                } onCompletion: { result in
+//                    switch result{
+//                    case .success(let auth):
+//                        loginWithFirebase(auth)
+//                    case .failure(let error):
+//                        showErrorMessage(error.localizedDescription )
+//                    }
+//                    
+//                }.frame(height: 45)
+//                // 胶囊
+//                    .clipShape(.capsule)
+//                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white: .black)
                 
+                
+                // fake button for login without apple developer account
+                
+                Button(action: {
+                                // 模拟登录成功，直接将 logStatus 设置为 true
+                                logStatus = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "applelogo")
+                                        .font(.system(size: 16, weight: .bold))
+                                    Text("Sign in with Click")
+                                        .font(.system(size: 16, weight: .bold))
+                                }
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .frame(height: 45)
+                                .frame(maxWidth: .infinity)
+                                .background(colorScheme == .dark ? Color.white : Color.black)
+                                .clipShape(Capsule())
+                            }
                 
             }.frame(maxWidth: .infinity, alignment: .leading)
-                .padding(20)
+                .padding()
         }
         .alert(errorMessage, isPresented: $showAlert){
         }
