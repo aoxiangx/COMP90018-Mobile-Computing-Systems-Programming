@@ -10,7 +10,7 @@ import AuthenticationServices
 
 struct ContentView: View {
     
-    @AppStorage("log_Status") private var logStatus: Bool = false
+    @AppStorage("log_Status") private var logStatus: Bool = false // remember to set as false
     
     var body: some View {
         ZStack{
@@ -21,7 +21,8 @@ struct ContentView: View {
                            startPoint: .topLeading,
                            endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)  // To fill the entire screen
-            GroupingDataView()
+            HomeView()
+//            GroupingDataView()
 //            if logStatus{
 //                HomeView()
 //            } else{

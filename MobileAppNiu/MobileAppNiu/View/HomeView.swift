@@ -10,7 +10,8 @@ import Firebase
 import FirebaseAuth
 
 struct HomeView: View {
-    @AppStorage("log_Status") private var logStatus: Bool = false
+    @EnvironmentObject var manager : HealthManager
+    @AppStorage("log_Status") private var logStatus: Bool = true
     
     var body: some View {
         NavigationStack{
