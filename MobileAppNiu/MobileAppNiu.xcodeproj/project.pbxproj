@@ -8,13 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		323EC2C12C9A9828008D4821 /* ImproveTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323EC2C02C9A9828008D4821 /* ImproveTip.swift */; };
+		323EC2C32C9AA6F3008D4821 /* Helpers in Resources */ = {isa = PBXBuildFile; fileRef = 323EC2C22C9AA6F3008D4821 /* Helpers */; };
 		323EC2C62C9AB8AC008D4821 /* SummarySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323EC2C52C9AB8AC008D4821 /* SummarySection.swift */; };
-		323EC2DF2C9ACA2F008D4821 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323EC2D72C9ACA2F008D4821 /* ColorExtensions.swift */; };
-		323EC2E02C9ACA2F008D4821 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323EC2D82C9ACA2F008D4821 /* Font.swift */; };
-		323EC2E12C9ACA2F008D4821 /* RedHatDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 323EC2D92C9ACA2F008D4821 /* RedHatDisplay-Bold.ttf */; };
-		323EC2E22C9ACA2F008D4821 /* RedHatDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 323EC2DA2C9ACA2F008D4821 /* RedHatDisplay-Regular.ttf */; };
-		323EC2E32C9ACA2F008D4821 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 323EC2DB2C9ACA2F008D4821 /* Roboto-Regular.ttf */; };
-		323EC2E42C9ACA2F008D4821 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323EC2DD2C9ACA2F008D4821 /* Constants.swift */; };
 		32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B55E2C96886400F48E56 /* GroupingDataView.swift */; };
 		32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5602C96887400F48E56 /* ExplainationView.swift */; };
 		32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5622C96888E00F48E56 /* GraphView.swift */; };
@@ -53,13 +48,8 @@
 
 /* Begin PBXFileReference section */
 		323EC2C02C9A9828008D4821 /* ImproveTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImproveTip.swift; sourceTree = "<group>"; };
+		323EC2C22C9AA6F3008D4821 /* Helpers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Helpers; sourceTree = "<group>"; };
 		323EC2C52C9AB8AC008D4821 /* SummarySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySection.swift; sourceTree = "<group>"; };
-		323EC2D72C9ACA2F008D4821 /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
-		323EC2D82C9ACA2F008D4821 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
-		323EC2D92C9ACA2F008D4821 /* RedHatDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Bold.ttf"; sourceTree = "<group>"; };
-		323EC2DA2C9ACA2F008D4821 /* RedHatDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Regular.ttf"; sourceTree = "<group>"; };
-		323EC2DB2C9ACA2F008D4821 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
-		323EC2DD2C9ACA2F008D4821 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		32A6B55E2C96886400F48E56 /* GroupingDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupingDataView.swift; sourceTree = "<group>"; };
 		32A6B5602C96887400F48E56 /* ExplainationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplainationView.swift; sourceTree = "<group>"; };
 		32A6B5622C96888E00F48E56 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
@@ -121,27 +111,6 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		323EC2DC2C9ACA2F008D4821 /* Colour and Font */ = {
-			isa = PBXGroup;
-			children = (
-				323EC2D72C9ACA2F008D4821 /* ColorExtensions.swift */,
-				323EC2D82C9ACA2F008D4821 /* Font.swift */,
-				323EC2D92C9ACA2F008D4821 /* RedHatDisplay-Bold.ttf */,
-				323EC2DA2C9ACA2F008D4821 /* RedHatDisplay-Regular.ttf */,
-				323EC2DB2C9ACA2F008D4821 /* Roboto-Regular.ttf */,
-			);
-			path = "Colour and Font";
-			sourceTree = "<group>";
-		};
-		323EC2DE2C9ACA2F008D4821 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				323EC2DC2C9ACA2F008D4821 /* Colour and Font */,
-				323EC2DD2C9ACA2F008D4821 /* Constants.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		F1DF4BC62C9591D80021FE1D = {
 			isa = PBXGroup;
 			children = (
@@ -166,8 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */,
+				323EC2C22C9AA6F3008D4821 /* Helpers */,
 				323EC2C42C9AB7B7008D4821 /* Components */,
-				323EC2DE2C9ACA2F008D4821 /* Helpers */,
 				F1DF4C082C95A1B10021FE1D /* View */,
 				F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */,
 				F1DF4BD42C9591D80021FE1D /* ContentView.swift */,
@@ -325,11 +294,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1DF4BDA2C9591D90021FE1D /* Preview Assets.xcassets in Resources */,
-				323EC2E32C9ACA2F008D4821 /* Roboto-Regular.ttf in Resources */,
 				F1DF4BD72C9591D90021FE1D /* Assets.xcassets in Resources */,
+				323EC2C32C9AA6F3008D4821 /* Helpers in Resources */,
 				F1DF4C142C95B88F0021FE1D /* GoogleService-Info.plist in Resources */,
-				323EC2E22C9ACA2F008D4821 /* RedHatDisplay-Regular.ttf in Resources */,
-				323EC2E12C9ACA2F008D4821 /* RedHatDisplay-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,11 +322,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				323EC2C12C9A9828008D4821 /* ImproveTip.swift in Sources */,
-				323EC2DF2C9ACA2F008D4821 /* ColorExtensions.swift in Sources */,
-				323EC2E02C9ACA2F008D4821 /* Font.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
-				323EC2E42C9ACA2F008D4821 /* Constants.swift in Sources */,
 				32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */,
 				32A6B5792C96BADB00F48E56 /* ChartView.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
