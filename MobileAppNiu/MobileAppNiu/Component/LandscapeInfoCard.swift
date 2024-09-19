@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct LandscapeInfoCard: View {
     var activity: String
     var iconName: ImageResource

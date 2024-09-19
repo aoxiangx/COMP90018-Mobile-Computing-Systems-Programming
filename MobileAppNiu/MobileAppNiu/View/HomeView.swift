@@ -11,15 +11,19 @@ import FirebaseAuth
 
 struct HomeView: View {
     @EnvironmentObject var manager : HealthManager
-    @AppStorage("log_Status") private var logStatus: Bool = true
+//    @AppStorage("log_Status") private var logStatus: Bool = true
     
     var body: some View {
         NavigationStack{
             Button("logOut"){
-                try? Auth.auth().signOut()
-                logStatus = false
-            }.navigationTitle("Home")
+//                try? Auth.auth().signOut()
+//                logStatus = false
+            }.onAppear(){
+                manager.fetchTodaySteps()
+            }
+            .navigationTitle("Home")
         }
+        
 
     }
 }
@@ -27,3 +31,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
+
+
