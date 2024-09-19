@@ -10,36 +10,50 @@ import SwiftUI
 struct SummarySection: View {
     var action:String
     var averageTime:String
-    var iconName:String
+    var iconName:ImageResource
     var body: some View {
-        HStack {
-            VStack {
+        ZStack {
+            VStack(alignment:.leading) {
                 HStack {
-                    Image(systemName: iconName)
+                    Image(iconName)
                         .foregroundColor(.yellow)
                     Text(action)
-                }
+                        .font(Font.custom("Roboto", size: 16))
+                        .foregroundColor(Constants.gray3)
+                }.frame(maxWidth:.infinity,alignment: .leading)
+                
                 Text(averageTime+" Mins")
+                    .font(Font.custom("Roboto", size: 24))
+                    .foregroundColor(Constants.gray3)
                 Text("Past 7 Days")
+                    .font(Font.custom("Roboto", size: 12))
+                    .foregroundColor(Constants.gray3)
             }
-                .frame(width: 150, height: 74) //
-                .padding(12)
-            ZStack {
-                ChartView(timePeriod: .day,hideDetail: true)
-                    .scaleEffect(x: 1, y: 0.3)
-                .frame(maxWidth:217,maxHeight: 59)
+                .padding(16)
+                .frame(width: .infinity,height: 72)
+            ZStack(alignment: .trailing) {
                 Rectangle()
-                    .fill(Color.yellow.opacity(0.3)) // Adjust opacity as needed
+                    .fill(Constants.Yellow3) // Adjust opacity as needed
                     .frame(width: 217, height: 26) // Adjust size and position as needed
                     .cornerRadius(26)
-            }.frame(width: 217, height: 74) //
+                
+                // used to extend the frame
+                Rectangle()
+                    .fill(Color.clear) // Adjust opacity as needed
+                    .frame(width: .infinity, height: 26) // Adjust size and position as needed
+                    .cornerRadius(26)
+                
+                ChartView(timePeriod: .day,hideDetail: true)
+                    .scaleEffect(x: 1, y: 0.3)
+                    .frame(maxWidth:217,maxHeight: 59,alignment: .trailing)
+            }.frame(width: .infinity,height: 72)
         }
-            .frame(maxWidth:.infinity,maxHeight: 106)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12) // Overlay to apply the border
-                    .stroke(Color.gray, lineWidth: 2) // Border color and width
-            )
-            .padding(12)
+            .frame(maxWidth:362,maxHeight: 104)
+            .cornerRadius(12)
+//            .overlay(
+//              RoundedRectangle(cornerRadius: 12)
+//                .stroke(Color(red: 0.34, green: 0.35, blue: 0.35), lineWidth: 0.3)
+//            )
 
             
         
@@ -47,5 +61,5 @@ struct SummarySection: View {
 }
 
 #Preview {
-    SummarySection(action:"Daylight Time",averageTime: "24",iconName: "sun.max.fill")
+    SummarySection(action:"Green Space Time",averageTime: "24",iconName: .sunLightIcon)
 }

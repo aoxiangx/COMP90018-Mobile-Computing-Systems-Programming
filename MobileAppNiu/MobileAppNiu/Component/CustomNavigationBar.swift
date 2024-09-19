@@ -20,8 +20,8 @@ struct CustomNavigationBar: View {
                     Image(systemName: iconName)
                         .foregroundColor(.yellow)  // Customize the icon color
                     Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary) // Customize the title style
+                        .font(Font.custom("Roboto", size: 16))
+                        .foregroundColor(Constants.gray3) // Customize the title style
                 }
                 Spacer()
             }
