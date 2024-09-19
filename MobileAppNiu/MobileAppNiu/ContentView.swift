@@ -21,12 +21,12 @@ struct ContentView: View {
                            startPoint: .topLeading,
                            endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)  // To fill the entire screen
-            
-            if logStatus{
-                HomeView()
-            } else{
-                LoginView()
-            }
+            GroupingDataView()
+//            if logStatus{
+//                HomeView()
+//            } else{
+//                LoginView()
+//            }
         }
 
     }

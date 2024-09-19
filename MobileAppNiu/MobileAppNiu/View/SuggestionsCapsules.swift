@@ -8,7 +8,7 @@ import SwiftUI
 
 struct SuggestionsCapsules: View {
     let suggestions = ["Take a Walk in the Park", "Go for a Run when it's Sunny"] // Example suggestions
-    
+    @State private var currentPage: Int = 0
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Section Title
@@ -18,17 +18,38 @@ struct SuggestionsCapsules: View {
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             
             // Horizontal ScrollView for Capsules
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: 8) {
-                    ForEach(suggestions, id: \.self) { suggestion in
-                        SuggestionCapsule(text: suggestion)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .center, spacing: 8) {
+                        ForEach(suggestions.indices, id: \.self) { index in
+                            SuggestionCapsule(text: suggestions[index])
+                                .onTapGesture {
+                                    withAnimation {
+                                        currentPage = index
+                                        print("Back button tapped ",index)
+                                        // Scroll to the selected button
+                                        proxy.scrollTo(currentPage, anchor: .center)
+                                    }
+                                }
+                        }
                     }
+                    .padding(.horizontal, 0)
+                    .padding(.top, 0)
+                    .padding(.bottom, 2)
                 }
-                .padding(.horizontal, 0)
-                .padding(.top, 0)
-                .padding(.bottom, 2)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            HStack{
+                ForEach(0..<suggestions.count, id: \.self) { index in
+                    Circle()
+                        .fill(Color.gray)
+                        .frame(width: 8, height: 8)
+                        .opacity(index == currentPage ? 1 : 0.5)
+                        .padding(2) // Adjust spacing between indicators
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            
         }
         .frame(width: 377, alignment: .topLeading)
     }

@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		328DDD1A2C9BC19A00937126 /* SummarySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328DDD192C9BC19A00937126 /* SummarySection.swift */; };
+		328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328DDD1B2C9BC1D500937126 /* ChartView.swift */; };
 		32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B55E2C96886400F48E56 /* GroupingDataView.swift */; };
 		32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5602C96887400F48E56 /* ExplainationView.swift */; };
-		32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5622C96888E00F48E56 /* GraphView.swift */; };
 		32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */; };
-		32A6B5792C96BADB00F48E56 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5782C96BADB00F48E56 /* ChartView.swift */; };
 		BF0C59532C97A4D6000E0875 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59522C97A4D6000E0875 /* Font.swift */; };
 		BF0C59572C97B266000E0875 /* RedHatDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */; };
 		BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595A2C97BB7A000E0875 /* Constants.swift */; };
@@ -52,11 +52,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		328DDD192C9BC19A00937126 /* SummarySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySection.swift; sourceTree = "<group>"; };
+		328DDD1B2C9BC1D500937126 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		32A6B55E2C96886400F48E56 /* GroupingDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupingDataView.swift; sourceTree = "<group>"; };
 		32A6B5602C96887400F48E56 /* ExplainationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplainationView.swift; sourceTree = "<group>"; };
-		32A6B5622C96888E00F48E56 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
-		32A6B5782C96BADB00F48E56 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		BF0C59522C97A4D6000E0875 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		BF0C59552C97A5BD000E0875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Bold.ttf"; sourceTree = "<group>"; };
@@ -111,6 +111,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		328DDD182C9BC16400937126 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				328DDD192C9BC19A00937126 /* SummarySection.swift */,
+				328DDD1B2C9BC1D500937126 /* ChartView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		BF0C59542C97A4E8000E0875 /* Colour and Font */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +164,7 @@
 		F1DF4BD12C9591D80021FE1D /* MobileAppNiu */ = {
 			isa = PBXGroup;
 			children = (
+				328DDD182C9BC16400937126 /* Component */,
 				BF0C59552C97A5BD000E0875 /* Info.plist */,
 				F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */,
 				F1DF4C082C95A1B10021FE1D /* View */,
@@ -202,8 +212,6 @@
 				32A6B55E2C96886400F48E56 /* GroupingDataView.swift */,
 				32A6B5602C96887400F48E56 /* ExplainationView.swift */,
 				BF0C595D2C97BCFE000E0875 /* SuggestionsCapsules.swift */,
-				32A6B5622C96888E00F48E56 /* GraphView.swift */,
-				32A6B5782C96BADB00F48E56 /* ChartView.swift */,
 				32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */,
 				BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */,
 				BF0C59642C97F7A5000E0875 /* SmallGraph.swift */,
@@ -354,14 +362,14 @@
 				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
-				32A6B5632C96888E00F48E56 /* GraphView.swift in Sources */,
-				32A6B5792C96BADB00F48E56 /* ChartView.swift in Sources */,
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
+				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
 				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
+				328DDD1A2C9BC19A00937126 /* SummarySection.swift in Sources */,
 				BF0C59532C97A4D6000E0875 /* Font.swift in Sources */,
 				BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */,
 				F1DF4C0C2C95A21F0021FE1D /* LoginView.swift in Sources */,
