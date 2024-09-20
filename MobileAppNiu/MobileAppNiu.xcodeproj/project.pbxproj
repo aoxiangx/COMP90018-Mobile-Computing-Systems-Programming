@@ -38,6 +38,7 @@
 		F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */; };
 		F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */; };
 		F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */; };
+		F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
+		F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +236,7 @@
 				F1DF4C0B2C95A21F0021FE1D /* LoginView.swift */,
 				F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */,
 				32A6B55E2C96886400F48E56 /* GroupingDataView.swift */,
+				F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
 				F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */,
 				F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */,
+				F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */,
 				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
 				328DDD1E2C9BD6A900937126 /* Summary.swift in Sources */,
 				BF0C59532C97A4D6000E0875 /* Font.swift in Sources */,
