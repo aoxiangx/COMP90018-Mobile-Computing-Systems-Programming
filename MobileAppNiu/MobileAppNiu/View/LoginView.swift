@@ -14,8 +14,6 @@ import CryptoKit
 
 struct LoginView: View {
     
-    
-    //
     @State private var errorMessage : String = ""
     @State private var showAlert : Bool = false
     @Environment(\.colorScheme) private var colorScheme
@@ -40,62 +38,50 @@ struct LoginView: View {
     var body: some View {
         
         ZStack(alignment : .bottom){
-            
-//            GeometryReader {
-//                let size = $0.size
-//                Image(.BG)
-//                    .resizable()
-//                    .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
-//                    .offset(y: -60 )
-//                    .frame(width: size.width, height: size.height)
-//                
-//            }
-//            .mask{
-//                Rectangle()
-//                    .fill(.linearGradient(
-//                        colors:[
-//                            .white,
-//                            .white,
-//                            .white,
-//                            .white,
-//                            .white,
-//                            .white.opacity(0.9),
-//                            .white.opacity(0.6),
-//                            .white.opacity(0.4),
-//                            .white.opacity(0.2),
-//                            .clear,
-//                            .clear
-//                        ], startPoint: .top,
-//                        endPoint: .bottom
-//                    )
-//                )
-//            }
-//            .ignoresSafeArea()
-
-
             // login button
             VStack(alignment: .leading){
                 Text("Chi")
                     .font(.custom("RedHatDisplay-Regular", size: 48))
                 
                 
-                SignInWithAppleButton(.signIn){ request in
-                    let nonce = randomNonceString()
-                    self.nonce = nonce
-                    request.requestedScopes = [.email, .fullName]
-                    request.nonce = sha256(nonce)
-                } onCompletion: { result in
-                    switch result{
-                    case .success(let auth):
-                        loginWithFirebase(auth)
-                    case .failure(let error):
-                        showErrorMessage(error.localizedDescription )
+//                SignInWithAppleButton(.signIn){ request in
+//                    let nonce = randomNonceString()
+//                    self.nonce = nonce
+//                    request.requestedScopes = [.email, .fullName]
+//                    request.nonce = sha256(nonce)
+//                } onCompletion: { result in
+//                    switch result{
+//                    case .success(let auth):
+//                        loginWithFirebase(auth)
+//                    case .failure(let error):
+//                        showErrorMessage(error.localizedDescription )
+//                    }
+//                    
+//                }.frame(height: 45)
+//                // 胶囊
+//                    .clipShape(.capsule)
+//                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white: .black)
+                
+                
+                Button(action: {
+                            // 模拟登录成功，直接将 logStatus 设置为 true
+                            logStatus = true
+                }) {
+                    HStack {
+                        Image(systemName: "applelogo")
+                            .font(.system(size: 16, weight: .bold))
+                        Text("Sign in with Apple")
+                            .font(.system(size: 16, weight: .bold))
                     }
-                    
-                }.frame(height: 45)
-                // 胶囊
-                    .clipShape(.capsule)
-                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white: .black)
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                    .frame(height: 45)
+                    .frame(maxWidth: .infinity)  // 使按钮占据父视图的全部宽度
+                    .background(colorScheme == .dark ? Color.white : Color.black)
+                    .clipShape(Capsule())
+                }  // 适当的内边距让按钮看起来更加美观
+                
+                
+                
                 
                 
             }.frame(maxWidth: .infinity, alignment: .leading)

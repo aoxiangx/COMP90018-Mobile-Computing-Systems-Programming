@@ -37,6 +37,7 @@
 		F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */; };
 		F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */; };
 		F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */; };
+		F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryBoxesView.swift; sourceTree = "<group>"; };
 		F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +230,7 @@
 		F1DF4C082C95A1B10021FE1D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */,
 				F1DF4C0B2C95A21F0021FE1D /* LoginView.swift */,
 				F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */,
 				32A6B55E2C96886400F48E56 /* GroupingDataView.swift */,
@@ -377,6 +380,7 @@
 				F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */,
 				BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */,
 				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
+				F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,

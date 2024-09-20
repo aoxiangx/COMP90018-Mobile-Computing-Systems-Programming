@@ -13,23 +13,17 @@ struct ContentView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false // remember to set as false
     
     var body: some View {
-        ZStack{
-            LinearGradient(gradient: Gradient(stops: [
-                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
-                .init(color: Color(hex: "EDF5FF"), location: 0.6)   // End with EDF5FF
-            ]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)  // To fill the entire screen
-            HomeView()
-//            GroupingDataView()
-//            if logStatus{
-//                HomeView()
-//            } else{
-//                LoginView()
-//            }
-        }
 
+//        BackgroundView()
+            //            HomeView()
+            //            GroupingDataView()
+        if logStatus{
+            HomeView()
+                .environmentObject(HealthManager())
+        } else{
+            LoginView()
+        }
+        
     }
 }
 
