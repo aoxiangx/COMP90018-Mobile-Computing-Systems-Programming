@@ -33,6 +33,8 @@
 		F1DF4C0E2C95AEE90021FE1D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */; };
 		F1DF4C142C95B88F0021FE1D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */; };
 		F1DF4C172C95B8BA0021FE1D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F1DF4C162C95B8BA0021FE1D /* FirebaseAuth */; };
+		F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */; };
+		F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +87,8 @@
 		F1DF4C0B2C95A21F0021FE1D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryBoxView.swift; sourceTree = "<group>"; };
+		F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryBoxesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +128,8 @@
 				BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */,
 				328DDD1D2C9BD6A900937126 /* Summary.swift */,
 				328DDD1B2C9BC1D500937126 /* ChartView.swift */,
+				F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */,
+				F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -372,6 +378,8 @@
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
+				F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */,
+				F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */,
 				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
 				328DDD1E2C9BD6A900937126 /* Summary.swift in Sources */,
 				BF0C59532C97A4D6000E0875 /* Font.swift in Sources */,
