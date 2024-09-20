@@ -73,8 +73,15 @@ struct CalendarView: View {
                                 .foregroundColor(Constants.gray2)
                                 .frame(maxWidth: .infinity)
                         }
+                        
+                        
                     }
-                    .padding(.bottom, 0)
+                    .padding(.bottom, 5)
+                    
+                    // 横线分隔
+                    Rectangle()
+                        .fill(Constants.gray2) // 设置横线颜色
+                        .frame(height: 1) // 横线高度
 
                     // 日历网格
                     LazyVGrid(columns: columns, spacing: 0) {
