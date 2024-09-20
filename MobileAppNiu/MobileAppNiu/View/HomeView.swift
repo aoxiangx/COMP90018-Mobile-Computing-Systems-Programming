@@ -14,17 +14,16 @@ struct HomeView: View {
     @AppStorage("log_Status") private var logStatus: Bool = true
     
     var body: some View {
-        NavigationStack{
-            Button("logOut"){
-                try? Auth.auth().signOut()
-                logStatus = false
-            }.onAppear(){
-                manager.fetchTodaySteps()
-            }
-            .navigationTitle("Home")
-        }
-        
 
+            NavigationStack{
+                Button("logOut"){
+                    try? Auth.auth().signOut()
+                    logStatus = false
+                }.onAppear(){
+                    manager.fetchTodaySteps()
+                }
+                .navigationTitle("Home")
+            }
     }
 }
 

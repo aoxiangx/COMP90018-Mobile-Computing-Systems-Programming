@@ -37,7 +37,19 @@ struct LoginView: View {
     
     var body: some View {
         
+        
         ZStack(alignment : .bottom){
+            
+            
+            LinearGradient(gradient: Gradient(stops: [
+                           .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
+                           .init(color: Color(hex: "EDF5FF"), location: 0.6)   // 结束颜色 EDF5FF
+                       ]),
+                                      startPoint: .topLeading,
+                                      endPoint: .bottomTrailing)
+                       .edgesIgnoringSafeArea(.all)  // 填满整个屏幕
+            
+            
             // login button
             VStack(alignment: .leading){
                 Text("Chi")
