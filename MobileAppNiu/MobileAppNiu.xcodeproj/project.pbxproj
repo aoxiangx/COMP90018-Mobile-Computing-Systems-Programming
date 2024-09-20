@@ -35,6 +35,8 @@
 		F1DF4C172C95B8BA0021FE1D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F1DF4C162C95B8BA0021FE1D /* FirebaseAuth */; };
 		F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */; };
 		F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */; };
+		F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */; };
+		F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,8 @@
 		F1DF4C132C95B88F0021FE1D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryBoxView.swift; sourceTree = "<group>"; };
 		F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryBoxesView.swift; sourceTree = "<group>"; };
+		F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +134,8 @@
 				328DDD1B2C9BC1D500937126 /* ChartView.swift */,
 				F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */,
 				F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */,
+				F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */,
+				F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -368,6 +374,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */,
+				F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */,
 				BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */,
 				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
@@ -375,6 +382,7 @@
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
+				F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
