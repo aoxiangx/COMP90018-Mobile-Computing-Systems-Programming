@@ -62,7 +62,10 @@ struct CalendarView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.white)
-                    .shadow(radius: 1)
+                    .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Constants.gray3, lineWidth: 1) // 设置边框宽度为 1
+                            )
                 
                 VStack(spacing: 0) {
                     // 星期标题
@@ -81,7 +84,7 @@ struct CalendarView: View {
                     // 横线分隔
                     Rectangle()
                         .fill(Constants.gray2) // 设置横线颜色
-                        .frame(height: 1) // 横线高度
+                        .frame(height: 0.7) // 横线高度
 
                     // 日历网格
                     LazyVGrid(columns: columns, spacing: 0) {
