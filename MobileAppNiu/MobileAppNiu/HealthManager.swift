@@ -87,4 +87,147 @@ class HealthManager: ObservableObject {
         }
         healthStore.execute(query)
     }
+    func fetchTimeIntervalByActivity(timePeriod: TimePeriod,  activity: HKQuantityTypeIdentifier,completion: @escaping ([LineChartData]) -> Void) {
+        guard let activity = HKQuantityType.quantityType(forIdentifier: activity) else { return }
+        
+        let calendar = Calendar.current
+        let endDate = Date()
+        var startDate: Date
+        var labels: [String] = []
+        
+        switch timePeriod {
+        case .day:
+            startDate = calendar.startOfDay(for: endDate)
+            labels = (0..<24).map { "\($0)" } // Hour labels
+            fetchHourly(startDate: startDate, endDate: endDate, labels: labels, activityType: activity) { hourlyData in
+                completion(hourlyData) // Return hourly data
+            }
+            
+        case .week:
+            startDate = calendar.date(byAdding: .day, value: -7, to: endDate)!
+            labels = calendar.shortWeekdaySymbols // Day labels
+            fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activityType: activity) { dailyData in
+                completion(dailyData) // Return daily data
+            }
+
+        case .month:
+            startDate = calendar.date(byAdding: .month, value: -1, to: endDate)!
+            let daysInMonth = calendar.range(of: .day, in: .month, for: endDate)!.count
+            labels = (1...daysInMonth).map { "\($0)" } // Day numbers
+            fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activityType: activity) { dailyData in
+                completion(dailyData) // Return daily data
+            }
+
+        case .sixMonths:
+            startDate = calendar.date(byAdding: .month, value: -6, to: endDate)!
+            let months = (0..<6).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
+            labels = months.compactMap { calendar.shortMonthSymbols[calendar.component(.month, from: $0) - 1] } // Use abbreviated month labels
+            fetchMonthly(startDate: startDate, endDate: endDate, labels: labels, activityType: activity) { monthlyData in
+                completion(monthlyData) // Return monthly data
+            }
+
+        case .year:
+            startDate = calendar.date(byAdding: .year, value: -1, to: endDate)!
+            let months = (0..<12).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
+            labels = months.compactMap { calendar.shortMonthSymbols[calendar.component(.month, from: $0) - 1] } // Use abbreviated month labels
+            fetchMonthly(startDate: startDate, endDate: endDate, labels: labels, activityType: activity) { monthlyData in
+                completion(monthlyData) // Return monthly data
+            }
+        }
+    }
+    private func fetchHourly(startDate: Date, endDate: Date, labels: [String], activityType: HKQuantityType, completion: @escaping ([LineChartData]) -> Void) {
+        var hourlySteps: [Double] = Array(repeating: 0.0, count: 24)
+        let group = DispatchGroup() // To wait for all queries to complete
+
+        for hour in 0..<24 {
+            guard let hourStart = Calendar.current.date(bySetting: .hour, value: hour, of: startDate),
+                  let hourEnd = Calendar.current.date(bySetting: .hour, value: hour + 1, of: startDate) else {
+                continue
+            }
+
+            let predicate = HKQuery.predicateForSamples(withStart: hourStart, end: hourEnd, options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                
+                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                hourlySteps[hour] = stepCount
+                
+                // Notify the group when a query finishes
+                group.leave()
+            }
+            healthStore.execute(query)
+            group.enter() // Indicate that a query is starting
+        }
+        
+        // After all queries have completed, create the LineChartData and call completion
+        group.notify(queue: .main) {
+            let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: hourlySteps[$0]) }
+            print("Hourly activity: \(lineChartData)")
+            completion(lineChartData)
+        }
+    }
+
+    private func fetchDaily(startDate: Date, endDate: Date, labels: [String], activityType: HKQuantityType, completion: @escaping ([LineChartData]) -> Void) {
+        var dailySteps: [Double] = Array(repeating: 0.0, count: labels.count)
+        let numberOfDays = labels.count
+        let calendar = Calendar.current
+        let group = DispatchGroup() // To wait for all queries to complete
+
+        for day in 0..<numberOfDays {
+            let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate)!
+            let dayEnd = calendar.date(byAdding: .day, value: -day + 1, to: endDate)!
+
+            let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                dailySteps[day] = stepCount
+                
+                // Notify the group when a query finishes
+                group.leave()
+            }
+            
+            healthStore.execute(query)
+            group.enter() // Indicate that a query is starting
+        }
+        
+        // After all queries have completed, create the LineChartData and call completion
+        group.notify(queue: .main) {
+            let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: dailySteps[$0]) }
+            print("Daily activity: \(lineChartData)")
+            completion(lineChartData)
+        }
+    }
+
+
+    private func fetchMonthly(startDate: Date, endDate: Date, labels: [String], activityType: HKQuantityType, completion: @escaping ([LineChartData]) -> Void) {
+        var monthlySteps: [Double] = Array(repeating: 0.0, count: labels.count)
+        let numberOfMonths = labels.count
+        let calendar = Calendar.current
+        let group = DispatchGroup() // To wait for all queries to complete
+
+        for month in 0..<numberOfMonths {
+            let monthStart = calendar.date(byAdding: .month, value: -month, to: endDate)!
+            let monthEnd = calendar.date(byAdding: .month, value: -month + 1, to: endDate)!
+
+            let predicate = HKQuery.predicateForSamples(withStart: monthStart, end: monthEnd, options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                monthlySteps[month] = stepCount
+                
+                // Notify the group when a query finishes
+                group.leave()
+            }
+            
+            healthStore.execute(query)
+            group.enter() // Indicate that a query is starting
+        }
+        
+        // After all queries have completed, create the LineChartData and call completion
+        group.notify(queue: .main) {
+            let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: monthlySteps[$0]) }
+            print("Monthly activity: \(lineChartData)")
+            completion(lineChartData)
+        }
+    }
+
+
 }

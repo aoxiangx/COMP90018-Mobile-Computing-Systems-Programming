@@ -14,28 +14,28 @@ struct HomeView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     var body: some View {
-        ZStack {
+        VStack {
             // 背景
-            LinearGradient(gradient: Gradient(stops: [
-                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
-                .init(color: Color(hex: "EDF5FF"), location: 0.6)   // 结束颜色 EDF5FF
-            ]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-            .edgesIgnoringSafeArea(.all)  // 填满整个屏幕
-            
-            // 页面内容
-            
-            DateHomeView()
-            
-            Button("Niu Niu") {
-            }
-            .onAppear {
-                manager.fetchTodaySteps()
-            }
-            .navigationTitle("Home")
-            .padding(.top, 200)
-            
+//            LinearGradient(gradient: Gradient(stops: [
+//                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
+//                .init(color: Color(hex: "EDF5FF"), location: 0.6)   // 结束颜色 EDF5FF
+//            ]),
+//                           startPoint: .topLeading,
+//                           endPoint: .bottomTrailing)
+//            .edgesIgnoringSafeArea(.all)  // 填满整个屏幕
+//            
+//            // 页面内容
+            GroupingDataView().environmentObject(manager)
+//            Button("Niu Niu") {
+//                manager.fetchTimeIntervalSteps(timePeriod: .week)
+//            }
+//            Button("haha") {
+//                manager.fetchTimeIntervalSteps(timePeriod: .day)
+//            }.padding(20)
+//
+//            Button("yeye") {
+//                manager.fetchTimeIntervalSteps(timePeriod: .year)
+//            }.padding(20)
             
         }
     }

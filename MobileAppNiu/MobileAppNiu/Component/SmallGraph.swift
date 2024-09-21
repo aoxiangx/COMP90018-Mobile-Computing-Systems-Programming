@@ -23,7 +23,7 @@ struct SmallGraph: View {
     
     var body: some View {
         ZStack {
-            ChartView(timePeriod: TimePeriod.week, hideDetail: true)
+            ChartView(timePeriod: TimePeriod.week, hideDetail: true,activity: .stepCount)
             .scaleEffect(x: 1, y: 0.5)
             .frame(maxWidth: .infinity, maxHeight: 59)
             .padding(.top,30)

@@ -15,6 +15,7 @@ struct LineChartData {
 
 struct GroupingDataView: View {
     @State private var selectedTimePeriod: TimePeriod = .day
+    @EnvironmentObject var manager : HealthManager
     var body: some View {
         VStack {
             // Time Period Picker
@@ -51,7 +52,7 @@ struct GroupingDataView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             
-            ChartView(timePeriod: selectedTimePeriod, hideDetail: false)
+            ChartView(timePeriod: selectedTimePeriod, hideDetail: false,activity: .stepCount).environmentObject(manager)
             SuggestionsCapsules()
                 .padding(8)
             ExplainationView()
@@ -70,6 +71,6 @@ enum TimePeriod: String, CaseIterable {
 }
 struct GroupingDataView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupingDataView()
+        GroupingDataView().environmentObject(HealthManager())
     }
 }

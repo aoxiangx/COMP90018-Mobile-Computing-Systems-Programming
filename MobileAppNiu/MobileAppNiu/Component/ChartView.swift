@@ -7,72 +7,72 @@
 
 import SwiftUI
 import Charts
+import HealthKit
 
 struct ChartView: View {
     var timePeriod: TimePeriod
-    var hideDetail:Bool
+    var hideDetail: Bool
+    var activity: HKQuantityTypeIdentifier
+    @EnvironmentObject var manager: HealthManager
+    @State private var chartData: [LineChartData] = []
+    
+
     var body: some View {
         Chart {
-            ForEach(getGraph(for: timePeriod), id: \.id) { item in
+            ForEach(chartData, id: \.id) { item in
                 LineMark(
-                    x: .value("Day", item.date),
+                    x: .value("Date", item.date),
                     y: .value("Value", item.value)
                 )
                 .interpolationMethod(.catmullRom)
                 .symbol(Circle().strokeBorder())
                 .foregroundStyle(Constants.gray3)
             }
-        }.frame(height: 195)
+        }
+        .frame(height: 195)
         .chartXAxis(hideDetail ? .hidden : .visible) // Hide X-axis
         .chartYAxis(hideDetail ? .hidden : .visible) // Hide Y-axis
         .chartLegend(hideDetail ? .hidden : .visible) // Hide the legend if needed
+        .onAppear {
+            fetchChartData()
+        }
+        .onChange(of: timePeriod) {
+                    fetchChartData() // Fetch chart data when timePeriod changes
+        }
     }
-}
 
-private func getData(for period: TimePeriod) -> [Double] {
-    switch period {
-    case .day:
-        return [0.2, 0.5, 0.3, 0.7, 0.4, 0.6, 0.8]
-    case .week:
-        return [0.3, 0.6, 0.4, 0.7, 0.5, 0.9, 0.6]
-    case .month:
-        return [0.4, 0.5, 0.7, 0.8, 0.6, 0.9, 0.7]
-    case .sixMonths:
-        return [0.5, 0.6, 0.8, 0.7, 0.9, 0.8]
-    case .year:
-        return [0.6, 0.7, 0.8, 0.6]
+    private func fetchChartData() {
+        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod,activity: activity) { data in
+            self.chartData = data
+        }
     }
-}
-
-private func getXLabels(for period: TimePeriod) -> [String] {
-    switch period {
-    case .day:
-        return ["1", "2", "3", "4", "5", "6", "7"]
-    case .week:
-        return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    case .month:
-        return ["1", "5", "10", "15", "20", "25", "30"]
-    case .sixMonths:
-        return ["Apr", "May", "Jun", "Jul", "Aug", "Sep"]
-    case .year:
-        return ["Q1", "Q2", "Q3", "Q4"]
-    }
-}
-private func getGraph(for period: TimePeriod) -> [LineChartData] {
-    let values = getData(for: period)      // Get the values
-        let labels = getXLabels(for: period)   // Get the labels
-
-        // Ensure both arrays have the same count to avoid mismatches
-        guard values.count == labels.count else {
-            print("Mismatch in number of values and labels")
-            return []
+    
+    // Format the labels depending on the time period
+    private func shouldShowLabel(for date: String) -> Bool {
+            switch timePeriod {
+            case .day:
+                return isImportantHour(date: date)
+            case .month:
+                return isImportantDay(date: date)
+            default:
+                return true // Show all labels for other time periods
+            }
         }
 
-        // Combine them into [LineChartData]
-        return zip(labels, values).map { LineChartData(date: $0, value: $1) }
+    // Helper function to determine if the hour is important (12 AM, 6 AM, 12 PM, 6 PM)
+    private func isImportantHour(date: String) -> Bool {
+        let importantHours = ["0", "6", "12", "24"]
+        return importantHours.contains(date)
+    }
+
+    // Helper function to determine if the day is important (1, 5, 10, 15, 20, 25, 30)
+    private func isImportantDay(date: String) -> Bool {
+        let importantDays = ["1", "5", "10", "15", "20", "25", "30"]
+        return importantDays.contains(date)
+    }
 }
 
 #Preview {
 
-    ChartView(timePeriod: .year,hideDetail: false)
+    ChartView(timePeriod: .day,hideDetail: false,activity:.stepCount).environmentObject(HealthManager())
 }
