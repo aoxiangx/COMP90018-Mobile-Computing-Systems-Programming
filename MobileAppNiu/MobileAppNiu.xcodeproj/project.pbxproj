@@ -39,6 +39,8 @@
 		F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */; };
 		F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */; };
 		F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */; };
+		F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */; };
+		F1F28E5A2C9F037A00A82BDE /* testView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E592C9F037A00A82BDE /* testView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
+		F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleChartView.swift; sourceTree = "<group>"; };
+		F1F28E592C9F037A00A82BDE /* testView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +144,8 @@
 				F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */,
 				F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */,
 				F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */,
+				F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */,
+				F1F28E592C9F037A00A82BDE /* testView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -391,8 +397,10 @@
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
 				F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
+				F1F28E5A2C9F037A00A82BDE /* testView.swift in Sources */,
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
+				F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */,
 				F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */,
 				F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */,
 				F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */,
