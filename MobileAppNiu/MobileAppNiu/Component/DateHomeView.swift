@@ -20,6 +20,21 @@ struct DateHomeView: View {
         weekDayFormatter.dateFormat = "EEEE"
     }
     
+    // 根据当前时间返回问候语
+    func greeting() -> String {
+        let hour = Calendar.current.component(.hour, from: date)
+        switch hour {
+        case 5..<12:
+            return "Morning"
+        case 12..<17:
+            return "Afternoon"
+        case 17..<21:
+            return "Evening"
+        default:
+            return "Night"
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             let monthAndDay = dateFormatter.string(from: date)
@@ -28,18 +43,23 @@ struct DateHomeView: View {
             // 显示日期和星期
             Text(monthAndDay + ",")
                 .font(.system(size: 12))
-                .foregroundColor(Constants.gray2)
+                .foregroundColor(Constants.gray4)
             
             Text(weekDay)
                 .font(.system(size: 12))
-                .foregroundColor(Constants.gray2)
+                .foregroundColor(Constants.gray4)
+            
+            // 显示问候语
+            Text(greeting()+",")
+                .font(.system(size: 48))
+                .fontWeight(.bold)
+                .foregroundColor(Constants.gray4)
         }
         .padding()
     }
 }
 
-
-
 #Preview {
     DateHomeView() // 示例数据
 }
+

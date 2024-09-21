@@ -26,12 +26,15 @@ struct HomeView: View {
             
             // 页面内容
             
+            DateHomeView()
+            
             Button("Niu Niu") {
             }
             .onAppear {
                 manager.fetchTodaySteps()
             }
             .navigationTitle("Home")
+            .padding(.top, 200)
             
             
         }
