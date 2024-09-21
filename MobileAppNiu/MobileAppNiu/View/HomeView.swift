@@ -26,7 +26,7 @@ struct HomeView: View {
             
             // 页面内容
             
-            Button("Home") {
+            Button("Niu Niu") {
             }
             .onAppear {
                 manager.fetchTodaySteps()

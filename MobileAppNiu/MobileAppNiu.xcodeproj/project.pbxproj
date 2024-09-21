@@ -41,6 +41,7 @@
 		F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */; };
 		F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */; };
 		F1F28E5C2C9F069400A82BDE /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E5B2C9F069400A82BDE /* PieView.swift */; };
+		F1F28E602C9F0F8400A82BDE /* DateHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
 		F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleChartView.swift; sourceTree = "<group>"; };
 		F1F28E5B2C9F069400A82BDE /* PieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
+		F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 				F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */,
 				F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */,
 				F1F28E5B2C9F069400A82BDE /* PieView.swift */,
+				F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
+				F1F28E602C9F0F8400A82BDE /* DateHomeView.swift in Sources */,
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
 				F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */,
 				F1F28E5C2C9F069400A82BDE /* PieView.swift in Sources */,
