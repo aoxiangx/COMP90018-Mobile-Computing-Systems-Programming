@@ -47,7 +47,7 @@ struct CircleChartView: View {
                 
                 // 显示进度和消息的区域
                 VStack {
-                    Text("\(Int(progress))%")  // 显示百分比
+                    Text("\(Int(progress))")  // 显示百分比
                         .font(.system(size: 48))
                         .bold()
                     
