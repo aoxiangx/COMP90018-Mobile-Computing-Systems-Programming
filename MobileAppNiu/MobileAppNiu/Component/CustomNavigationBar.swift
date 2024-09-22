@@ -8,7 +8,7 @@ import SwiftUI
 
 struct CustomNavigationBar: View {
     var title: String
-    var iconName: String
+//    var iconName: String
     var onBackButtonTap: () -> Void
 
     var body: some View {
@@ -17,7 +17,7 @@ struct CustomNavigationBar: View {
             HStack {
                 Spacer()
                 HStack {
-                    Image(systemName: iconName)
+                    Image(systemName: "sun.max.fill")
                         .foregroundColor(.yellow)  // Customize the icon color
                     Text(title)
                         .font(Font.custom("Roboto", size: 16))
@@ -48,7 +48,7 @@ struct CustomNavigationBar_Previews: PreviewProvider {
     static var previews: some View {
         CustomNavigationBar(
             title: "Daylight Time",
-            iconName: "sun.max.fill",
+//            iconName: "sun.max.fill",
             onBackButtonTap: {
                 print("Back button tapped")
             }

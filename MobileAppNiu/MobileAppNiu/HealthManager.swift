@@ -13,6 +13,7 @@ extension Date {
     }
 }
 
+
 class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
 
@@ -31,7 +32,6 @@ class HealthManager: ObservableObject {
             }
         }
     }
-    
     func fetchTodaySteps() {
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
