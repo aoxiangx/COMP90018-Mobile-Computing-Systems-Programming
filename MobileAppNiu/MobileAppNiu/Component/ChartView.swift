@@ -12,7 +12,7 @@ import HealthKit
 struct ChartView: View {
     var timePeriod: TimePeriod
     var hideDetail: Bool
-    var activity: HKQuantityTypeIdentifier
+    var activity: Activity
     @EnvironmentObject var manager: HealthManager
     @State private var chartData: [LineChartData] = []
     
@@ -30,7 +30,21 @@ struct ChartView: View {
             }
         }
         .frame(height: 195)
-        .chartXAxis(hideDetail ? .hidden : .visible) // Hide X-axis
+        .chartXAxis {
+            if hideDetail {
+                AxisMarks(values: .automatic) { _ in
+                    AxisGridLine() // Only show gridlines, no labels
+                }
+            } else {
+                AxisMarks(values: .automatic) { value in
+                    if shouldShowLabel(for: value.as(String.self) ?? "") {
+                        AxisValueLabel() // Show label for important hours or days
+                    } else {
+                        AxisGridLine() // Still show gridline for non-important values
+                    }
+                }
+            }
+        }
         .chartYAxis(hideDetail ? .hidden : .visible) // Hide Y-axis
         .chartLegend(hideDetail ? .hidden : .visible) // Hide the legend if needed
         .onAppear {
@@ -42,7 +56,7 @@ struct ChartView: View {
     }
 
     private func fetchChartData() {
-        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod,activity: activity) { data in
+        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod,activity: activity.quantityTypeIdentifier) { data in
             self.chartData = data
         }
     }
@@ -61,18 +75,20 @@ struct ChartView: View {
 
     // Helper function to determine if the hour is important (12 AM, 6 AM, 12 PM, 6 PM)
     private func isImportantHour(date: String) -> Bool {
-        let importantHours = ["0", "6", "12", "24"]
+        let importantHours = ["0", "6", "12", "23"]
         return importantHours.contains(date)
     }
 
     // Helper function to determine if the day is important (1, 5, 10, 15, 20, 25, 30)
     private func isImportantDay(date: String) -> Bool {
-        let importantDays = ["1", "5", "10", "15", "20", "25", "30"]
+        let importantDays = ["1", "8", "15", "22", "29"]
+        // Return true if the given date is an important day
         return importantDays.contains(date)
     }
+
 }
 
 #Preview {
 
-    ChartView(timePeriod: .day,hideDetail: false,activity:.stepCount).environmentObject(HealthManager())
+    ChartView(timePeriod: .day,hideDetail: false,activity:.steps).environmentObject(HealthManager())
 }
