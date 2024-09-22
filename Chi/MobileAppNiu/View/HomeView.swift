@@ -66,6 +66,7 @@ struct HomeView: View {
                 .padding(.leading, 15)
                 
                 
+                
             }
         }
     }
