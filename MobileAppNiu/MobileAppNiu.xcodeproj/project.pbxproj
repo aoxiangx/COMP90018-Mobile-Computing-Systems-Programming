@@ -42,6 +42,7 @@
 		F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */; };
 		F1F28E5C2C9F069400A82BDE /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E5B2C9F069400A82BDE /* PieView.swift */; };
 		F1F28E602C9F0F8400A82BDE /* DateHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */; };
+		F1F28E642C9FB26300A82BDE /* PieHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F28E632C9FB26300A82BDE /* PieHomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleChartView.swift; sourceTree = "<group>"; };
 		F1F28E5B2C9F069400A82BDE /* PieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
 		F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHomeView.swift; sourceTree = "<group>"; };
+		F1F28E632C9FB26300A82BDE /* PieHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieHomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */,
 				F1F28E5B2C9F069400A82BDE /* PieView.swift */,
 				F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */,
+				F1F28E632C9FB26300A82BDE /* PieHomeView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
 				F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
+				F1F28E642C9FB26300A82BDE /* PieHomeView.swift in Sources */,
 				32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */,
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
