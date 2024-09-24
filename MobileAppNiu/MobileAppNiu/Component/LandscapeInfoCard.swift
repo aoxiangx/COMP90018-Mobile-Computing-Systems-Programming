@@ -13,19 +13,18 @@ struct LandscapeInfoCard: View {
     var iconName: ImageResource
     var body: some View {
         ZStack(alignment: .center) {
-            
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .center, spacing: 4) {
                     Image(iconName)
                         .frame(width: 16, height: 16)
                     Text(activity)
-                        .font(Font.custom("Switzer", size: 16))
+                        .font(Font.custom("Roboto", size: 16))
                         .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                         .frame(maxWidth:.infinity,alignment: .leading)
+                    
                 }
                 .padding(.vertical, 3)
-                
-                
+                  
                 Text("24 Min")
                     .font(Font.custom("Roboto", size: 24))
                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
@@ -56,6 +55,9 @@ struct LandscapeInfoCard: View {
     }
 
 
+
+
 #Preview {
     LandscapeInfoCard(activity: "Green Space Time",iconName: .sunLightIcon)
+        .environmentObject(HealthManager())
 }

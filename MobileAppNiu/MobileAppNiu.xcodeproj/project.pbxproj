@@ -20,6 +20,8 @@
 		BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59642C97F7A5000E0875 /* SmallGraph.swift */; };
 		BF0C59672C990D6F000E0875 /* Insights.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59662C990D6F000E0875 /* Insights.swift */; };
 		BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */; };
+		BFE91E692CA1462200B68226 /* ScoreEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE91E682CA1462200B68226 /* ScoreEmoji.swift */; };
+		BFE91E6D2CA14D6400B68226 /* ObjectiveNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE91E6C2CA14D6400B68226 /* ObjectiveNotification.swift */; };
 		BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */; };
 		F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */; };
 		F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD42C9591D80021FE1D /* ContentView.swift */; };
@@ -79,6 +81,8 @@
 		BF0C59642C97F7A5000E0875 /* SmallGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallGraph.swift; sourceTree = "<group>"; };
 		BF0C59662C990D6F000E0875 /* Insights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insights.swift; sourceTree = "<group>"; };
 		BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		BFE91E682CA1462200B68226 /* ScoreEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEmoji.swift; sourceTree = "<group>"; };
+		BFE91E6C2CA14D6400B68226 /* ObjectiveNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveNotification.swift; sourceTree = "<group>"; };
 		BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		F1DF4BCF2C9591D80021FE1D /* MobileAppNiu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileAppNiu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileAppNiuApp.swift; sourceTree = "<group>"; };
@@ -152,6 +156,7 @@
 				F1F28E5B2C9F069400A82BDE /* PieView.swift */,
 				F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */,
 				F1F28E632C9FB26300A82BDE /* PieHomeView.swift */,
+				BFE91E6C2CA14D6400B68226 /* ObjectiveNotification.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -246,6 +251,7 @@
 			children = (
 				F1F28E512C9DB7E700A82BDE /* BackgroundView.swift */,
 				F1DF4C0B2C95A21F0021FE1D /* LoginView.swift */,
+				BFE91E682CA1462200B68226 /* ScoreEmoji.swift */,
 				F1DF4C0D2C95AEE90021FE1D /* HomeView.swift */,
 				32A6B55E2C96886400F48E56 /* GroupingDataView.swift */,
 				F1F28E552C9DBBDA00A82BDE /* LogoutView.swift */,
@@ -402,10 +408,12 @@
 				BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */,
 				32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */,
 				F1F28E602C9F0F8400A82BDE /* DateHomeView.swift in Sources */,
+				BFE91E692CA1462200B68226 /* ScoreEmoji.swift in Sources */,
 				F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */,
 				F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */,
 				F1F28E5C2C9F069400A82BDE /* PieView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
+				BFE91E6D2CA14D6400B68226 /* ObjectiveNotification.swift in Sources */,
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
 				F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */,

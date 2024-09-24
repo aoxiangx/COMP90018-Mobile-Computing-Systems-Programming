@@ -40,7 +40,6 @@ struct HomeView: View {
 //        }
         
         ZStack (alignment: .topLeading){
-            // 背景
             LinearGradient(gradient: Gradient(stops: [
                 .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
                 .init(color: Color(hex: "EDF5FF"), location: 0.6)   // 结束颜色 EDF5FF
@@ -56,17 +55,24 @@ struct HomeView: View {
                 PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
                 
                 
+                
                 // button
-                Button("Niu Niu") {
+                Button("Fetch Steps") {
                 }
                 .onAppear {
                     manager.fetchTodaySteps()
                 }
-                .navigationTitle("Home")
-                .padding(.leading, 15)
+//                .navigationTitle("Home")
+                .padding(.leading, 16)
                 
-                
+                VStack(alignment: .center){
+                    ScoreEmoji(score:89)
+                }
+                ObjectiveNotification()
+                    .padding(16)
             }
+            
+
         }
     }
 }

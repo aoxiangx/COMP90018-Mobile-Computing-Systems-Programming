@@ -7,42 +7,54 @@
 
 import SwiftUI
 
-import SwiftUI
-
-import SwiftUI
-
 struct PieView: View {
-    let percentage: Double // 输入的百分比
+    let percentage: Double // Input percentage
 
     var body: some View {
         ZStack {
-            // 黄色顶部饼图
             Canvas { context, size in
-                let total = 100.0 // 总百分比
-                let startAngle: Double = 90.0 // 起始角度
-                let endAngle = startAngle + (percentage / total) * 360 // 计算结束角度
+                let total = 100.0 // Total percentage
+                let startAngle: Double = 90.0 // Starting angle
+                let endAngle = startAngle + (percentage / total) * 360 // Calculate ending angle
 
-                // 创建黄色饼图的路径
-                let yellowPath = Path { path in
-                    path.move(to: CGPoint(x: size.width / 2, y: size.height / 2)) // 圆心
+                // Create the pie chart path
+                let piePath = Path { path in
+                    path.move(to: CGPoint(x: size.width / 2, y: size.height / 2)) // Center point
                     path.addArc(center: CGPoint(x: size.width / 2, y: size.height / 2),
                                 radius: min(size.width, size.height) / 2,
                                 startAngle: Angle(degrees: startAngle),
                                 endAngle: Angle(degrees: endAngle),
                                 clockwise: false)
-                    path.addLine(to: CGPoint(x: size.width / 2, y: size.height / 2)) // 闭合路径
+                    path.closeSubpath()
+                        // Close the path
                 }
-                
-                // 填充黄色饼图颜色
-                context.fill(yellowPath, with: .color(Constants.Yellow2))
-                
-                // 添加黑色边框
-                context.stroke(yellowPath, with: .color(Constants.gray3), lineWidth: 0.2) // 黑色边框
+                   
+
+                // Determine color based on percentage
+                let color = colorForPercentage(percentage)
+
+                // Fill the pie chart with the determined color
+                context.fill(piePath, with: .color(color))
+
+                // Add a border to the pie chart
+                context.stroke(piePath, with: .color(Constants.gray3), lineWidth: 0.2)
             }
-            .frame(width: 32, height: 32) // 黄色饼图的视图大小
+            .frame(width: 32, height: 32) // Size of the pie chart view
+        }
+    }
+    
+    // Determine the appropriate color based on the percentage
+    func colorForPercentage(_ percentage: Double) -> Color {
+        if percentage < 50 {
+            let index = Int((percentage / 50.0) * 3.0)
+            return [Constants.Blue3, Constants.Blue2, Constants.Blue1][index]
+        } else {
+            let index = Int(((percentage - 50) / 50.0) * 3.0)
+            return [Constants.Yellow1, Constants.Yellow2, Constants.Yellow3][index]
         }
     }
 }
+
 #Preview {
-    PieView(percentage: 35) // 示例数据
+    PieView(percentage: 35) // Example data
 }
