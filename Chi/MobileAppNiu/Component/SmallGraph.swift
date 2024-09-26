@@ -45,6 +45,6 @@ struct SmallGraph: View {
 
 struct SmallGraph_Previews: PreviewProvider {
     static var previews: some View {
-        SmallGraph()
+        SmallGraph().environmentObject(HealthManager())
     }
 }

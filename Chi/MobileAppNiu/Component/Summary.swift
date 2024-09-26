@@ -20,4 +20,5 @@ struct Summary: View {
 
 #Preview {
     Summary()
+        .environmentObject(HealthManager())
 }

@@ -58,4 +58,5 @@ struct LandscapeInfoCard: View {
 
 #Preview {
     LandscapeInfoCard(activity: "Green Space Time",iconName: .sunLightIcon)
+        .environmentObject(HealthManager())
 }
