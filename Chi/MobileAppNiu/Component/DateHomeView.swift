@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct DateHomeView: View {
     let date = Date()
     let dateFormatter: DateFormatter
@@ -43,17 +41,17 @@ struct DateHomeView: View {
             // 显示日期和星期
             Text(monthAndDay + ",")
                 .font(.system(size: 12))
-                .foregroundColor(Constants.gray4)
+                .foregroundColor(Constants.gray1)
             
             Text(weekDay)
                 .font(.system(size: 12))
-                .foregroundColor(Constants.gray4)
+                .foregroundColor(Constants.gray1)
             
             // 显示问候语
             Text(greeting()+",")
                 .font(.system(size: 48))
                 .fontWeight(.bold)
-                .foregroundColor(Constants.gray4)
+                .foregroundColor(Constants.gray2)
         }
         .padding()
     }

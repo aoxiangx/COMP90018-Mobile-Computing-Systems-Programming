@@ -19,6 +19,9 @@
 		BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */; };
 		BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59642C97F7A5000E0875 /* SmallGraph.swift */; };
 		BF0C59672C990D6F000E0875 /* Insights.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59662C990D6F000E0875 /* Insights.swift */; };
+		BF409D6D2CA646D5000A77E5 /* ObjectiveNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF409D6C2CA646D5000A77E5 /* ObjectiveNotification.swift */; };
+		BF409D6F2CA64776000A77E5 /* ObjectiveCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF409D6E2CA64776000A77E5 /* ObjectiveCard.swift */; };
+		BF409D712CA64825000A77E5 /* ScoreEmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */; };
 		BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */; };
 		BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */; };
 		F11A06D32CA39F6200080164 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11A06D22CA39F6200080164 /* PhotoView.swift */; };
@@ -80,6 +83,9 @@
 		BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeInfoCard.swift; sourceTree = "<group>"; };
 		BF0C59642C97F7A5000E0875 /* SmallGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallGraph.swift; sourceTree = "<group>"; };
 		BF0C59662C990D6F000E0875 /* Insights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insights.swift; sourceTree = "<group>"; };
+		BF409D6C2CA646D5000A77E5 /* ObjectiveNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveNotification.swift; sourceTree = "<group>"; };
+		BF409D6E2CA64776000A77E5 /* ObjectiveCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveCard.swift; sourceTree = "<group>"; };
+		BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEmojiView.swift; sourceTree = "<group>"; };
 		BF9F9B952C979ACA00B479B1 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		F11A06D22CA39F6200080164 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
@@ -151,13 +157,16 @@
 				F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */,
 				F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */,
 				F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */,
+				BF409D6E2CA64776000A77E5 /* ObjectiveCard.swift */,
 				F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */,
 				F1F28E572C9EFD2800A82BDE /* CircleChartView.swift */,
 				F1F28E5B2C9F069400A82BDE /* PieView.swift */,
+				BF409D6C2CA646D5000A77E5 /* ObjectiveNotification.swift */,
 				F1F28E5F2C9F0F8400A82BDE /* DateHomeView.swift */,
 				F1F28E632C9FB26300A82BDE /* PieHomeView.swift */,
 				F11A06D22CA39F6200080164 /* PhotoView.swift */,
 				F194148D2CA449F800B291BC /* PhotoButtonView.swift */,
+				BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -400,6 +409,7 @@
 				BF9F9B962C979ACA00B479B1 /* ColorExtensions.swift in Sources */,
 				F1F28E4E2C9D248B00A82BDE /* Date+Extension.swift in Sources */,
 				BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */,
+				BF409D6F2CA64776000A77E5 /* ObjectiveCard.swift in Sources */,
 				BF0C595E2C97BCFE000E0875 /* SuggestionsCapsules.swift in Sources */,
 				F1F28E522C9DB7E700A82BDE /* BackgroundView.swift in Sources */,
 				32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */,
@@ -416,6 +426,7 @@
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
 				BF0C59672C990D6F000E0875 /* Insights.swift in Sources */,
 				F1F28E582C9EFD2800A82BDE /* CircleChartView.swift in Sources */,
+				BF409D6D2CA646D5000A77E5 /* ObjectiveNotification.swift in Sources */,
 				F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */,
 				F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */,
 				F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */,
@@ -424,6 +435,7 @@
 				BF0C59532C97A4D6000E0875 /* Font.swift in Sources */,
 				BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */,
 				F1DF4C0C2C95A21F0021FE1D /* LoginView.swift in Sources */,
+				BF409D712CA64825000A77E5 /* ScoreEmojiView.swift in Sources */,
 				F11A06D32CA39F6200080164 /* PhotoView.swift in Sources */,
 				F1DF4C0E2C95AEE90021FE1D /* HomeView.swift in Sources */,
 				F1DF4C072C95A18C0021FE1D /* AppleSignInView.swift in Sources */,

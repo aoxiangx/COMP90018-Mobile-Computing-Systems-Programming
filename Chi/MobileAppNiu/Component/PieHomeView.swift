@@ -13,15 +13,12 @@ struct PieHomeView: View {
     
     var body: some View {
         VStack {
-            
             HStack(spacing: 10) {
                 ForEach(0..<daysOfWeek.count, id: \.self) { index in
                     PieView(percentage: percentages[index])
                         .frame(maxWidth: .infinity)
                 }
             }
-            
-            
             HStack(spacing: 10) {
                 ForEach(daysOfWeek, id: \.self) { day in
                     Text(day)
@@ -31,7 +28,7 @@ struct PieHomeView: View {
                 }
             }
         }
-        .frame(width: 361, height: 64) // 固定视图大小
+        .frame(width: 361, height: 64) // Fixed view size
     }
 }
 
