@@ -57,17 +57,18 @@ struct HomeView: View {
                     
                     
                     // button
-                    Button("Niu Niu") {
-                    }
-                    .onAppear {
+                    Button("Fetch Steps") {
                         manager.fetchTodaySteps()
                     }
+
+
                     .navigationTitle("Home")
                     .padding(.leading, 15)
                     
                     
                     PhotoButtonView()
                     ScoreEmojiView(score: 45)
+                    ObjectiveNotification()
                 }
             }
         }
