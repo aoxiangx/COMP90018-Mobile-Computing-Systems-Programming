@@ -60,7 +60,7 @@ struct HomeView: View {
                 Button("Fetch Steps") {
                 }
                 .onAppear {
-                    manager.fetchTodaySteps()
+                    manager.fetchTodayNoiseLevels()
                 }
 //                .navigationTitle("Home")
                 .padding(.leading, 16)
