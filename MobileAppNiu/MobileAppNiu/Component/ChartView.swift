@@ -90,5 +90,5 @@ struct ChartView: View {
 
 #Preview {
 
-    ChartView(timePeriod: .day,hideDetail: false,activity:.steps).environmentObject(HealthManager())
+    ChartView(timePeriod: .day,hideDetail: false,activity:.noise).environmentObject(HealthManager())
 }

@@ -69,6 +69,7 @@ class HealthManager: ObservableObject {
                 return
             }
             let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
+            
             print("Today's average noise level: \(averageNoise) dB")
         }
         healthStore.execute(query)
@@ -148,8 +149,14 @@ class HealthManager: ObservableObject {
             let predicate = HKQuery.predicateForSamples(withStart: hourStart, end: hourEnd, options: .strictStartDate)
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
                 
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                hourlySteps[hour] = stepCount
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                hourlySteps[hour] = count
                 
                 // Notify the group when a query finishes
                 group.leave()
@@ -178,8 +185,15 @@ class HealthManager: ObservableObject {
 
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                dailySteps[day] = stepCount
+                
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                dailySteps[day] = count
                 
                 // Notify the group when a query finishes
                 group.leave()
@@ -210,8 +224,14 @@ class HealthManager: ObservableObject {
 
             let predicate = HKQuery.predicateForSamples(withStart: monthStart, end: monthEnd, options: .strictStartDate)
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                monthlySteps[month] = stepCount
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                monthlySteps[month] = count
                 
                 // Notify the group when a query finishes
                 group.leave()
