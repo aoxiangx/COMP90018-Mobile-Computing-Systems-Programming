@@ -70,6 +70,7 @@ struct HomeView: View {
                 }
                 ObjectiveNotification()
                     .padding(16)
+                SummaryBoxesView().environmentObject(HealthManager())
             }
             
 

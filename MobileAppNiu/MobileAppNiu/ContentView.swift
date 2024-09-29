@@ -17,12 +17,12 @@ struct ContentView: View {
 //        BackgroundView()
             //            HomeView()
             //            GroupingDataView()
-        if logStatus{
+//        if logStatus{
             HomeView()
                 .environmentObject(HealthManager())
-        } else{
-            LoginView()
-        }
+//        } else{
+//            LoginView()
+//        }
         
     }
 }
