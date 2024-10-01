@@ -14,9 +14,7 @@ struct ContentView: View {
     
     var body: some View {
 
-//        BackgroundView()
-            //            HomeView()
-            //            GroupingDataView()
+        
         if logStatus{
             HomeView()
                 .environmentObject(HealthManager())
