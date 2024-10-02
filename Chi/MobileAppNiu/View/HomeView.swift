@@ -68,7 +68,7 @@ struct HomeView: View {
                     
                     PhotoButtonView()
                     ScoreEmojiView(score: 45)
-                    ObjectiveNotification()
+                    ObjectiveNotification(currentTime: 20, objectiveTime: 40)
                 }
             }
         }
