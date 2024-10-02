@@ -33,7 +33,7 @@ struct LogoutView: View {
                 try? Auth.auth().signOut()
                 logStatus = false
             }
-//            .navigationTitle("Home")
+            .navigationTitle("Home")
             .padding()
             
             
