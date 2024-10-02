@@ -68,7 +68,7 @@ struct HomeView: View {
                     
                     PhotoButtonView()
                     ScoreEmojiView(score: 45)
-                    ObjectiveNotification(currentTime: 20, objectiveTime: 40, objectiveType: "daylight")
+                    ObjectiveNotification(currentTime: 20, objectiveTime: 100, objectiveType: "Daylight time")
                 }
             }
         }
