@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "15"
             endingLineNumber = "15"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "ChartView"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -66,6 +66,36 @@
             endingLineNumber = "12"
             landmarkName = "SummeryBoxView"
             landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "94EBA851-E81B-492C-BD44-26685D2BFF1B - c9f4a5369b8f11b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MobileAppNiu.SummeryBoxView.init() -&gt; MobileAppNiu.SummeryBoxView"
+                  moduleName = "MobileAppNiu.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jun/Documents/GitHub/COMP90018-Mobile-Computing-Systems-Programming/Chi/MobileAppNiu/Component/SummaryBoxView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12">
+               </Location>
+               <Location
+                  uuid = "94EBA851-E81B-492C-BD44-26685D2BFF1B - 8f2e4637895c4368"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "default argument 0 of MobileAppNiu.SummeryBoxView.init(color: SwiftUI.Color, icon: Swift.String, title: Swift.String, subtitle: Swift.String, description: Swift.String, paddingSapce: CoreGraphics.CGFloat) -&gt; MobileAppNiu.SummeryBoxView"
+                  moduleName = "MobileAppNiu.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jun/Documents/GitHub/COMP90018-Mobile-Computing-Systems-Programming/Chi/MobileAppNiu/Component/SummaryBoxView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -14,7 +14,7 @@ struct HomeView: View {
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     var body: some View {
-        VStack {
+        
             
 //            LinearGradient(gradient: Gradient(stops: [
 //                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
@@ -39,39 +39,38 @@ struct HomeView: View {
             //
             //        }
             
-            ZStack (alignment: .topLeading){
-                // 背景
-                LinearGradient(gradient: Gradient(stops: [
-                    .init(color: Color(hex: "FFF8C9"), location: 0.0),  // 开始颜色 FFF8C9
-                    .init(color: Color(hex: "EDF5FF"), location: 0.6)   // 结束颜色 EDF5FF
-                ]),
-                               startPoint: .topLeading,
-                               endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)  // 填满整个屏幕
-                
-                VStack(alignment: .leading){
-                    // Date view
-                    DateHomeView()
-                    
-                    PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
-                    
-                    
-                    // button
-                    Button("Fetch Steps") {
-                        manager.fetchTodaySteps()
+        NavigationView {
+                    ZStack(alignment: .topLeading) {
+                        // 背景渐变
+                        LinearGradient(gradient: Gradient(colors: [Color(hex: "FFF8C9"), Color(hex: "EDF5FF")]),
+                                       startPoint: .topLeading,
+                                       endPoint: .bottomTrailing)
+                        .edgesIgnoringSafeArea(.all)
+
+                        VStack(alignment: .leading) {
+                            DateHomeView()
+                            
+                            PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55])
+                                .padding(.leading, 15)
+
+                            Button("Fetch Steps") {
+                                manager.fetchTodaySteps()
+                            }
+                            .padding(.leading, 15)
+
+                            PhotoButtonView()
+                            ScoreEmojiView(score: 45)
+                            ObjectiveNotification()
+                            NavigationLink(destination: ProfileView()){
+                                Text("Profile")
+                            }
+                        }
+
                     }
-
-
-                    .navigationTitle("Home")
-                    .padding(.leading, 15)
-                    
-                    
-                    PhotoButtonView()
-                    ScoreEmojiView(score: 45)
-                    ObjectiveNotification()
+                    .navigationTitle("") // 确保此处设置空标题
+                    .navigationBarHidden(true) // 确保导航栏被隐藏
                 }
-            }
-        }
+        
     }
     
     

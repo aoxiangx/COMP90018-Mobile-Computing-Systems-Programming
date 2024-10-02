@@ -48,25 +48,27 @@ struct ProfileView: View {
                                     .foregroundColor(Color.gray), // 线的颜色
                                 alignment: .bottom // 对齐到底部
                             )
-                            HStack(alignment: .center) {
-                                Text("Your Objectives")
-                                  .font(Font.custom("Roboto", size: 16))
-                                  .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                              Spacer()
-                                Image(systemName: "chevron.right") // Using SF Symbol here
-                                .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
+                            NavigationLink (destination:ObjectiveSetView() ) {
+                                HStack(alignment: .center) {
+                                    Text("Your Objectives")
+                                        .font(Font.custom("Roboto", size: 16))
+                                        .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
+                                    Spacer()
+                                    Image(systemName: "chevron.right") // Using SF Symbol here
+                                        .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 16)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .background(Constants.white)
+                                .cornerRadius(12)
+                                .overlay(
+                                    Rectangle() // 在底部绘制一条线
+                                        .frame(height: 0.3) // 线的高度
+                                        .foregroundColor(Color.gray), // 线的颜色
+                                    alignment: .bottom // 对齐到底部
+                                )
                             }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 16)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .background(Constants.white)
-                            .cornerRadius(12)
-                            .overlay(
-                                Rectangle() // 在底部绘制一条线
-                                    .frame(height: 0.3) // 线的高度
-                                    .foregroundColor(Color.gray), // 线的颜色
-                                alignment: .bottom // 对齐到底部
-                            )
                             HStack(alignment: .center) {
                                 Text("About You")
                                   .font(Font.custom("Roboto", size: 16))
