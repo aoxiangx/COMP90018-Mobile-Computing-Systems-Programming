@@ -27,12 +27,12 @@ struct SummaryBoxesView: View {
     
     // 创建方块的数据集合
     let boxes = [
-        BoxData(color: .white, icon: "star", title: "Daylight Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 40,activity: .daylight),
-        BoxData(color: .white, icon: "heart", title: "Green Space Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 0,activity: .hrv),
-        BoxData(color: .white, icon: "bolt", title: "Noise Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 56,activity: .noise),
-        BoxData(color: .white, icon: "moon", title: "Sleep Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
-        BoxData(color: .white, icon: "sun.max", title: "Stress Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
-        BoxData(color: .white, icon: "cloud", title: "Actice Index", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .steps)
+        BoxData(color: Constants.white, icon: "star", title: "Daylight Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 40,activity: .daylight),
+        BoxData(color: Constants.white, icon: "heart", title: "Green Space Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 0,activity: .hrv),
+        BoxData(color: Constants.white, icon: "bolt", title: "Noise Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 56,activity: .noise),
+        BoxData(color: Constants.white, icon: "moon", title: "Sleep Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
+        BoxData(color: Constants.white, icon: "sun.max", title: "Stress Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
+        BoxData(color: Constants.white, icon: "cloud", title: "Actice Index", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .steps)
     ]
     
     var body: some View {

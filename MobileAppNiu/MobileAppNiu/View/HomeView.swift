@@ -58,11 +58,9 @@ struct HomeView: View {
                 
                 // button
                 Button("Fetch Steps") {
-                }
-                .onAppear {
                     manager.fetchTodayNoiseLevels()
                 }
-//                .navigationTitle("Home")
+
                 .padding(.leading, 16)
                 
                 VStack(alignment: .center){

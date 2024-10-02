@@ -24,7 +24,9 @@ struct Constants {
     static let Purple: Color = Color(red: 0.91, green: 0.73, blue: 0.97)
     static let Orange: Color = Color(red: 1, green: 0.86, blue: 0.65)
     
+    static let body: Font = Font.custom("Roboto", size: 16)
     
+
     static let caption: Font = Font.custom("Roboto", size: 12)
     
     

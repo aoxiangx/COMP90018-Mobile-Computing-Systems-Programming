@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct DateHomeView: View {
     let date = Date()
     let dateFormatter: DateFormatter
