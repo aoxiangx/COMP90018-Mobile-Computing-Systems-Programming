@@ -19,5 +19,5 @@ struct Summary: View {
 }
 
 #Preview {
-    Summary()
+    Summary().environmentObject(HealthManager())
 }
