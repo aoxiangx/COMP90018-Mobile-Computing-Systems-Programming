@@ -15,6 +15,8 @@ extension Date {
 
 class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
+    
+    @Published var currentDaylight: Double = 0.0  // 当前日照时间
 
     init() {
         let steps = HKQuantityType.quantityType(forIdentifier: .stepCount)!
@@ -55,6 +57,9 @@ class HealthManager: ObservableObject {
                 return
             }
             let daylightHours = quantity.doubleValue(for: HKUnit.hour())
+            DispatchQueue.main.async {
+                self.currentDaylight = daylightHours  // 更新当前日照时间
+            }
             print("Today's daylight hours: \(daylightHours)")
         }
         healthStore.execute(query)
