@@ -10,11 +10,12 @@ import SwiftUI
 struct BoxData: Identifiable {
     var id = UUID()
     var color: Color
-    var icon: String
+    var icon: ImageResource
     var title: String
     var subtitle: String
     var description: String
     var paddingSapce: CGFloat // 用于控制padding大小
+    let activity: Activity // Add this property
 }
 
 
@@ -26,27 +27,31 @@ struct SummaryBoxesView: View {
     
     // 创建方块的数据集合
     let boxes = [
-        BoxData(color: .white, icon: "star", title: "Daylight Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 40),
-        BoxData(color: .white, icon: "heart", title: "Green Space Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 0),
-        BoxData(color: .white, icon: "bolt", title: "Noise Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 56),
-        BoxData(color: .white, icon: "moon", title: "Sleep Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50),
-        BoxData(color: .white, icon: "sun.max", title: "Stress Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50),
-        BoxData(color: .white, icon: "cloud", title: "Actice Index", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50)
+        BoxData(color: Constants.white, icon: .sunLightIcon, title: "Daylight Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 40,activity: .daylight),
+        BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 0,activity: .hrv),
+        BoxData(color: Constants.white, icon: .noise, title: "Noise Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 56,activity: .noise),
+        BoxData(color: Constants.white, icon: .sleep, title: "Sleep Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
+        BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
+        BoxData(color: Constants.white, icon: .activeIndexIcon, title: "Actice Index", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .steps)
     ]
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(boxes) { box in
-                SummeryBoxView(
-                    color: box.color,
-                    icon: box.icon,
-                    title: box.title,
-                    subtitle: box.subtitle,
-                    description: box.description,
-                    paddingSapce: box.paddingSapce // 传入paddingSapce
-                )
-                .frame(height: 142) // 确保方块的高度一致
-                
+                NavigationLink(destination:
+                    GroupingDataView(activity: box.activity)
+                        .environmentObject(HealthManager())
+                ) { // Closing parenthesis moved here
+                    SummeryBoxView(
+                        color: box.color,
+                        icon: box.icon,
+                        title: box.title,
+                        subtitle: box.subtitle,
+                        description: box.description,
+                        paddingSapce: box.paddingSapce // Pass the padding space
+                    )
+                    .frame(height: 142) // Ensure consistent box height
+                }
             }
         }
         .padding() // 设置整体网格的内边距
@@ -56,5 +61,6 @@ struct SummaryBoxesView: View {
 
 
 #Preview {
-    SummaryBoxesView()
+    SummaryBoxesView().environmentObject(HealthManager())
 }
+

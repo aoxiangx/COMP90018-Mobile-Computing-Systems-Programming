@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SummeryBoxView: View {
     var color: Color = .white  // 默认背景颜色
-    var icon: String = "star" // 默认图标
+    var icon: ImageResource = .sunLightIcon // 默认图标
     var title: String = "Noise Level" // 第一个文本
     var subtitle: String = "24 Min" // 第二个文本
     var description: String = "Past 7 Days" // 第三个文本
@@ -18,8 +18,9 @@ struct SummeryBoxView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 7) { // 上下排列，左对齐
-            Image(systemName: icon)
-                .font(.title) // 图标大小
+            Image(icon)
+                .resizable() // Make the image resizable
+                .frame(width: 32, height: 32) // Set the size to 32x32
                 .foregroundColor(.gray)
             // Noise Level
             Text(title)
@@ -55,3 +56,4 @@ struct SummeryBoxView: View {
 #Preview {
     SummeryBoxView()
 }
+

@@ -13,20 +13,17 @@ extension Date {
     }
 }
 
+
 class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
-    
-    @Published var currentDaylight: Double = 0.0  // 当前日照时间
-    @Published var currentActiveTime: Double = 0.0  // 当前活动时间
 
     init() {
         let steps = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight)!
         let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)!
         let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
-        let activeTime = HKQuantityType.quantityType(forIdentifier: .appleExerciseTime)!  // 请求活动时间权限
-
-        let healthTypes: Set = [steps, daylight, noise, hrv, activeTime]
+        
+        let healthTypes: Set = [steps, daylight, noise, hrv]
         Task {
             do {
                 try await healthStore.requestAuthorization(toShare: [], read: healthTypes)
@@ -35,7 +32,6 @@ class HealthManager: ObservableObject {
             }
         }
     }
-    
     func fetchTodaySteps() {
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
@@ -59,9 +55,6 @@ class HealthManager: ObservableObject {
                 return
             }
             let daylightHours = quantity.doubleValue(for: HKUnit.hour())
-            DispatchQueue.main.async {
-                self.currentDaylight = daylightHours  // 更新当前日照时间
-            }
             print("Today's daylight hours: \(daylightHours)")
         }
         healthStore.execute(query)
@@ -76,6 +69,7 @@ class HealthManager: ObservableObject {
                 return
             }
             let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
+            
             print("Today's average noise level: \(averageNoise) dB")
         }
         healthStore.execute(query)
@@ -94,24 +88,6 @@ class HealthManager: ObservableObject {
         }
         healthStore.execute(query)
     }
-    
-    func fetchTodayActiveTime() {
-        guard let activeTime = HKQuantityType.quantityType(forIdentifier: .appleExerciseTime) else { return }
-        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: activeTime, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-            guard let quantity = result?.sumQuantity(), error == nil else {
-                print("Error fetching today's active time data")
-                return
-            }
-            let activeTimeMinutes = quantity.doubleValue(for: HKUnit.minute())  // 活动时间以分钟为单位
-            DispatchQueue.main.async {
-                self.currentActiveTime = activeTimeMinutes  // 更新当前活动时间
-            }
-            print("Today's active time: \(activeTimeMinutes) minutes")
-        }
-        healthStore.execute(query)
-    }
-
     func fetchTimeIntervalByActivity(timePeriod: TimePeriod,  activity: HKQuantityTypeIdentifier,completion: @escaping ([LineChartData]) -> Void) {
         guard let activity = HKQuantityType.quantityType(forIdentifier: activity) else { return }
         
@@ -169,12 +145,20 @@ class HealthManager: ObservableObject {
                   let hourEnd = Calendar.current.date(bySetting: .hour, value: hour + 1, of: startDate) else {
                 continue
             }
-
             let predicate = HKQuery.predicateForSamples(withStart: hourStart, end: hourEnd, options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                hourlySteps[hour] = stepCount
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                hourlySteps[hour] = count
                 
                 // Notify the group when a query finishes
                 group.leave()
@@ -200,11 +184,21 @@ class HealthManager: ObservableObject {
         for day in 0..<numberOfDays {
             let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate)!
             let dayEnd = calendar.date(byAdding: .day, value: -day + 1, to: endDate)!
-
+            
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                dailySteps[day] = stepCount
+            
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+            
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
+                
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                dailySteps[day] = count
                 
                 // Notify the group when a query finishes
                 group.leave()
@@ -232,11 +226,20 @@ class HealthManager: ObservableObject {
         for month in 0..<numberOfMonths {
             let monthStart = calendar.date(byAdding: .month, value: -month, to: endDate)!
             let monthEnd = calendar.date(byAdding: .month, value: -month + 1, to: endDate)!
-
+            
             let predicate = HKQuery.predicateForSamples(withStart: monthStart, end: monthEnd, options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                let stepCount = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                monthlySteps[month] = stepCount
+            
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+            
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                else{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                monthlySteps[month] = count
                 
                 // Notify the group when a query finishes
                 group.leave()

@@ -10,7 +10,7 @@ import AuthenticationServices
 
 struct ContentView: View {
     
-    @AppStorage("log_Status") private var logStatus: Bool = false // remember to set as false
+    @AppStorage("log_Status") private var logStatus: Bool = true // remember to set as false
     
     var body: some View {
 
@@ -18,8 +18,7 @@ struct ContentView: View {
             //            HomeView()
             //            GroupingDataView()
         if logStatus{
-            HomeView()
-                .environmentObject(HealthManager())
+            SummaryBoxesView().environmentObject(HealthManager())
         } else{
             LoginView()
         }
