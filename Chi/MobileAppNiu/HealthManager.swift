@@ -17,14 +17,16 @@ class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
     
     @Published var currentDaylight: Double = 0.0  // 当前日照时间
+    @Published var currentActiveTime: Double = 0.0  // 当前活动时间
 
     init() {
         let steps = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight)!
         let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)!
         let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
-        
-        let healthTypes: Set = [steps, daylight, noise, hrv]
+        let activeTime = HKQuantityType.quantityType(forIdentifier: .appleExerciseTime)!  // 请求活动时间权限
+
+        let healthTypes: Set = [steps, daylight, noise, hrv, activeTime]
         Task {
             do {
                 try await healthStore.requestAuthorization(toShare: [], read: healthTypes)
@@ -92,6 +94,24 @@ class HealthManager: ObservableObject {
         }
         healthStore.execute(query)
     }
+    
+    func fetchTodayActiveTime() {
+        guard let activeTime = HKQuantityType.quantityType(forIdentifier: .appleExerciseTime) else { return }
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: activeTime, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            guard let quantity = result?.sumQuantity(), error == nil else {
+                print("Error fetching today's active time data")
+                return
+            }
+            let activeTimeMinutes = quantity.doubleValue(for: HKUnit.minute())  // 活动时间以分钟为单位
+            DispatchQueue.main.async {
+                self.currentActiveTime = activeTimeMinutes  // 更新当前活动时间
+            }
+            print("Today's active time: \(activeTimeMinutes) minutes")
+        }
+        healthStore.execute(query)
+    }
+
     func fetchTimeIntervalByActivity(timePeriod: TimePeriod,  activity: HKQuantityTypeIdentifier,completion: @escaping ([LineChartData]) -> Void) {
         guard let activity = HKQuantityType.quantityType(forIdentifier: activity) else { return }
         
