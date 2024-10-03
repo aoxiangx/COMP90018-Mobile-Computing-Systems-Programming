@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @AppStorage("log_Status") private var logStatus: Bool = true // Access logStatus
     @State private var isNotificationsEnabled = true
     var body: some View {
         ZStack {
@@ -121,6 +122,19 @@ struct ProfileView: View {
                                 .stroke(Constants.gray4, lineWidth: 0.4)
                             )
                         }
+                        // Logout Button
+                        Button(action: {
+                            logStatus = false // Set log status to false to log out
+                        }) {
+                            Text("Logout")
+                                .font(Constants.body)
+                                .foregroundColor(Constants.gray2)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding()
+                                .background(Constants.Yellow1)
+                                .cornerRadius(12)
+                        }
+                        .padding(.top, 20) // Add padding to space it from other sections
                     }
                     .padding(0)
                     .frame(width: 361, alignment: .topLeading)
