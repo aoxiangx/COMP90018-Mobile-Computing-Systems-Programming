@@ -18,41 +18,46 @@ struct ContentView: View {
     var body: some View {
         if logStatus{
             TabView {
-                HomeView()
-                    .tabItem {
-                        Image(isReflectToggled ? .mindfulnessToggled : .mindfulUntoggled) // Toggle between two images
-                        Text("Reflect")
-                    }
-                    .onAppear {
-                        toggleTabs(reflect: true) // Toggle Reflect and untoggle others
-                    }
-                
-                CalendarView()
-                    .tabItem {
-                        Image(isJourneyToggled ? .journeyToggled : .journeyUntoggled)
-                        Text("Journey")
-                    }
-                    .onAppear {
-                        toggleTabs(journey: true) // Toggle Journey and untoggle others
-                    }
-                
-                SummaryBoxesView().environmentObject(HealthManager())
-                    .tabItem {
-                        Image(isInsightsToggled ? .insightsToggled : .insightsUntoggled)
-                        Text("Insights")
-                    }
-                    .onAppear {
-                        toggleTabs(insights: true) // Toggle Insights and untoggle others
-                    }
-                
-                ProfileView()
-                    .tabItem {
-                        Image(isSettingsToggled ? .settingToggled : .settingUntoggled)
-                        Text("Setting")
-                    }
-                    .onAppear {
-                        toggleTabs(settings: true) // Toggle Settings and untoggle others
-                    }
+                NavigationView {
+                    HomeView()
+                }
+                .tabItem {
+                    Image(isReflectToggled ? .mindfulnessToggled : .mindfulUntoggled) // Toggle between two images
+                    Text("Reflect")
+                }
+                .onAppear {
+                    toggleTabs(reflect: true) // Toggle Reflect and untoggle others
+                }
+                NavigationView {
+                    CalendarView()
+                }
+                .tabItem {
+                    Image(isJourneyToggled ? .journeyToggled : .journeyUntoggled)
+                    Text("Journey")
+                }
+                .onAppear {
+                    toggleTabs(journey: true) // Toggle Journey and untoggle others
+                }
+                NavigationView {
+                    SummaryBoxesView().environmentObject(HealthManager())
+                }
+                .tabItem {
+                    Image(isInsightsToggled ? .insightsToggled : .insightsUntoggled)
+                    Text("Insights")
+                }
+                .onAppear {
+                    toggleTabs(insights: true) // Toggle Insights and untoggle others
+                }
+                NavigationView {
+                    ProfileView()
+                }
+                .tabItem {
+                    Image(isSettingsToggled ? .settingToggled : .settingUntoggled)
+                    Text("Setting")
+                }
+                .onAppear {
+                    toggleTabs(settings: true) // Toggle Settings and untoggle others
+                }
             }
      
         } else{
