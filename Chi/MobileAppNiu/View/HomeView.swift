@@ -13,6 +13,9 @@ struct HomeView: View {
     @EnvironmentObject var manager : HealthManager
     @AppStorage("log_Status") private var logStatus: Bool = false
     
+    // 引入 ObjectiveViewModel
+    @StateObject private var objectiveViewModel = ObjectiveViewModel()
+    
     var body: some View {
         VStack {
             
@@ -68,7 +71,30 @@ struct HomeView: View {
                     
                     PhotoButtonView()
                     ScoreEmojiView(score: 45)
-                    ObjectiveNotification(currentTime: 20, objectiveTime: 100, objectiveType: "Daylight time")
+                    // 使用 TabView 实现左右滑动的 ObjectiveNotification 列表
+                    TabView {
+                        // 日照时间的目标
+                        ObjectiveNotification(
+                            currentTime: 5,
+                            objectiveTime: objectiveViewModel.objectives.sunlightDuration,
+                            objectiveType: "Daylight time"
+                        )
+                        // 绿地活动时间的目标
+                        ObjectiveNotification(
+                            currentTime: 45,
+                            objectiveTime: objectiveViewModel.objectives.greenAreaActivityDuration,
+                            objectiveType: "Green Space Time"
+                        )
+                        // 总活动时间的目标
+                        ObjectiveNotification(
+                            currentTime: 80,
+                            objectiveTime: objectiveViewModel.objectives.totalActivityDuration,
+                            objectiveType: "Active Index"
+                        )
+                    }
+                    .tabViewStyle(PageTabViewStyle()) // 使用 PageTabViewStyle 实现左右滑动效果
+                    .frame(height: 300) // 设置 TabView 高度
+
                 }
             }
         }
