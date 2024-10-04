@@ -1,16 +1,9 @@
-//
-//  ObjectiveNotification.swift
-//  MobileAppNiu
-//
-//  Created by Jun Zhu on 23/9/2024.
-//
-
 import SwiftUI
 
 struct ObjectiveNotification: View {
-    var currentTime: Int? // 当前的时间（可能为nil）
-    var objectiveTime: Int? // 用户设置的目标时间，可能为nil
-    var objectiveType: String? // 目标类型，可能为nil
+    var currentTime: Int? // Current time (can be nil)
+    var objectiveTime: Int? // User-set objective time (can be nil)
+    var objectiveType: String? // Objective type, can be nil
 
     init(currentTime: Int? = nil, objectiveTime: Int? = nil, objectiveType: String? = nil) {
         self.currentTime = currentTime
@@ -18,7 +11,7 @@ struct ObjectiveNotification: View {
         self.objectiveType = objectiveType
     }
 
-    // 根据进度确定提示信息
+    // Determine the message based on progress
     private var progressMessage: String {
         let progress = currentTime != nil && objectiveTime != nil ? Double(currentTime!) / Double(objectiveTime!) : 0
         switch progress {
@@ -35,22 +28,21 @@ struct ObjectiveNotification: View {
         }
     }
 
-
-    // 根据目标类型决定显示的图标
+    // Determine the icon based on the objective type
     private var objectiveIcon: String {
         switch objectiveType {
         case "Daylight time":
             return "Sun_Light_Icon"
         case "Green Space Time":
-            return "Green_Space_Icon" // 你需要提供对应的图标名称
+            return "Green_Space_Icon" // You need to provide the corresponding icon name
         case "Active Index":
-            return "Active_Index_Icon" // 你需要提供对应的图标名称
+            return "Active_Index_Icon" // You need to provide the corresponding icon name
         default:
-            return "Default_Icon" // 你需要提供默认图标名称
+            return "Default_Icon" // You need to provide the default icon name
         }
     }
 
-    // 根据目标类型决定进度条颜色
+    // Determine the progress bar color based on the objective type
     private var progressBarColor: Color {
         switch objectiveType {
         case "Daylight time":
@@ -60,14 +52,14 @@ struct ObjectiveNotification: View {
         case "Active Index":
             return Constants.Red
         default:
-            return .gray // 默认颜色
+            return .gray // Default color
         }
     }
 
     var body: some View {
         VStack {
             if let objective = objectiveTime, let current = currentTime, let objectiveType = objectiveType {
-                // 显示根据进度生成的提示和目标
+                // Display the message and the objective based on progress
                 Text(progressMessage)
                     .font(Constants.caption)
                     .foregroundColor(Constants.gray3)
@@ -75,28 +67,28 @@ struct ObjectiveNotification: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .center, spacing: 8) {
                         HStack(alignment: .bottom) {
-                            Image(objectiveIcon) // 动态显示图标
+                            Image(objectiveIcon) // Dynamically display the icon
                                 .resizable()
                                 .padding(8)
                                 .frame(width: 48, height: 48)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("\(objectiveType.capitalized)") // 动态显示目标类型
+                                Text("\(objectiveType.capitalized)") // Dynamically display the objective type
                                     .font(Font.custom("Roboto", size: 16))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
-                                Text("\(current) Min") // 显示当前时间
+                                Text("\(current) Min") // Display current time
                                     .font(Font.custom("Roboto", size: 24))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
-                                Text("per day") // 显示时间单位
+                                Text("per day") // Display time unit
                                     .font(Font.custom("Roboto", size: 12))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                             }
                             Spacer()
-                            Text("Objective: \(objective) Min") // 显示目标时间
+                            Text("Objective: \(objective) Min") // Display the objective time
                                 .font(Font.custom("Roboto", size: 12))
                                 .foregroundColor(Constants.gray3)
                         }
                     }
-                    // 进度条
+                    // Progress bar
                     GeometryReader { geometry in
                         ZStack(alignment: .leading) {
                             Rectangle()
@@ -106,7 +98,7 @@ struct ObjectiveNotification: View {
                                 .cornerRadius(10)
                             Rectangle()
                                 .frame(width: min(Double(current) / Double(objective) * geometry.size.width, geometry.size.width), height: 20)
-                                .foregroundColor(progressBarColor) // 根据目标类型动态设置进度条颜色
+                                .foregroundColor(progressBarColor) // Set the progress bar color dynamically
                                 .animation(.linear, value: currentTime)
                                 .cornerRadius(10)
                         }
@@ -125,17 +117,14 @@ struct ObjectiveNotification: View {
                         .stroke(Constants.gray4, lineWidth: 0.3)
                 )
             } else {
-                // 没有设置目标的情况，保留背景和框架
+                // Case where no objective is set, keep the background and frame
                 VStack(alignment: .center, spacing: 8) {
                     Text("Press the button to set your first objective!")
                         .font(Constants.caption)
                         .foregroundColor(Constants.gray3)
                         .padding()
 
-                    Button(action: {
-                        // 跳转到设置页面的逻辑
-                        print("Navigate to settings")
-                    }) {
+                    NavigationLink(destination: ObjectiveSetView()) {
                         Text("Set Objective")
                             .font(Font.custom("Roboto", size: 16))
                             .foregroundColor(.blue)
@@ -146,29 +135,29 @@ struct ObjectiveNotification: View {
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .background(Constants.white) // 保持一致的背景
+                .background(Constants.white) // Keep consistent background
                 .cornerRadius(24)
                 .shadow(color: .black.opacity(0.15), radius: 1.5, x: 0, y: 1)
                 .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
                         .inset(by: 0.15)
-                        .stroke(Constants.gray4, lineWidth: 0.3) // 保持一致的外框
+                        .stroke(Constants.gray4, lineWidth: 0.3) // Keep consistent outer frame
                 )
             }
         }
     }
 }
 #Preview {
-    // 测试无目标设定情况
+    // Test case with no objective set
     ObjectiveNotification()
     
-    // 测试有目标设定情况
+    // Test case with an objective set
     ObjectiveNotification(currentTime: 20, objectiveTime: 100, objectiveType: "Daylight time")
     
-    // 测试 green space 目标
+    // Test case with green space objective
     ObjectiveNotification(currentTime: 45, objectiveTime: 100, objectiveType: "Green Space Time")
     
-    // 测试 active index 目标
+    // Test case with active index objective
     ObjectiveNotification(currentTime: 60, objectiveTime: 100, objectiveType: "Active Index")
 }
