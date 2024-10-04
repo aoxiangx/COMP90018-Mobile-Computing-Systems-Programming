@@ -16,6 +16,7 @@ struct LineChartData {
 
 struct GroupingDataView: View {
     var activity: Activity
+    var icon:ImageResource
     @State private var selectedTimePeriod: TimePeriod = .day
     @EnvironmentObject var manager : HealthManager
 //    @Environment(\.presentationMode) var presentationMode
@@ -58,7 +59,7 @@ struct GroupingDataView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack {
-                    Image(systemName: "sun.max.fill")
+                    Image(icon)
                         .foregroundColor(.yellow)
                     Text(activity.title) // Dynamic title based on activity
                         .font(Font.custom("Roboto", size: 16))
@@ -137,6 +138,6 @@ private func dynamicTimePeriodDescription(for period: TimePeriod) -> String {
    }
 struct GroupingDataView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupingDataView(activity:.steps).environmentObject(HealthManager())
+        GroupingDataView(activity:.steps,icon: .activeIndexIcon).environmentObject(HealthManager())
     }
 }

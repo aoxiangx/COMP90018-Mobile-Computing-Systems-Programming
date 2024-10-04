@@ -147,16 +147,16 @@ class HealthManager: ObservableObject {
             }
             let predicate = HKQuery.predicateForSamples(withStart: hourStart, end: hourEnd, options: .strictStartDate)
             
-            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ?  .cumulativeSum : .discreteAverage
 
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 
                 var count = 0.0
-                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
-                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue {
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
                 }
                 else{
-                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
                 }
                 hourlySteps[hour] = count
                 
@@ -174,6 +174,55 @@ class HealthManager: ObservableObject {
             completion(lineChartData)
         }
     }
+    func fetchAverage(endDate: Date = Date(), activityType: HKQuantityTypeIdentifier, completion: @escaping (Int) -> Void) {
+        guard let activityType = HKQuantityType.quantityType(forIdentifier: activityType) else { return }
+        let numberOfDays = 7  // Fetch data for the last 7 days
+        var dailySteps: [Double] = Array(repeating: 0.0, count: numberOfDays)
+        let calendar = Calendar.current
+        let group = DispatchGroup() // To wait for all queries to complete
+
+        for day in 0..<numberOfDays {
+            let dayStart = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -day, to: endDate)!)
+            let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+            
+            let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
+            
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ?  .cumulativeSum : .discreteAverage
+            let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
+                
+                if let error = error {
+                        print("Error fetching data for \(activityType.identifier): \(error.localizedDescription)")
+                        group.leave() // Ensure to notify the group in case of an error
+                        return
+                }
+                
+                var count = 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                }
+                else{
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                }
+                dailySteps[day] = count
+                
+                // Notify the group when a query finishes
+                group.leave()
+            }
+            
+            healthStore.execute(query)
+            group.enter() // Indicate that a query is starting
+        }
+        
+        // After all queries have completed, compute the average and call completion
+        group.notify(queue: .main) {
+            let totalSteps = dailySteps.reduce(0, +)
+            let averageSteps = totalSteps / Double(numberOfDays)
+            
+            print("7-day average: \(averageSteps)")
+            completion(Int(averageSteps))
+        }
+    }
+
 
     private func fetchDaily(startDate: Date, endDate: Date, labels: [String], activityType: HKQuantityType, completion: @escaping ([LineChartData]) -> Void) {
         var dailySteps: [Double] = Array(repeating: 0.0, count: labels.count)
@@ -186,17 +235,16 @@ class HealthManager: ObservableObject {
             let dayEnd = calendar.date(byAdding: .day, value: -day + 1, to: endDate)!
             
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
-            
-            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ?  .cumulativeSum : .discreteAverage
             
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 
                 var count = 0.0
-                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
-                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue {
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
                 }
                 else{
-                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
                 }
                 dailySteps[day] = count
                 
@@ -229,15 +277,15 @@ class HealthManager: ObservableObject {
             
             let predicate = HKQuery.predicateForSamples(withStart: monthStart, end: monthEnd, options: .strictStartDate)
             
-            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue) ? .discreteAverage : .cumulativeSum
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ?  .cumulativeSum : .discreteAverage
             
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 var count = 0.0
-                if activityType.identifier == HKQuantityTypeIdentifier.environmentalAudioExposure.rawValue {
-                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
+                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue{
+                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
                 }
                 else{
-                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
                 }
                 monthlySteps[month] = count
                 

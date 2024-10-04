@@ -4,7 +4,6 @@
 //
 //  Created by 关昊 on 20/9/2024.
 //
-
 import SwiftUI
 
 struct BoxData: Identifiable {
@@ -18,8 +17,9 @@ struct BoxData: Identifiable {
     let activity: Activity // Add this property
 }
 
-
 struct SummaryBoxesView: View {
+    @EnvironmentObject var manager: HealthManager
+    
     let columns = [
         GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20)
@@ -27,28 +27,29 @@ struct SummaryBoxesView: View {
     
     // 创建方块的数据集合
     let boxes = [
-        BoxData(color: Constants.white, icon: .sunLightIcon, title: "Daylight Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 40,activity: .daylight),
-        BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 0,activity: .hrv),
-        BoxData(color: Constants.white, icon: .noise, title: "Noise Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 56,activity: .noise),
-        BoxData(color: Constants.white, icon: .sleep, title: "Sleep Time", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
-        BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .hrv),
-        BoxData(color: Constants.white, icon: .activeIndexIcon, title: "Actice Index", subtitle: "24 Min", description: "Past 7 Days", paddingSapce: 50,activity: .steps)
+        BoxData(color: Constants.white, icon: .sunLightIcon, title: "Daylight Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSapce: 40, activity: .daylight),
+        BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSapce: 0, activity: .daylight),
+        BoxData(color: Constants.white, icon: .noise, title: "Noise Level", subtitle: "dB", description: "Past 7 Days", paddingSapce: 56, activity: .noise),
+        BoxData(color: Constants.white, icon: .sleep, title: "Sleep Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSapce: 50, activity: .daylight),
+        BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "Pascals", description: "Past 7 Days", paddingSapce: 50, activity: .daylight),
+        BoxData(color: Constants.white, icon: .activeIndexIcon, title: "Active Index", subtitle: "Step(s)", description: "Past 7 Days", paddingSapce: 50, activity: .steps)
     ]
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(boxes) { box in
                 NavigationLink(destination:
-                    GroupingDataView(activity: box.activity)
+                                GroupingDataView(activity: box.activity,icon:box.icon)
                         .environmentObject(HealthManager())
-                ) { // Closing parenthesis moved here
+                ) {
                     SummeryBoxView(
                         color: box.color,
                         icon: box.icon,
                         title: box.title,
-                        subtitle: box.subtitle,
+                        subtitle: box.subtitle, // Use the fetched average
                         description: box.description,
-                        paddingSapce: box.paddingSapce // Pass the padding space
+                        paddingSapce: box.paddingSapce,
+                        activity: box.activity
                     )
                     .frame(height: 142) // Ensure consistent box height
                 }
@@ -56,11 +57,9 @@ struct SummaryBoxesView: View {
         }
         .padding() // 设置整体网格的内边距
     }
+    
 }
-
-
 
 #Preview {
     SummaryBoxesView().environmentObject(HealthManager())
 }
-
