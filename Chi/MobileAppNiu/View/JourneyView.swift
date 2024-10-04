@@ -46,7 +46,7 @@ struct JourneyView: View {
                             .padding(.trailing, 15)
                             
                             // 调用新修改后的 PhotoView，传递选中的图片
-                            PhotoView(selectedImages: selectedImages)
+                            PhotoView(selectedImages: $selectedImages)
                                 .frame(maxWidth: .infinity)
 
                             // CalendarView
