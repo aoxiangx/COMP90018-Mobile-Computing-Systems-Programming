@@ -77,7 +77,6 @@ struct HomeView: View {
                         .navigationTitle("Home")
                         .padding(.leading, 15)
                         
-                        PhotoButtonView()
                         ScoreEmojiView(score: 45)
                         
                         // TabView for sliding list of notifications
