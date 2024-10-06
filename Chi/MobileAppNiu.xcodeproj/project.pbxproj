@@ -29,6 +29,7 @@
 		BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */; };
 		F11A06D32CA39F6200080164 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11A06D22CA39F6200080164 /* PhotoView.swift */; };
 		F194148E2CA449F800B291BC /* PhotoButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F194148D2CA449F800B291BC /* PhotoButtonView.swift */; };
+		F1A26AD12CB23BFC009B8BCA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A26AD02CB23BFC009B8BCA /* LocationManager.swift */; };
 		F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */; };
 		F1DF4BD52C9591D80021FE1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD42C9591D80021FE1D /* ContentView.swift */; };
 		F1DF4BD72C9591D90021FE1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1DF4BD62C9591D90021FE1D /* Assets.xcassets */; };
@@ -96,6 +97,7 @@
 		BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		F11A06D22CA39F6200080164 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		F194148D2CA449F800B291BC /* PhotoButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoButtonView.swift; sourceTree = "<group>"; };
+		F1A26AD02CB23BFC009B8BCA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F1DF4BCF2C9591D80021FE1D /* MobileAppNiu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileAppNiu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileAppNiuApp.swift; sourceTree = "<group>"; };
 		F1DF4BD42C9591D80021FE1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				BF0C595C2C97BB7D000E0875 /* Helpers */,
 				BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */,
 				BFB26D9C2CAD4B9200E41F1B /* Model */,
+				F1A26AD02CB23BFC009B8BCA /* LocationManager.swift */,
 			);
 			path = MobileAppNiu;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 				F11A06D32CA39F6200080164 /* PhotoView.swift in Sources */,
 				F1DF4C0E2C95AEE90021FE1D /* HomeView.swift in Sources */,
 				F1DF4C072C95A18C0021FE1D /* AppleSignInView.swift in Sources */,
+				F1A26AD12CB23BFC009B8BCA /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,6 +633,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -662,6 +668,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

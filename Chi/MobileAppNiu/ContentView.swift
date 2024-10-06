@@ -11,6 +11,8 @@ import AuthenticationServices
 struct ContentView: View {
     
     @AppStorage("log_Status") private var logStatus: Bool = true // remember to set as false
+    
+    
     @State private var isReflectToggled = false
     @State private var isJourneyToggled = false
     @State private var isInsightsToggled = false
@@ -19,7 +21,8 @@ struct ContentView: View {
         if logStatus{
             TabView {
                 NavigationView {
-                    HomeView()
+                    HomeView().environmentObject(LocationManager())
+                    
                 }
                 .tabItem {
                     Image(isReflectToggled ? .mindfulnessToggled : .mindfulUntoggled) // Toggle between two images
@@ -63,15 +66,6 @@ struct ContentView: View {
         } else{
             LoginView()
         }
-
-//        BackgroundView()
-            //            HomeView()
-            //            GroupingDataView()
-//        if logStatus{
-//            SummaryBoxesView().environmentObject(HealthManager())
-//        } else{
-//            LoginView()
-//        }
         
     }
     private func toggleTabs(reflect: Bool = false, journey: Bool = false, insights: Bool = false, settings: Bool = false) {

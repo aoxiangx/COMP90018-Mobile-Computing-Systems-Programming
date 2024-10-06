@@ -3,7 +3,13 @@ import Firebase
 import FirebaseAuth
 
 struct HomeView: View {
+    
+    
     @EnvironmentObject var manager : HealthManager
+    @EnvironmentObject var locationManager: LocationManager
+    
+    
+    
     @AppStorage("log_Status") private var logStatus: Bool = false
     
     // Import ObjectiveViewModel
@@ -74,10 +80,51 @@ struct HomeView: View {
                         Button("Fetch Steps") {
                             manager.fetchTodaySteps()
                         }
-                        .navigationTitle("Home")
                         .padding(.leading, 15)
                         
-                        PhotoButtonView()
+                        // show location
+                        VStack(alignment: .leading, spacing: 10) {
+                            
+                            Divider()
+                                .padding(.vertical, 10)
+                            
+                            
+                            Text("Your Current Location")
+                                .font(.headline)
+                                .padding(.bottom, 5)
+                            
+                            HStack {
+                                Text("Latitude:")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Text(String(format: "%.5f", locationManager.location?.coordinate.latitude ?? 0.0))
+                                    .font(.body)
+                            }
+                            
+                            HStack {
+                                Text("Longitude:")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Text(String(format: "%.5f", locationManager.location?.coordinate.longitude ?? 0.0))
+                                    .font(.body)
+                            }
+                            
+                            Divider()
+                                .padding(.vertical, 10)
+                            
+                            Text("Place Description:")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            Text(locationManager.locationDescription)
+                                .font(.body)
+                                .multilineTextAlignment(.leading)
+                                .padding(.top, 5)
+                            
+                            Divider()
+                                .padding(.vertical, 10)
+                        }
+                        
+                        
                         ScoreEmojiView(score: 45)
                         
                         // TabView for sliding list of notifications
@@ -113,4 +160,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environmentObject(HealthManager())
+        .environmentObject(LocationManager())
 }

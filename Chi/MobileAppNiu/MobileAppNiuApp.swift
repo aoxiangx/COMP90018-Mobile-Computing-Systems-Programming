@@ -25,12 +25,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   // register app delegate for Firebase setup
      @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
      @StateObject var manager = HealthManager()
+     @StateObject var locationManager = LocationManager()
 
   var body: some Scene {
     WindowGroup {
       NavigationView {
         ContentView()
               .environmentObject(manager)
+              .environmentObject(locationManager)
       }
     }
   }
