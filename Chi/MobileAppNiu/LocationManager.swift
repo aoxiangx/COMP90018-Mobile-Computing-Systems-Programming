@@ -16,7 +16,7 @@ class LocationManager: NSObject, ObservableObject{
     
     private let locationManager = CLLocationManager()
     
-    
+    // initial location description
     private let geocoder = CLGeocoder()
     @Published var locationDescription: String = "Unknown"
     
@@ -33,7 +33,7 @@ class LocationManager: NSObject, ObservableObject{
     }
     
     
-    // 反向地理编码方法
+    // reverse geocode
     func reverseGeocodeLocation(location: CLLocation) {
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             guard let placemark = placemarks?.first, error == nil else {
@@ -41,7 +41,7 @@ class LocationManager: NSObject, ObservableObject{
                 return
             }
             
-            // 解析地标信息
+            // get location description
             if let name = placemark.name, let locality = placemark.locality {
                 self.locationDescription = "\(name), \(locality)"
             } else if let locality = placemark.locality {
@@ -63,7 +63,7 @@ extension LocationManager: CLLocationManagerDelegate{
         self.location = location
         self.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         
-        // 反向地理编码
+        // reverse geocode
         reverseGeocodeLocation(location: location)
     }
 }
