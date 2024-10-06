@@ -6,31 +6,35 @@
 //
 
 import SwiftUI
+import PhotosUI
 
+
+// MARK: - JourneyView
 struct JourneyView: View {
-    @State private var selectedImages: [UIImage] = [] // 保存上传的图片
+    @State private var dateImages: [Date: [UIImage]] = [:]
+    @State private var selectedDate: Date? = Date() // Set default to today
+    @State private var cachedImages: [UIImage] = []
 
     var body: some View {
         NavigationView {
             ZStack(alignment: .topLeading) {
-                // Background
+                // Background gradient for the entire view
                 LinearGradient(gradient: Gradient(stops: [
                     .init(color: Color(hex: "FFF8C9"), location: 0.0),
                     .init(color: Color(hex: "EDF5FF"), location: 0.6)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)  // Fill the screen
+                .edgesIgnoringSafeArea(.all)
                 
-                ScrollView { // 包裹内容，支持上下滚动
+                ScrollView {
                     VStack(alignment: .leading) {
-                        
-                        // 为了与 HomeView 一致，顶部留有空间
                         VStack {
-                            Spacer().frame(height: 50) // 留出与 HomeView 相同的顶部空间
+                            Spacer()
+                                .frame(minHeight: 20) // Space at the top for padding
                             
-                            // Journey Title and PhotoButton on the same line
                             HStack {
+                                // Title for the Journey section
                                 Text("Journey")
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
@@ -38,20 +42,31 @@ struct JourneyView: View {
                                 
                                 Spacer()
                                 
-                                // 传入 `selectedImages` 绑定
-                                PhotoButtonView(selectedImages: $selectedImages)
+                                // Photo button for adding images
+                                PhotoButtonView(dateImages: $dateImages, selectedDate: $selectedDate)
                                     .frame(width: 48, height: 32)
                             }
                             .padding(.leading, 15)
                             .padding(.trailing, 15)
                             
-                            // 调用新修改后的 PhotoView，传递选中的图片
-                            PhotoView(selectedImages: $selectedImages)
-                                .frame(maxWidth: .infinity)
-
-                            // CalendarView
+                            // Display selected images or placeholder if no images
+                            if let selectedDate = selectedDate, let images = dateImages[selectedDate] {
+                                PhotoCarouselView(images: images)
+                                    .frame(maxWidth: .infinity)
+                            } else {
+                                Image("BG")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 320.6, height: 375.8)
+                                    .cornerRadius(16)
+                                    .rotationEffect(Angle(degrees: 4))
+                                    .shadow(radius: 2)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            
                             VStack(alignment: .leading, spacing: 10) {
-                                CalendarView() // 显示 CalendarView
+                                // Calendar view for selecting a date
+                                CalendarView(selectedDate: $selectedDate)
                                     .padding([.leading, .trailing], 20)
                             }
                             .padding(.top, 20)
@@ -66,5 +81,11 @@ struct JourneyView: View {
 #Preview {
     JourneyView()
 }
+
+
+
+
+
+
 
 

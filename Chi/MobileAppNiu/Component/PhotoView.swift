@@ -6,106 +6,57 @@
 //
 
 import SwiftUI
+import PhotosUI
 
-enum SwipeDirection {
-    case left, right, top, bottom
-}
+// MARK: - PhotoCarouselView
+struct PhotoCarouselView: View {
+    let images: [UIImage] // Array of images to display in the carousel
+    @State private var currentIndex: Int = 0 // Index of the currently displayed image
 
-struct PhotoView: View {
-    @Binding var selectedImages: [UIImage] // 绑定外部传入的图片数组
-    
-    var onCardSwiped: ((SwipeDirection, Int) -> Void)? = nil // 回调滑动后的事件
-    
     var body: some View {
-        ZStack {
-            ForEach(selectedImages.indices, id: \.self) { index in
-                SwipableCardView(
-                    image: selectedImages[index],
-                    index: index,
-                    onCardSwiped: { direction in
-                        // 当滑动时，移除图片
-                        selectedImages.remove(at: index)
-                        onCardSwiped?(direction, index)
+        if images.isEmpty {
+            Text("No images available")
+                .font(.headline)
+                .padding()
+        } else {
+            ZStack {
+                // Loop through the images and display them in a stacked layout
+                ForEach(images.indices, id: \ .self) { index in
+                    Image(uiImage: images[index])
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 320.6, height: 375.8)
+                        .cornerRadius(16)
+                        .rotationEffect(Angle(degrees: 4))
+                        .shadow(radius: 2)
+                        .frame(maxWidth: .infinity)
+                        .opacity(index == currentIndex ? 1 : 0.5)
+                        .scaleEffect(index == currentIndex ? 1.0 : 0.9)
+                        .animation(.spring(), value: currentIndex)
+                        .offset(x: CGFloat(index - currentIndex) * 300) // Offset to simulate iOS background switch effect
+                }
+            }
+            .gesture(
+                DragGesture()
+                    .onEnded { value in
+                        // Update current index based on swipe direction
+                        if value.translation.width < 0 {
+                            currentIndex = (currentIndex + 1) % images.count
+                        } else if value.translation.width > 0 {
+                            currentIndex = (currentIndex - 1 + images.count) % images.count
+                        }
                     }
-                )
-                .id(UUID()) // 给每张图片唯一的标识，保证视图的更新
-            }
-            
-            // 如果没有图片，显示默认图片
-            if selectedImages.isEmpty {
-                Image("BG")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 320.6, height: 375.8)
-                    .cornerRadius(16)
-                    .rotationEffect(Angle(degrees: 4))
-                    .shadow(radius: 2)
-            }
+            )
         }
     }
 }
 
-struct SwipableCardView: View {
-    var image: UIImage
-    var index: Int
-    var onCardSwiped: ((SwipeDirection) -> Void)? = nil
-    
-    @State private var offset = CGSize.zero
-    @State private var isRemoved = false
-    
-    var body: some View {
-        ZStack {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 320.6, height: 375.8)
-                .cornerRadius(16)
-                .rotationEffect(.degrees(Double(offset.width / 40)))
-                .shadow(radius: 2)
-                .offset(x: offset.width, y: offset.height * 0.4)
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            offset = gesture.translation
-                        }
-                        .onEnded { _ in
-                            withAnimation {
-                                handleSwipe(offsetWidth: offset.width, offsetHeight: offset.height)
-                            }
-                        }
-                )
-                .opacity(isRemoved ? 0 : 1)
-        }
-    }
-    
-    func handleSwipe(offsetWidth: CGFloat, offsetHeight: CGFloat) {
-        var swipeDirection: SwipeDirection = .left
-        
-        switch (offsetWidth, offsetHeight) {
-        case (-500...(-150), _):
-            swipeDirection = .left
-            offset = CGSize(width: -500, height: 0)
-            isRemoved = true
-            onCardSwiped?(swipeDirection)
-        case (150...500, _):
-            swipeDirection = .right
-            offset = CGSize(width: 500, height: 0)
-            isRemoved = true
-            onCardSwiped?(swipeDirection)
-        case (_, -500...(-150)):
-            swipeDirection = .top
-            offset = CGSize(width: 0, height: -500)
-            isRemoved = true
-            onCardSwiped?(swipeDirection)
-        case (_, 150...500):
-            swipeDirection = .bottom
-            offset = CGSize(width: 0, height: 500)
-            isRemoved = true
-            onCardSwiped?(swipeDirection)
-        default:
-            offset = .zero
-        }
+#Preview {
+    if let example1 = UIImage(named: "bg1"),
+       let example2 = UIImage(named: "bg2"),
+       let example3 = UIImage(named: "bg3") {
+        PhotoCarouselView(images: [example1, example2, example3])
+    } else {
+        Text("Images not found")
     }
 }
-
-
