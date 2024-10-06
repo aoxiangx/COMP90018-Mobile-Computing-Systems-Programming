@@ -83,46 +83,7 @@ struct HomeView: View {
                         .padding(.leading, 15)
                         
                         // show location
-                        VStack(alignment: .leading, spacing: 10) {
-                            
-                            Divider()
-                                .padding(.vertical, 10)
-                            
-                            
-                            Text("Your Current Location")
-                                .font(.headline)
-                                .padding(.bottom, 5)
-                            
-                            HStack {
-                                Text("Latitude:")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                Text(String(format: "%.5f", locationManager.location?.coordinate.latitude ?? 0.0))
-                                    .font(.body)
-                            }
-                            
-                            HStack {
-                                Text("Longitude:")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                Text(String(format: "%.5f", locationManager.location?.coordinate.longitude ?? 0.0))
-                                    .font(.body)
-                            }
-                            
-                            Divider()
-                                .padding(.vertical, 10)
-                            
-                            Text("Place Description:")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                            Text(locationManager.locationDescription)
-                                .font(.body)
-                                .multilineTextAlignment(.leading)
-                                .padding(.top, 5)
-                            
-                            Divider()
-                                .padding(.vertical, 10)
-                        }
+                        LocationView()
                         
                         
                         ScoreEmojiView(score: 45)

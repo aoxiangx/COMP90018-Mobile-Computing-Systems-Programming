@@ -28,6 +28,7 @@
 		BFB26DA02CAD4CDB00E41F1B /* ObjectiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB26D9F2CAD4CD900E41F1B /* ObjectiveViewModel.swift */; };
 		BFF6297B2C9BE33C0072C6CD /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */; };
 		F11A06D32CA39F6200080164 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11A06D22CA39F6200080164 /* PhotoView.swift */; };
+		F16264522CB24827007157B4 /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16264512CB24827007157B4 /* LocationView.swift */; };
 		F194148E2CA449F800B291BC /* PhotoButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F194148D2CA449F800B291BC /* PhotoButtonView.swift */; };
 		F1A26AD12CB23BFC009B8BCA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A26AD02CB23BFC009B8BCA /* LocationManager.swift */; };
 		F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DF4BD22C9591D80021FE1D /* MobileAppNiuApp.swift */; };
@@ -96,6 +97,7 @@
 		BFB26D9F2CAD4CD900E41F1B /* ObjectiveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveViewModel.swift; sourceTree = "<group>"; };
 		BFF6297A2C9BE33C0072C6CD /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		F11A06D22CA39F6200080164 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
+		F16264512CB24827007157B4 /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		F194148D2CA449F800B291BC /* PhotoButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoButtonView.swift; sourceTree = "<group>"; };
 		F1A26AD02CB23BFC009B8BCA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F1DF4BCF2C9591D80021FE1D /* MobileAppNiu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileAppNiu.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +176,7 @@
 				F11A06D22CA39F6200080164 /* PhotoView.swift */,
 				F194148D2CA449F800B291BC /* PhotoButtonView.swift */,
 				BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */,
+				F16264512CB24827007157B4 /* LocationView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 				F1F28E4A2C9D1DBD00A82BDE /* CalendarView.swift in Sources */,
 				F1F28E5C2C9F069400A82BDE /* PieView.swift in Sources */,
 				F1DF4BD32C9591D80021FE1D /* MobileAppNiuApp.swift in Sources */,
+				F16264522CB24827007157B4 /* LocationView.swift in Sources */,
 				BFB26D9B2CAD4B8C00E41F1B /* DailyObjectives.swift in Sources */,
 				F194148E2CA449F800B291BC /* PhotoButtonView.swift in Sources */,
 				328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */,
