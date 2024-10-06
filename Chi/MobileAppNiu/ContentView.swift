@@ -32,7 +32,7 @@ struct ContentView: View {
                     toggleTabs(reflect: true) // Toggle Reflect and untoggle others
                 }
                 NavigationView {
-                    CalendarView()
+                    JourneyView()
                 }
                 .tabItem {
                     Image(isJourneyToggled ? .journeyToggled : .journeyUntoggled)

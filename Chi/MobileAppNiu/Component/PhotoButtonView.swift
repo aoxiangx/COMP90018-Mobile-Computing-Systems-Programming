@@ -7,67 +7,144 @@
 
 import SwiftUI
 import PhotosUI
-import Photos
-
 
 struct PhotoButtonView: View {
-    @State private var selectedItems: [PhotosPickerItem] = [] // 用于存储选中的照片
-    @State private var selectedImages: [UIImage] = [] // 用于存储转换后的 UIImage
-    @State private var showPicker = false // 控制 PhotosPicker 的显示
+    @Binding var dateImages: [Date: [UIImage]]
+    @Binding var selectedDate: Date?
+    @State private var selectedItems: [PhotosPickerItem] = []
+    @State private var showImagePicker = false
+    @State private var showPhotosPicker = false
+    @State private var showActionSheet = false
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showAlert = false
+    @State private var alertMessage = ""
 
     var body: some View {
         VStack {
-            // 上传照片按钮
-            PhotosPicker(selection: $selectedItems, matching: .images) {
+            Button(action: {
+                showActionSheet = true
+            }) {
                 ZStack {
-                    // 黄色背景的按钮
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.yellow)
                         .frame(width: 48, height: 32)
-                    
-                    // 灰色的加号图标
+
                     ZStack {
                         Rectangle()
                             .fill(Color.gray)
                             .frame(width: 16, height: 2)
-                        
+
                         Rectangle()
                             .fill(Color.gray)
                             .frame(width: 2, height: 16)
                     }
                 }
             }
-            .onChange(of: selectedItems) { newItems in
-                for newItem in newItems {
-                    Task {
-                        do {
-                            if let data = try await newItem.loadTransferable(type: Data.self),
-                               let image = UIImage(data: data) {
-                                // 如果选中的图片数量小于3张，则添加
-                                if selectedImages.count < 3 {
-                                    selectedImages.append(image)
-                                }
+            .actionSheet(isPresented: $showActionSheet) {
+                ActionSheet(
+                    title: Text("Choose Photo Source"),
+                    message: Text("Please select a source to upload photos"),
+                    buttons: [
+                        .default(Text("Photo Library")) {
+                            showPhotosPicker = true
+                        },
+                        .default(Text("Camera")) {
+                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                sourceType = .camera
+                                showImagePicker = true
+                            } else {
+                                alertMessage = "Camera is not available on this device."
+                                showAlert = true
                             }
-                        } catch {
-                            print("Error loading image: \(error)")
+                        },
+                        .cancel()
+                    ]
+                )
+            }
+            .photosPicker(isPresented: $showPhotosPicker, selection: $selectedItems, matching: .images)
+            .onChange(of: selectedItems) { newItems in
+                Task {
+                    for newItem in newItems {
+                        if let data = try? await newItem.loadTransferable(type: Data.self),
+                           let image = UIImage(data: data) {
+                            if let selectedDate = selectedDate {
+                                var images = dateImages[selectedDate] ?? []
+                                if images.count < 5 {
+                                    images.append(image)
+                                    dateImages[selectedDate] = images
+                                } else {
+                                    alertMessage = "You can only add up to 5 images per date."
+                                    showAlert = true
+                                }
+                            } else {
+                                alertMessage = "Please select a date first."
+                                showAlert = true
+                            }
                         }
                     }
                 }
             }
-
-            // 显示已选中的图片
-            ForEach(selectedImages, id: \.self) { image in
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200) // 显示上传的照片
-                    .padding()
+            .sheet(isPresented: $showImagePicker) {
+                ImagePicker(sourceType: sourceType) { image in
+                    if let selectedDate = selectedDate {
+                        var images = dateImages[selectedDate] ?? []
+                        images.append(image)
+                        dateImages[selectedDate] = images
+                    } else {
+                        alertMessage = "Please select a date first."
+                        showAlert = true
+                    }
+                }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }
 }
 
+// Custom ImagePicker to handle camera and photo library
+struct ImagePicker: UIViewControllerRepresentable {
+    var sourceType: UIImagePickerController.SourceType
+    var onImagePicked: (UIImage) -> Void
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = sourceType
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: ImagePicker
+
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.onImagePicked(image)
+            }
+            DispatchQueue.main.async {
+                picker.dismiss(animated: true)
+            }
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            DispatchQueue.main.async {
+                picker.dismiss(animated: true)
+            }
+        }
+    }
+}
 
 #Preview {
-    PhotoButtonView()
+    PhotoButtonView(dateImages: .constant([:]), selectedDate: .constant(nil))
 }
