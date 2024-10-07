@@ -22,6 +22,8 @@ struct LoginView: View {
     @State private var isLoading: Bool = false
     
     @AppStorage("log_Status") private var logStatus: Bool = false
+    
+    @StateObject private var vm = SignInWithGoogleViewModel()
 /*
  Check my precious font, Dont Move and Look for Red Hat Display Bold, Regular and Roboto Regular in Console PLZ
  --------
@@ -75,8 +77,27 @@ struct LoginView: View {
 //                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white: .black)
                 
                 
+                // google login
+                
+                Button(
+                    action: vm.signInWithGoogle
+                ) {
+                    HStack {
+                        Image(systemName: "cloud")
+                            .font(.system(size: 16, weight: .bold))
+                        Text("Sign in with Google")
+                            .font(.system(size: 16, weight: .bold))
+                    }
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                    .frame(height: 45)
+                    .frame(maxWidth: .infinity)
+                    .background(colorScheme == .dark ? Color.white : Color.black)
+                    .clipShape(Capsule())
+                }
+                
+                // apple login
                 Button(action: {
-                            // 模拟登录成功，直接将 logStatus 设置为 true
+                            // mock login
                             logStatus = true
                 }) {
                     HStack {
@@ -87,10 +108,10 @@ struct LoginView: View {
                     }
                     .foregroundColor(colorScheme == .dark ? .black : .white)
                     .frame(height: 45)
-                    .frame(maxWidth: .infinity)  // 使按钮占据父视图的全部宽度
+                    .frame(maxWidth: .infinity)
                     .background(colorScheme == .dark ? Color.white : Color.black)
                     .clipShape(Capsule())
-                }  // 适当的内边距让按钮看起来更加美观
+                }
                 
                 
                 
