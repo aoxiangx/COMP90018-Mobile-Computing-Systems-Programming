@@ -58,60 +58,79 @@ struct HomeView: View {
     }
     
     var body: some View {
+        
         NavigationView {
-            VStack {
-                ZStack (alignment: .topLeading){
-                    // Background
-                    LinearGradient(gradient: Gradient(stops: [
-                        .init(color: Color(hex: "FFF8C9"), location: 0.0),
-                        .init(color: Color(hex: "EDF5FF"), location: 0.6)
-                    ]),
-                                   startPoint: .topLeading,
-                                   endPoint: .bottomTrailing)
-                    .edgesIgnoringSafeArea(.all)  // Fill the screen
+            ZStack{
+                
+                // Background
+                LinearGradient(gradient: Gradient(stops: [
+                    .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
+                    .init(color: Color(hex: "EDF5FF"), location: 0.6)   // End with EDF5FF
+                ]),
+                               startPoint: .topLeading,
+                               endPoint: .bottomTrailing)
+                .edgesIgnoringSafeArea(.all)  // To fill the entire screen
+                
+                // start scroll view
+                ScrollView {
                     
-                    VStack(alignment: .leading) {
-                        // Date view
-                        DateHomeView()
+                    VStack {
                         
-                        PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
-                        
-                        // Fetch Steps button
-                        Button("Fetch Steps") {
-                            manager.fetchTodaySteps()
-                        }
-                        .padding(.leading, 15)
-                        
-                        // show location
-                        LocationView()
-                        
-                        
-                        ScoreEmojiView(score: 45)
-                        
-                        // TabView for sliding list of notifications
-                        VStack {
-                            TabView(selection: $currentPageIndex) {
-                                ForEach(0..<objectiveNotifications.count, id: \.self) { index in
-                                    objectiveNotifications[index]
-                                        .tag(index)
-                                }
-                            }
-                            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                            .frame(height: 300)
+                        // start Ztack
+                        ZStack (alignment: .topLeading){
                             
-                            // Display page indicator if there are objectives set
-                            if objectiveNotifications.count > 1 {
-                                HStack {
-                                    ForEach(0..<objectiveNotifications.count, id: \.self) { index in
-                                        Circle()
-                                            .fill(currentPageIndex == index ? Color.blue : Color.gray)
-                                            .frame(width: 8, height: 8)
-                                    }
+                            // start Vstack
+                            VStack(alignment: .leading) {
+                                // Date view
+                                DateHomeView()
+                                
+                                PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
+                                
+                                // Fetch Steps button
+                                Button("Fetch Steps") {
+                                    manager.fetchTodaySteps()
                                 }
-                                .padding(.top, -70)  // Adjust location of indicator
+                                .padding(.leading, 15)
+                                
+                                // show location
+                                LocationView()
+                                
+                                ScoreEmojiView(score: 45)
+                                
+                                // TabView for sliding list of notifications
+                                VStack {
+                                    TabView(selection: $currentPageIndex) {
+                                        ForEach(0..<objectiveNotifications.count, id: \.self) { index in
+                                            objectiveNotifications[index]
+                                                .tag(index)
+                                        }
+                                    }
+                                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                                    .frame(height: 300)
+        
+                                    // Display page indicator if there are objectives set
+                                    if objectiveNotifications.count > 1 {
+                                        HStack {
+                                            ForEach(0..<objectiveNotifications.count, id: \.self) { index in
+                                                Circle()
+                                                    .fill(currentPageIndex == index ? Color.blue : Color.gray)
+                                                    .frame(width: 8, height: 8)
+                                            }
+                                        }
+                                        .padding(.top, -70)  // Adjust location of indicator
+                                    }
+                                // end Vstack list of notifications
+                                }
+                                
+                            // end Vstack
                             }
+                            
+                        // end Ztack
                         }
+                        
                     }
+                
+                // end scroll view
                 }
             }
         }
