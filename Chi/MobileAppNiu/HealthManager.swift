@@ -175,51 +175,60 @@ class HealthManager: ObservableObject {
         }
     }
     func fetchAverage(endDate: Date = Date(), activityType: HKQuantityTypeIdentifier, completion: @escaping (Int) -> Void) {
-        guard let activityType = HKQuantityType.quantityType(forIdentifier: activityType) else { return }
+        // Ensure valid HKQuantityType
+        guard let activityType = HKQuantityType.quantityType(forIdentifier: activityType) else {
+            print("Invalid activity type: \(activityType)")
+            return
+        }
+        
         let numberOfDays = 7  // Fetch data for the last 7 days
-        var dailySteps: [Double] = Array(repeating: 0.0, count: numberOfDays)
+        var dailyValues: [Double] = Array(repeating: 0.0, count: numberOfDays)
         let calendar = Calendar.current
         let group = DispatchGroup() // To wait for all queries to complete
 
         for day in 0..<numberOfDays {
+            // Calculate the date range for each day
             let dayStart = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -day, to: endDate)!)
             let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
             
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
             
-            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ?  .cumulativeSum : .discreteAverage
+            // Determine the correct options for statistics query based on the activity type
+            let options: HKStatisticsOptions = (activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue) ? .cumulativeSum : .discreteAverage
+            
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 
-                if let error = error {
-                        print("Error fetching data for \(activityType.identifier): \(error.localizedDescription)")
-                        group.leave() // Ensure to notify the group in case of an error
-                        return
+                defer { group.leave() } // Ensure `leave` is always called
+                
+                // Handle any errors
+//                if let error = error {
+//                    print("Cannot fetch data for \(activityType.identifier) on day \(day): \(error.localizedDescription)")
+//                    return
+//                }
+                
+                var value = 0.0
+                // Handle step count and time in daylight, or average for other types
+                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue {
+                    value = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
+                } else {
+                    value = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
                 }
                 
-                var count = 0.0
-                if activityType.identifier == HKQuantityTypeIdentifier.stepCount.rawValue || activityType.identifier == HKQuantityTypeIdentifier.timeInDaylight.rawValue{
-                    count = result?.sumQuantity()?.doubleValue(for: HKUnit.count()) ?? 0.0
-                }
-                else{
-                    count = result?.averageQuantity()?.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel()) ?? 0.0
-                }
-                dailySteps[day] = count
-                
-                // Notify the group when a query finishes
-                group.leave()
+                dailyValues[day] = value
+                print("Data for day \(day): \(value)")
             }
             
+            group.enter() // Notify that a query is starting
             healthStore.execute(query)
-            group.enter() // Indicate that a query is starting
         }
         
-        // After all queries have completed, compute the average and call completion
+        // After all queries are done, compute the average
         group.notify(queue: .main) {
-            let totalSteps = dailySteps.reduce(0, +)
-            let averageSteps = totalSteps / Double(numberOfDays)
+            let total = dailyValues.reduce(0, +)
+            let average = total / Double(numberOfDays)
             
-            print("7-day average: \(averageSteps)")
-            completion(Int(averageSteps))
+            print("7-day average: \(average)")
+            completion(Int(average))
         }
     }
 

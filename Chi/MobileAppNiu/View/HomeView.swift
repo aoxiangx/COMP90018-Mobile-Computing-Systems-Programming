@@ -86,16 +86,17 @@ struct HomeView: View {
                                 
                                 PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
                                 
-                                // Fetch Steps button
-                                Button("Fetch Steps") {
-                                    manager.fetchTodaySteps()
-                                }
-                                .padding(.leading, 15)
+                                ScoreEmojiView(score: 45)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .multilineTextAlignment(.center) // This helps in case you have text in your view
+//                                // Fetch Steps button
+//                                Button("Fetch Steps") {
+//                                    manager.fetchTodaySteps()
+//                                }
+//                                .padding(.leading, 15)
                                 
                                 // show location
                                 LocationView()
-                                
-                                ScoreEmojiView(score: 45)
                                 
                                 // TabView for sliding list of notifications
                                 VStack {
