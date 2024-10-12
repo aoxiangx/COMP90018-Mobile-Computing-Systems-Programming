@@ -4,22 +4,19 @@
 //
 //  Created by Tori Li on 15/9/2024.
 //
+// GroupingDataView.swift
 
 import SwiftUI
 import Charts
 import HealthKit
-struct LineChartData {
-    var id = UUID()
-    var date: String
-    var value: Double
-}
 
 struct GroupingDataView: View {
     var activity: Activity
-    var icon:ImageResource
+    var icon: ImageResource
     @State private var selectedTimePeriod: TimePeriod = .day
-    @EnvironmentObject var manager : HealthManager
-//    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var manager: HealthManager
+    @State private var dynamicValue: String = "Loading..."
+
     var body: some View {
         VStack {
             Picker("Select Time Period", selection: $selectedTimePeriod) {
@@ -34,110 +31,80 @@ struct GroupingDataView: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
             .frame(height: 22)
+            .onChange(of: selectedTimePeriod) { newPeriod in
+                updateData(for: newPeriod)
+            }
 
             VStack(alignment: .leading) {
-               Text(dynamicValue(for: selectedTimePeriod))
-                   .font(.system(size: 32))
-                   .frame(height: 42)
-               Text(dynamicTimePeriodDescription(for: selectedTimePeriod))
-                   .font(.system(size: 12))
-           }
-           .padding(.leading)
-           .padding(.vertical, 16)
-           .frame(maxWidth: .infinity, alignment: .leading)
+                Text(dynamicValue)
+                    .font(.system(size: 32))
+                    .frame(height: 42)
+                Text(dynamicTimePeriodDescription(for: selectedTimePeriod))
+                    .font(.system(size: 12))
+            }
+            .padding(.leading)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            
-            ChartView(timePeriod: selectedTimePeriod, hideDetail: false,activity: activity).environmentObject(manager)
+            ChartView(timePeriod: selectedTimePeriod, hideDetail: false, activity: activity)
+                .environmentObject(manager)
+                .padding()
+
             SuggestionsCapsules()
                 .padding(8)
             ExplainationView()
                 .padding(8)
-            
         }
-        .navigationBarTitleDisplayMode(.inline) // Set title display mode
-        .navigationTitle("") // To avoid double title
+        .environmentObject(HealthManager())
+        .navigationBarTitleDisplayMode(.inline) // 设置标题显示模式
+        .navigationTitle("") // 避免双重标题
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack {
                     Image(icon)
                         .foregroundColor(.yellow)
-                    Text(activity.title) // Dynamic title based on activity
+                    Text(activity.title) // 动态标题基于活动
                         .font(Font.custom("Roboto", size: 16))
                         .foregroundColor(Constants.gray3)
                 }
             }
         }
+        .onAppear {
+            updateData(for: selectedTimePeriod)
+        }
+    }
+
+    /// 根据选定的时间段更新数据
+    private func updateData(for period: TimePeriod) {
+        manager.fetchAverage(endDate: Date(), activity: activity) { result in
+            DispatchQueue.main.async {
+                self.dynamicValue = "\(result) \(activity.unitDescription)"
+            }
+        }
     }
 }
 
-enum TimePeriod: String, CaseIterable {
-    case day = "D"
-    case week = "W"
-    case month = "M"
-    case sixMonths = "6M"
-    case year = "Y"
-}
-enum Activity {
-    case steps
-    case daylight
-    case noise
-    case hrv
-
-    var quantityTypeIdentifier: HKQuantityTypeIdentifier {
-        switch self {
-        case .steps:
-            return .stepCount
-        case .daylight:
-            return .timeInDaylight
-        case .noise:
-            return .environmentalAudioExposure
-        case .hrv:
-            return .heartRateVariabilitySDNN
-        }
-    }
-    var title: String {
-        switch self {
-        case .steps:
-            return "Active Index"
-        case .daylight:
-            return "Daylight Time"
-        case .noise:
-            return "Noise Level"
-        case .hrv:
-            return "Stree Level"
-        }
-    }
-}
-private func dynamicValue(for period: TimePeriod) -> String {
-        switch period {
-        case .day:
-            return "24 Min" // Placeholder for actual data
-        case .week:
-            return "3 Hours" // Placeholder for actual data
-        case .month:
-            return "12 Hours" // Placeholder for actual data
-        case .sixMonths:
-            return "180 Hours" // Placeholder for actual data
-        case .year:
-            return "1,200 Hours" // Placeholder for actual data
-        }
-    }
+/// 动态文本描述基于上下文
 private func dynamicTimePeriodDescription(for period: TimePeriod) -> String {
-       switch period {
-       case .day:
-           return "Past 24 Hours"
-       case .week:
-           return "Past 7 Days"
-       case .month:
-           return "Past Month"
-       case .sixMonths:
-           return "Past 6 Months"
-       case .year:
-           return "Past Year"
-       }
-   }
+    switch period {
+    case .day:
+        return "Past 24 Hours"
+    case .week:
+        return "Past 7 Days"
+    case .month:
+        return "Past Month"
+    case .sixMonths:
+        return "Past 6 Months"
+    case .year:
+        return "Past Year"
+    }
+}
+
 struct GroupingDataView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupingDataView(activity:.steps,icon: .activeIndexIcon).environmentObject(HealthManager())
+        NavigationView {
+            GroupingDataView(activity: .steps, icon: .activeIndexIcon)
+                .environmentObject(HealthManager())
+        }
     }
 }

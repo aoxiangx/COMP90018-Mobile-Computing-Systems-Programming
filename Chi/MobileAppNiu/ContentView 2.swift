@@ -1,9 +1,11 @@
 //
-//  ContentView.swift
+//  ContentView 2.swift
 //  MobileAppNiu
 //
-//  Created by 关昊 on 14/9/2024.
+//  Created by Jun Zhu on 12/10/2024.
 //
+
+
 import SwiftUI
 import AuthenticationServices
 
@@ -44,7 +46,6 @@ struct ContentView: View {
 
                 NavigationView {
                     SummaryBoxesView()
-                        .environmentObject(healthManager) //Inject HealthManager to let child see the health
                 }
                 .tabItem {
                     Image(isInsightsToggled ? .insightsToggled : .insightsUntoggled)

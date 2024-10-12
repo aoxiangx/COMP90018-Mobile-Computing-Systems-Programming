@@ -96,22 +96,22 @@ struct LoginView: View {
                 }
                 
                 // apple login
-                Button(action: {
-                            // mock login
-                            logStatus = true
-                }) {
-                    HStack {
-                        Image(systemName: "applelogo")
-                            .font(.system(size: 16, weight: .bold))
-                        Text("Sign in with Apple")
-                            .font(.system(size: 16, weight: .bold))
-                    }
-                    .foregroundColor(colorScheme == .dark ? .black : .white)
-                    .frame(height: 45)
-                    .frame(maxWidth: .infinity)
-                    .background(colorScheme == .dark ? Color.white : Color.black)
-                    .clipShape(Capsule())
-                }
+//                Button(action: {
+//                            // mock login
+//                            logStatus = true
+//                }) {
+//                    HStack {
+//                        Image(systemName: "applelogo")
+//                            .font(.system(size: 16, weight: .bold))
+//                        Text("Sign in with Apple")
+//                            .font(.system(size: 16, weight: .bold))
+//                    }
+//                    .foregroundColor(colorScheme == .dark ? .black : .white)
+//                    .frame(height: 45)
+//                    .frame(maxWidth: .infinity)
+//                    .background(colorScheme == .dark ? Color.white : Color.black)
+//                    .clipShape(Capsule())
+//                }
                 
                 
                 

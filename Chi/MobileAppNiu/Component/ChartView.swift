@@ -56,11 +56,10 @@ struct ChartView: View {
     }
 
     private func fetchChartData() {
-        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod,activity: activity.quantityTypeIdentifier) { data in
+        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod, activity: activity) { data in
             self.chartData = data
         }
     }
-    
     // Format the labels depending on the time period
     private func shouldShowLabel(for date: String) -> Bool {
             switch timePeriod {

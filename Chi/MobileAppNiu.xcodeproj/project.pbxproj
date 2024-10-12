@@ -20,6 +20,7 @@
 		BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */; };
 		BF0C59652C97F7A5000E0875 /* SmallGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59642C97F7A5000E0875 /* SmallGraph.swift */; };
 		BF0C59672C990D6F000E0875 /* Insights.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59662C990D6F000E0875 /* Insights.swift */; };
+		BF0F57E02CB9FC5F001B6144 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0F57DF2CB9FC5F001B6144 /* Models.swift */; };
 		BF409D6D2CA646D5000A77E5 /* ObjectiveNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF409D6C2CA646D5000A77E5 /* ObjectiveNotification.swift */; };
 		BF409D712CA64825000A77E5 /* ScoreEmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */; };
 		BF8021A22CAD163900C9C86D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8021A12CAD163900C9C86D /* ProfileView.swift */; };
@@ -94,6 +95,8 @@
 		BF0C595F2C97E52B000E0875 /* LandscapeInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeInfoCard.swift; sourceTree = "<group>"; };
 		BF0C59642C97F7A5000E0875 /* SmallGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallGraph.swift; sourceTree = "<group>"; };
 		BF0C59662C990D6F000E0875 /* Insights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insights.swift; sourceTree = "<group>"; };
+		BF0F57DA2CB9EB86001B6144 /* MobileAppNiuDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MobileAppNiuDebug.entitlements; sourceTree = "<group>"; };
+		BF0F57DF2CB9FC5F001B6144 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		BF409D6C2CA646D5000A77E5 /* ObjectiveNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveNotification.swift; sourceTree = "<group>"; };
 		BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEmojiView.swift; sourceTree = "<group>"; };
 		BF8021A12CAD163900C9C86D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -217,6 +220,7 @@
 			children = (
 				BFB26D9F2CAD4CD900E41F1B /* ObjectiveViewModel.swift */,
 				BFB26D9A2CAD4B8C00E41F1B /* DailyObjectives.swift */,
+				BF0F57DF2CB9FC5F001B6144 /* Models.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -244,6 +248,7 @@
 		F1DF4BD12C9591D80021FE1D /* MobileAppNiu */ = {
 			isa = PBXGroup;
 			children = (
+				BF0F57DA2CB9EB86001B6144 /* MobileAppNiuDebug.entitlements */,
 				328DDD182C9BC16400937126 /* Component */,
 				BF0C59552C97A5BD000E0875 /* Info.plist */,
 				F1CB26B62CB3F97D008CB89D /* GoogleService-Info.plist */,
@@ -472,6 +477,7 @@
 				BF409D6D2CA646D5000A77E5 /* ObjectiveNotification.swift in Sources */,
 				F1F28E472C9D1AD700A82BDE /* SummaryBoxesView.swift in Sources */,
 				F1F28E452C9D1AB400A82BDE /* SummaryBoxView.swift in Sources */,
+				BF0F57E02CB9FC5F001B6144 /* Models.swift in Sources */,
 				F1CB26BF2CB405C2008CB89D /* Application_utility.swift in Sources */,
 				F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */,
 				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
@@ -646,10 +652,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MobileAppNiu/MobileAppNiu.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MobileAppNiu/MobileAppNiuDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
+				DEVELOPMENT_TEAM = UDC5456Q7K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
