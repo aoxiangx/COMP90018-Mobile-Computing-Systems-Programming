@@ -6,7 +6,6 @@
 //
 
 
-
 import Foundation
 import HealthKit
 
@@ -15,21 +14,24 @@ enum Activity {
     case daylight
     case noise
     case hrv
-
-    var quantityTypeIdentifier: HKQuantityTypeIdentifier {
+    case sleep
+    
+    var activityType: HKObjectType {
         switch self {
         case .steps:
-            return .stepCount
+            return HKQuantityType.quantityType(forIdentifier: .stepCount)!
         case .daylight:
-            return .timeInDaylight
+            return HKQuantityType.quantityType(forIdentifier: .timeInDaylight)!
         case .noise:
-            return .environmentalAudioExposure
+            return HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)!
         case .hrv:
-            return .heartRateVariabilitySDNN
+            return HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
+        case .sleep:
+            return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
         }
     }
     
-    var unit: HKUnit {
+    var unit: HKUnit? {
         switch self {
         case .steps:
             return HKUnit.count()
@@ -39,6 +41,8 @@ enum Activity {
             return HKUnit.decibelAWeightedSoundPressureLevel()
         case .hrv:
             return HKUnit.secondUnit(with: .milli)
+        case .sleep:
+            return nil  // Sleep does not have a unit like the others
         }
     }
     
@@ -48,6 +52,8 @@ enum Activity {
             return .cumulativeSum
         case .noise, .hrv:
             return .discreteAverage
+        case .sleep:
+            return []  // No statistics options for sleep
         }
     }
     
@@ -61,6 +67,8 @@ enum Activity {
             return "Noise Level"
         case .hrv:
             return "Stress Level"
+        case .sleep:
+            return "Sleep Time"
         }
     }
     
@@ -74,6 +82,8 @@ enum Activity {
             return "dB"
         case .hrv:
             return "ms"
+        case .sleep:
+            return "Hours"
         }
     }
 }
@@ -88,9 +98,10 @@ enum TimePeriod: String, CaseIterable {
     case day = "Day"
     case week = "Week"
     case month = "Month"
-    case sixMonths = "Six Months"
+    case sixMonths = "6Ms"
     case year = "Year"
 }
+
 extension Date {
     static var startOfDay: Date {
         Calendar.current.startOfDay(for: Date())

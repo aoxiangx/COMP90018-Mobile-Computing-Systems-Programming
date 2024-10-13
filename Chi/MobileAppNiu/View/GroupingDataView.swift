@@ -103,7 +103,7 @@ private func dynamicTimePeriodDescription(for period: TimePeriod) -> String {
 struct GroupingDataView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            GroupingDataView(activity: .steps, icon: .activeIndexIcon)
+            GroupingDataView(activity: .hrv, icon: .stress)
                 .environmentObject(HealthManager())
         }
     }

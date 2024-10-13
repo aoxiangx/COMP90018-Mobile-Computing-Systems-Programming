@@ -16,7 +16,7 @@ struct SummeryBoxView: View {
     var subtitle: String = "Step(s)" // 第二个文本
     var description: String = "Past 7 Days" // 第三个文本
     var paddingSpace: CGFloat = 50
-    var activity: Activity = .steps
+    var activity: Activity = .sleep
     @State private var average: Int = 0
 
     var body: some View {
