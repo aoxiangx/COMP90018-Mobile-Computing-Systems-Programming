@@ -11,7 +11,7 @@ import HealthKit
 
 class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
-
+    
     init() {
         // 使用可选绑定来安全地获取 HKQuantityType
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount),
@@ -19,8 +19,8 @@ class HealthManager: ObservableObject {
               let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure),
               let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
               let sleep = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
-                print("Error: Unable to get types")
-                return
+            print("Error: Unable to get types")
+            return
         }
         
         let healthTypes: Set = [steps, daylight, noise, hrv, sleep]
@@ -34,7 +34,7 @@ class HealthManager: ObservableObject {
     }
     
     /// 获取特定活动和时间段的平均值
-    func fetchAverage(endDate: Date = Date(), activity: Activity, period: TimePeriod, completion: @escaping (Int) -> Void) {
+    func fetchAverage(endDate: Date = Date(), activity: Activity, period: TimePeriod, completion: @escaping (Double) -> Void) {
         let activityType = activity.activityType
         // Determine the number of days based on the selected period
         var numberOfDays: Int
@@ -50,12 +50,12 @@ class HealthManager: ObservableObject {
         case .year:
             numberOfDays = 365
         }
-
+        
         var dailyValues: [Double] = Array(repeating: 0.0, count: numberOfDays)
         let calendar = Calendar.current
         let group = DispatchGroup()
         let options = activity.statisticsOption
-
+        
         for day in 0..<numberOfDays {
             // Calculate each day's date range
             guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate),
@@ -73,7 +73,7 @@ class HealthManager: ObservableObject {
                         print("Error fetching sleep data: \(String(describing: error))")
                         return
                     }
-
+                    
                     // Process sleep samples
                     var totalSleepTime = 0.0
                     if let samples = results as? [HKCategorySample] {
@@ -81,7 +81,7 @@ class HealthManager: ObservableObject {
                             totalSleepTime += sample.endDate.timeIntervalSince(sample.startDate) // Calculate sleep duration
                         }
                     }
-
+                    
                     dailyValues[day] = totalSleepTime / 3600.0 // Convert seconds to hours
                     print("Data for day \(day): \(dailyValues[day]) hours of sleep")
                 }
@@ -121,7 +121,8 @@ class HealthManager: ObservableObject {
             let average = total / Double(numberOfDays)
             
             print("\(numberOfDays)-day average: \(average)")
-            completion(Int(average))
+       
+            completion(Double(String(format: "%.1f", average)) ?? 0.0)
         }
     }
     
@@ -148,7 +149,7 @@ class HealthManager: ObservableObject {
             fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { dailyData in
                 completion(dailyData) // 返回每日数据
             }
-
+            
         case .month:
             startDate = calendar.date(byAdding: .month, value: -1, to: endDate)!
             let daysInMonth = calendar.range(of: .day, in: .month, for: endDate)!.count
@@ -156,7 +157,7 @@ class HealthManager: ObservableObject {
             fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { dailyData in
                 completion(dailyData) // 返回每日数据
             }
-
+            
         case .sixMonths:
             startDate = calendar.date(byAdding: .month, value: -6, to: endDate)!
             let months = (0..<6).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
@@ -164,7 +165,7 @@ class HealthManager: ObservableObject {
             fetchMonthly(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { monthlyData in
                 completion(monthlyData) // 返回每月数据
             }
-
+            
         case .year:
             startDate = calendar.date(byAdding: .year, value: -1, to: endDate)!
             let months = (0..<12).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
@@ -180,7 +181,7 @@ class HealthManager: ObservableObject {
         let numberOfDays = labels.count
         let calendar = Calendar.current
         let group = DispatchGroup() // 等待所有查询完成
-
+        
         for day in 0..<numberOfDays {
             guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate),
                   let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
@@ -190,7 +191,7 @@ class HealthManager: ObservableObject {
             
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
             let options = activity.statisticsOption
-
+            
             if activity == .sleep {
                 // Use HKSampleQuery for sleep activity
                 let query = HKSampleQuery(sampleType: activityType as! HKSampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
@@ -201,7 +202,7 @@ class HealthManager: ObservableObject {
                         print("Error fetching sleep data: \(String(describing: error))")
                         return
                     }
-
+                    
                     // Process sleep samples
                     var totalSleepTime = 0.0
                     if let samples = results as? [HKCategorySample] {
@@ -209,7 +210,7 @@ class HealthManager: ObservableObject {
                             totalSleepTime += sample.endDate.timeIntervalSince(sample.startDate) // Calculate sleep duration
                         }
                     }
-
+                    
                     dailyValues[day] = totalSleepTime / 3600.0 // Convert seconds to hours
                     print("Data for day \(day): \(dailyValues[day]) hours of sleep")
                 }
@@ -251,7 +252,7 @@ class HealthManager: ObservableObject {
             completion(lineChartData)
         }
     }
-
+    
     // fetch hourly
     private func fetchHourly(startDate: Date, endDate: Date, labels: [String], activity: Activity, activityType: HKObjectType, completion: @escaping ([LineChartData]) -> Void) {
         var hourlyValues: [Double] = Array(repeating: 0.0, count: 24)
@@ -326,8 +327,8 @@ class HealthManager: ObservableObject {
             }
         }
     }
-       
-
+    
+    
     /// 获取每月的数据
     private func fetchMonthly(startDate: Date, endDate: Date, labels: [String], activity: Activity, activityType: HKObjectType, completion: @escaping ([LineChartData]) -> Void) {
         var monthlyValues: [Double] = Array(repeating: 0.0, count: labels.count)
@@ -394,71 +395,72 @@ class HealthManager: ObservableObject {
                 }
             }
             group.notify(queue: .main) {
-                        let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: monthlyValues[$0]) }
-                        print("Monthly activity: \(lineChartData)")
-                        completion(lineChartData)
-        }
-    }
-      
-
-    
-    /// 获取今天的步数
-    func fetchTodaySteps() {
-        guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
-        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-            guard let quantity = result?.sumQuantity(), error == nil else {
-                print("Error fetching today's step data")
-                return
+                let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: monthlyValues[$0]) }
+                print("Monthly activity: \(lineChartData)")
+                completion(lineChartData)
             }
-            let stepCount = quantity.doubleValue(for: HKUnit.count())
-            print("Today's steps: \(stepCount)")
         }
-        healthStore.execute(query)
-    }
-    
-    /// 获取今天的日光时间
-    func fetchTodayDaylight() {
-        guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else { return }
-        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-            guard let quantity = result?.sumQuantity(), error == nil else {
-                print("Error fetching today's daylight data")
-                return
+        
+        
+        
+        /// 获取今天的步数
+        func fetchTodaySteps() {
+            guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
+            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                guard let quantity = result?.sumQuantity(), error == nil else {
+                    print("Error fetching today's step data")
+                    return
+                }
+                let stepCount = quantity.doubleValue(for: HKUnit.count())
+                print("Today's steps: \(stepCount)")
             }
-            let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
-            print("Today's daylight minutes: \(daylightMinutes)")
+            healthStore.execute(query)
         }
-        healthStore.execute(query)
-    }
-    
-    /// 获取今天的噪音水平
-    func fetchTodayNoiseLevels() {
-        guard let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure) else { return }
-        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: noise, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
-            guard let quantity = result?.averageQuantity(), error == nil else {
-                print("Error fetching today's noise level data")
-                return
+        
+        /// 获取今天的日光时间
+        func fetchTodayDaylight() {
+            guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else { return }
+            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                guard let quantity = result?.sumQuantity(), error == nil else {
+                    print("Error fetching today's daylight data")
+                    return
+                }
+                let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
+                print("Today's daylight minutes: \(daylightMinutes)")
             }
-            let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
-            print("Today's average noise level: \(averageNoise) dB")
+            healthStore.execute(query)
         }
-        healthStore.execute(query)
-    }
-    
-    /// 获取今天的 HRV
-    func fetchTodayHRV() {
-        guard let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else { return }
-        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: hrv, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
-            guard let quantity = result?.averageQuantity(), error == nil else {
-                print("Error fetching today's HRV data")
-                return
+        
+        /// 获取今天的噪音水平
+        func fetchTodayNoiseLevels() {
+            guard let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure) else { return }
+            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: noise, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+                guard let quantity = result?.averageQuantity(), error == nil else {
+                    print("Error fetching today's noise level data")
+                    return
+                }
+                let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
+                print("Today's average noise level: \(averageNoise) dB")
             }
-            let hrvValue = quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
-            print("Today's HRV: \(hrvValue) ms")
+            healthStore.execute(query)
         }
-        healthStore.execute(query)
+        
+        /// 获取今天的 HRV
+        func fetchTodayHRV() {
+            guard let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else { return }
+            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+            let query = HKStatisticsQuery(quantityType: hrv, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+                guard let quantity = result?.averageQuantity(), error == nil else {
+                    print("Error fetching today's HRV data")
+                    return
+                }
+                let hrvValue = quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
+                print("Today's HRV: \(hrvValue) ms")
+            }
+            healthStore.execute(query)
+        }
     }
 }

@@ -55,15 +55,14 @@ struct GroupingDataView: View {
             ExplainationView()
                 .padding(8)
         }
-        .environmentObject(HealthManager())
-        .navigationBarTitleDisplayMode(.inline) // 设置标题显示模式
-        .navigationTitle("") // 避免双重标题
+        .navigationTitle("") // This avoids double titles
+        .navigationBarTitleDisplayMode(.inline) // Set title display mode
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack {
                     Image(icon)
                         .foregroundColor(.yellow)
-                    Text(activity.title) // 动态标题基于活动
+                    Text(activity.title) // Dynamic title based on activity
                         .font(Font.custom("Roboto", size: 16))
                         .foregroundColor(Constants.gray3)
                 }
@@ -74,7 +73,6 @@ struct GroupingDataView: View {
         }
     }
 
-    /// 根据选定的时间段更新数据
     private func updateData(for period: TimePeriod) {
         manager.fetchAverage(endDate: Date(), activity: activity, period: period) { result in
             DispatchQueue.main.async {

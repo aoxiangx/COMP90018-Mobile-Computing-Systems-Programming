@@ -17,7 +17,7 @@ struct SummeryBoxView: View {
     var description: String = "Past 7 Days" // 第三个文本
     var paddingSpace: CGFloat = 50
     var activity: Activity = .sleep
-    @State private var average: Int = 0
+    @State private var average: Double = 0.0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 7) { // 上下排列，左对齐
