@@ -41,7 +41,7 @@ struct SummaryBoxesView: View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(boxes) { box in
                 NavigationLink(destination:
-                    GroupingDataView(activity: box.activity, icon: box.icon)
+                                GroupingDataView(activity: box.activity, icon: box.icon).environmentObject(manager)
                 ) {
                     SummeryBoxView(
                         color: box.color,

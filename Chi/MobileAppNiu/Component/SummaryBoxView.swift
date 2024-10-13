@@ -51,13 +51,13 @@ struct SummeryBoxView: View {
         )
         .shadow(radius: 1) // 阴影
         .onAppear {
-            fetchAverage(activity: activity)
+            fetchAverage(activity: activity,period: TimePeriod.week)
         }
     }
 
     // 获取并存储当前活动的平均值
-    private func fetchAverage(activity: Activity) {
-        manager.fetchAverage(endDate: Date(), activity: activity) { fetchedAverage in
+    private func fetchAverage(activity: Activity,period: TimePeriod) {
+        manager.fetchAverage(endDate: Date(), activity: activity,period: period) { fetchedAverage in
             DispatchQueue.main.async {
                 self.average = fetchedAverage
                 print("Average for \(activity.title): \(fetchedAverage)")

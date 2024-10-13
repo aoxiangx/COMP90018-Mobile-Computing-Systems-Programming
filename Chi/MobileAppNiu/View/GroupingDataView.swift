@@ -76,7 +76,7 @@ struct GroupingDataView: View {
 
     /// 根据选定的时间段更新数据
     private func updateData(for period: TimePeriod) {
-        manager.fetchAverage(endDate: Date(), activity: activity) { result in
+        manager.fetchAverage(endDate: Date(), activity: activity, period: period) { result in
             DispatchQueue.main.async {
                 self.dynamicValue = "\(result) \(activity.unitDescription)"
             }

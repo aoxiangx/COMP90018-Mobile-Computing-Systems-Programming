@@ -17,12 +17,13 @@ class HealthManager: ObservableObject {
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount),
               let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight),
               let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure),
-              let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
-            print("Error: Unable to get quantity types")
-            return
+              let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
+              let sleep = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+                print("Error: Unable to get types")
+                return
         }
         
-        let healthTypes: Set = [steps, daylight, noise, hrv]
+        let healthTypes: Set = [steps, daylight, noise, hrv, sleep]
         Task {
             do {
                 try await healthStore.requestAuthorization(toShare: [], read: healthTypes)
@@ -33,31 +34,45 @@ class HealthManager: ObservableObject {
     }
     
     /// 获取特定活动和时间段的平均值
-    func fetchAverage(endDate: Date = Date(), activity: Activity, completion: @escaping (Int) -> Void) {
+    func fetchAverage(endDate: Date = Date(), activity: Activity, period: TimePeriod, completion: @escaping (Int) -> Void) {
         guard let activityType = HKQuantityType.quantityType(forIdentifier: activity.quantityTypeIdentifier) else {
             print("Invalid activity type: \(activity.quantityTypeIdentifier)")
             completion(0)
             return
         }
         
-        let numberOfDays = 7  // 获取过去7天的数据
+        // Determine the number of days based on the selected period
+        var numberOfDays: Int
+        switch period {
+        case .day:
+            numberOfDays = 1
+        case .week:
+            numberOfDays = 7
+        case .month:
+            numberOfDays = 30
+        case .sixMonths:
+            numberOfDays = 180
+        case .year:
+            numberOfDays = 365
+        }
+
         var dailyValues: [Double] = Array(repeating: 0.0, count: numberOfDays)
         let calendar = Calendar.current
-        let group = DispatchGroup() // 等待所有查询完成
+        let group = DispatchGroup()
         let options = activity.statisticsOption
 
         for day in 0..<numberOfDays {
-            // 计算每一天的日期范围
+            // Calculate each day's date range
             guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate),
                   let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
                 print("Error calculating date range for day \(day)")
                 continue
             }
-            
+
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
             let query = HKStatisticsQuery(quantityType: activityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                 
-                defer { group.leave() } // 确保总是调用 leave
+                defer { group.leave() }
                 
                 var value = 0.0
                 switch activity {
@@ -74,16 +89,16 @@ class HealthManager: ObservableObject {
                 print("Data for day \(day): \(value)")
             }
             
-            group.enter() // 通知有一个查询开始
+            group.enter()
             healthStore.execute(query)
         }
         
-        // 所有查询完成后计算平均值
+        // Notify when all queries complete
         group.notify(queue: .main) {
             let total = dailyValues.reduce(0, +)
             let average = total / Double(numberOfDays)
             
-            print("7-day average: \(average)")
+            print("\(numberOfDays)-day average: \(average)")
             completion(Int(average))
         }
     }
