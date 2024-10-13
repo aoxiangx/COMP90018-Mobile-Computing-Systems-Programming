@@ -33,7 +33,7 @@ struct SummaryBoxesView: View {
         BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 0, activity: .daylight),
         BoxData(color: Constants.white, icon: .noise, title: "Noise Level", subtitle: "dB", description: "Past 7 Days", paddingSpace: 56, activity: .noise),
         BoxData(color: Constants.white, icon: .sleep, title: "Sleep Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 50, activity: .daylight),
-        BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "Pascals", description: "Past 7 Days", paddingSpace: 50, activity: .daylight),
+        BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "Pascals", description: "Past 7 Days", paddingSpace: 50, activity: .hrv),
         BoxData(color: Constants.white, icon: .activeIndexIcon, title: "Active Index", subtitle: "Step(s)", description: "Past 7 Days", paddingSpace: 50, activity: .steps)
     ]
 
