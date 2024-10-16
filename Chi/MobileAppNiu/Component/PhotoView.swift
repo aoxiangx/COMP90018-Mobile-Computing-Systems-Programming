@@ -21,7 +21,7 @@ struct PhotoCarouselView: View {
         } else {
             ZStack {
                 // Loop through the images and display them in a stacked layout
-                ForEach(images.indices, id: \ .self) { index in
+                ForEach(images.indices, id: \.self) { index in
                     Image(uiImage: images[index])
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -60,3 +60,4 @@ struct PhotoCarouselView: View {
         Text("Images not found")
     }
 }
+

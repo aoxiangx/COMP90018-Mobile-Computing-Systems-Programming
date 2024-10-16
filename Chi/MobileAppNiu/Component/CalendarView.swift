@@ -140,3 +140,51 @@ struct CalendarView: View {
 #Preview {
     CalendarView(selectedDate: .constant(nil))
 }
+
+// MARK: - Date Extension for Formatting
+extension Date {
+    /// Formats the date to a string (e.g., "2024-10-17")
+    func toString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: self)
+    }
+    
+    /// Initializes a Date from a string formatted as "yyyy-MM-dd"
+    static func fromString(_ dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString)
+    }
+}
+
+// MARK: - FileManager Extension for Image Storage
+extension FileManager {
+    /// Returns the URL to the app's Documents directory
+    static var documentsDirectory: URL {
+        return Self.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    
+    /// Saves a UIImage to the Documents directory with a unique filename
+    static func saveImage(_ image: UIImage) -> String? {
+        let uuid = UUID().uuidString
+        let filename = "\(uuid).png"
+        let url = documentsDirectory.appendingPathComponent(filename)
+        if let data = image.pngData() {
+            do {
+                try data.write(to: url)
+                return filename
+            } catch {
+                print("Error saving image: \(error)")
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    /// Loads a UIImage from the Documents directory given a filename
+    static func loadImage(named filename: String) -> UIImage? {
+        let url = documentsDirectory.appendingPathComponent(filename)
+        return UIImage(contentsOfFile: url.path)
+    }
+}

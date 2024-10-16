@@ -18,7 +18,10 @@ struct PhotoButtonView: View {
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showAlert = false
     @State private var alertMessage = ""
-
+    
+    // Closure to notify when images are added
+    var onImageAdded: ((Date, [UIImage]) -> Void)?
+    
     var body: some View {
         VStack {
             Button(action: {
@@ -28,12 +31,12 @@ struct PhotoButtonView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.yellow)
                         .frame(width: 48, height: 32)
-
+                    
                     ZStack {
                         Rectangle()
                             .fill(Color.gray)
                             .frame(width: 16, height: 2)
-
+                        
                         Rectangle()
                             .fill(Color.gray)
                             .frame(width: 2, height: 16)
@@ -64,6 +67,7 @@ struct PhotoButtonView: View {
             .photosPicker(isPresented: $showPhotosPicker, selection: $selectedItems, matching: .images)
             .onChange(of: selectedItems) { newItems in
                 Task {
+                    var newImages: [UIImage] = []
                     for newItem in newItems {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
                            let image = UIImage(data: data) {
@@ -72,15 +76,21 @@ struct PhotoButtonView: View {
                                 if images.count < 5 {
                                     images.append(image)
                                     dateImages[selectedDate] = images
+                                    newImages.append(image)
                                 } else {
                                     alertMessage = "You can only add up to 5 images per date."
                                     showAlert = true
+                                    break
                                 }
                             } else {
                                 alertMessage = "Please select a date first."
                                 showAlert = true
+                                break
                             }
                         }
+                    }
+                    if !newImages.isEmpty, let selectedDate = selectedDate {
+                        onImageAdded?(selectedDate, newImages)
                     }
                 }
             }
@@ -88,8 +98,14 @@ struct PhotoButtonView: View {
                 ImagePicker(sourceType: sourceType) { image in
                     if let selectedDate = selectedDate {
                         var images = dateImages[selectedDate] ?? []
-                        images.append(image)
-                        dateImages[selectedDate] = images
+                        if images.count < 5 {
+                            images.append(image)
+                            dateImages[selectedDate] = images
+                            onImageAdded?(selectedDate, [image])
+                        } else {
+                            alertMessage = "You can only add up to 5 images per date."
+                            showAlert = true
+                        }
                     } else {
                         alertMessage = "Please select a date first."
                         showAlert = true
@@ -146,5 +162,7 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    PhotoButtonView(dateImages: .constant([:]), selectedDate: .constant(nil))
+    PhotoButtonView(dateImages: .constant([:]), selectedDate: .constant(nil), onImageAdded: { date, images in
+        // Handle image saving if needed
+    })
 }
