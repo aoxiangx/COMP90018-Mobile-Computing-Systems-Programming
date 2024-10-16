@@ -9,12 +9,12 @@ import SwiftUI
 
 // MARK: - CalendarView
 struct CalendarView: View {
-    @Binding var selectedDate: Date? // Binding to the currently selected date
-    @State private var date = Date.now
-    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date()) // Holds the currently selected month
-    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays // Days of the week
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7) // Define grid columns for the calendar
-    @State private var days: [Date] = [] // Array to store days of the selected month
+    @Binding var selectedDate: Date? // 当前选定的日期绑定
+    @State private var date = Date()
+    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date()) // 当前选定的月份
+    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays // 星期几的名称
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7) // 日历的网格列
+    @State private var days: [Date] = [] // 当前月份的日期数组
 
     var body: some View {
         VStack {
@@ -25,12 +25,12 @@ struct CalendarView: View {
                 
                 Spacer()
                 
-                // Dropdown menu for selecting a month
+                // 选择月份的下拉菜单
                 Menu {
-                    ForEach(1...12, id: \ .self) { month in
+                    ForEach(1...12, id: \.self) { month in
                         Button(action: {
                             selectedMonth = month
-                            updateDays() // Update the calendar days when a new month is selected
+                            updateDays() // 选择新月份时更新日期
                         }) {
                             Text("\(DateFormatter().monthSymbols[month - 1])")
                                 .font(.system(size: 12))
@@ -56,7 +56,7 @@ struct CalendarView: View {
             }
             
             ZStack {
-                // Background for the calendar grid
+                // 日历网格的背景
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.white)
                     .overlay(
@@ -65,9 +65,9 @@ struct CalendarView: View {
                     )
                 
                 VStack(spacing: 0) {
-                    // Display days of the week as headers
+                    // 显示星期几作为标题
                     HStack(spacing: 0) {
-                        ForEach(daysOfWeek.indices, id: \ .self) { index in
+                        ForEach(daysOfWeek.indices, id: \.self) { index in
                             Text(daysOfWeek[index])
                                 .font(.system(size: 12))
                                 .foregroundColor(Constants.gray2)
@@ -76,33 +76,35 @@ struct CalendarView: View {
                     }
                     .padding(.bottom, 5)
                     
-                    // Horizontal line separator
+                    // 分隔线
                     Rectangle()
                         .fill(Constants.gray2)
                         .frame(height: 0.7)
                     
-                    // Display calendar days in a grid
+                    // 显示日期的网格
                     LazyVGrid(columns: columns, spacing: 0) {
-                        ForEach(days, id: \ .self) { day in
+                        ForEach(days, id: \.self) { day in
                             if day.monthInt != selectedMonth {
                                 Text("")
                                     .font(.system(size: 12))
                                     .frame(maxWidth: .infinity, minHeight: 40)
-                                    .border(Color.clear) // Hide days that are not part of the current month
+                                    .border(Color.clear) // 隐藏不属于当前月份的日期
                             } else {
                                 Text(day.formatted(.dateTime.day()))
                                     .font(.system(size: 12))
-                                    .foregroundColor(Constants.gray3)
+                                    .foregroundColor(
+                                        isSelected(day: day) ? Color.white : Constants.gray3
+                                    )
                                     .frame(maxWidth: .infinity, minHeight: 40)
                                     .background(
                                         Circle()
-                                            .foregroundStyle(
-                                                selectedDate == day ? Constants.Blue3 :
-                                                    (Calendar.current.isDateInToday(day) && selectedDate == nil ? Constants.Blue2 : Color.white)
+                                            .foregroundColor(
+                                                isSelected(day: day) ? Color.yellow :
+                                                (Calendar.current.isDateInToday(day) && selectedDate == nil ? Constants.Blue2 : Color.white)
                                             )
                                     )
                                     .onTapGesture {
-                                        selectedDate = day // Update selected date when a day is tapped
+                                        selectedDate = Calendar.current.startOfDay(for: day) // 选择日期时标准化
                                     }
                             }
                         }
@@ -113,19 +115,25 @@ struct CalendarView: View {
         }
         .padding()
         .onAppear {
-            updateDays() // Initialize days when the view appears
+            updateDays() // 视图出现时初始化日期
         }
         .onChange(of: selectedMonth) { _ in
-            updateDays() // Update days when the selected month changes
+            updateDays() // 选择新月份时更新日期
         }
     }
 
-    // Function to update the days array based on the selected month
+    // 检查某个日期是否被选中
+    private func isSelected(day: Date) -> Bool {
+        guard let selectedDate = selectedDate else { return false }
+        return Calendar.current.isDate(selectedDate, inSameDayAs: day)
+    }
+
+    // 根据选定的月份更新日期数组
     private func updateDays() {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
-        let monthDate = calendar.date(from: DateComponents(year: year, month: selectedMonth))!
-        days = monthDate.calendarDisplayDays
+        guard let monthDate = calendar.date(from: DateComponents(year: year, month: selectedMonth)) else { return }
+        days = monthDate.calendarDisplayDays.map { Calendar.current.startOfDay(for: $0) } // 标准化所有日期
     }
 }
 
@@ -133,4 +141,50 @@ struct CalendarView: View {
     CalendarView(selectedDate: .constant(nil))
 }
 
+// MARK: - Date Extension for Formatting
+extension Date {
+    /// Formats the date to a string (e.g., "2024-10-17")
+    func toString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: self)
+    }
+    
+    /// Initializes a Date from a string formatted as "yyyy-MM-dd"
+    static func fromString(_ dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString)
+    }
+}
 
+// MARK: - FileManager Extension for Image Storage
+extension FileManager {
+    /// Returns the URL to the app's Documents directory
+    static var documentsDirectory: URL {
+        return Self.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    
+    /// Saves a UIImage to the Documents directory with a unique filename
+    static func saveImage(_ image: UIImage) -> String? {
+        let uuid = UUID().uuidString
+        let filename = "\(uuid).png"
+        let url = documentsDirectory.appendingPathComponent(filename)
+        if let data = image.pngData() {
+            do {
+                try data.write(to: url)
+                return filename
+            } catch {
+                print("Error saving image: \(error)")
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    /// Loads a UIImage from the Documents directory given a filename
+    static func loadImage(named filename: String) -> UIImage? {
+        let url = documentsDirectory.appendingPathComponent(filename)
+        return UIImage(contentsOfFile: url.path)
+    }
+}
