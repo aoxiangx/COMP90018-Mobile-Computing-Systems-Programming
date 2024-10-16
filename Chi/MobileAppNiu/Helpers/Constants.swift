@@ -29,5 +29,6 @@ struct Constants {
     
     static let caption: Font = Font.custom("Roboto", size: 12)
     static let body: Font = Font.custom("Roboto", size: 16)
+    static let bigTitle: Font = Font.custom("Red Hat Display", size: 48)
     
 }

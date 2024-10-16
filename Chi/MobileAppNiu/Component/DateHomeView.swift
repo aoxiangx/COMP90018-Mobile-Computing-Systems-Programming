@@ -49,7 +49,7 @@ struct DateHomeView: View {
             
             // 显示问候语
             Text(greeting()+",")
-                .font(.system(size: 48))
+                .font(Constants.bigTitle)
                 .fontWeight(.bold)
                 .foregroundColor(Constants.gray2)
         }

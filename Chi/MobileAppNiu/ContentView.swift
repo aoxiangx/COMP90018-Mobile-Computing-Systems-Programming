@@ -43,7 +43,7 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    SummaryBoxesView()
+                    Insights()
                         .environmentObject(healthManager) //Inject HealthManager to let child see the health
                 }
                 .tabItem {

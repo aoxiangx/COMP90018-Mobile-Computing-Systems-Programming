@@ -8,59 +8,90 @@
 import SwiftUI
 
 struct CircleChartView: View {
-    @State private var progress: Double = 90.0  // 默认进度百分比
-    var message: String = "Keep it up!"         // 自定义的消息
+    @Binding var score: Double  // Binding to the external score
+    var message: String = "Keep it up!"
 
     var body: some View {
         VStack {
-            
-            // circle view
             ZStack {
-                
-                // background circle
+                // Background gray circle
                 Circle()
-                    .stroke(Color.white, lineWidth: 20)
-                    .frame(width: 198.5, height: 186)
-                
-                // gray border circle
-               Circle()
-                   .trim(from: 0.0, to: progress / 100)  // 根据百分比裁剪进度
-                   .stroke(
-                    Constants.gray3,  // 设置进度条颜色
-                       style: StrokeStyle(lineWidth: 21, lineCap: .round)  // 设置圆角
-                   )
-                   .rotationEffect(.degrees(130))  // 旋转进度条起始点到顶部
-                   .frame(width: 198.5, height: 186)  // 设置圆的大小
-                
-                
-                // 前景进度条圆形
-               Circle()
-                   .trim(from: 0.0, to: progress / 100)  // 根据百分比裁剪进度
-                   .stroke(
-                       Color.yellow,  // 设置进度条颜色
-                       style: StrokeStyle(lineWidth: 20, lineCap: .round)  // 设置圆角
-                   )
-                   .rotationEffect(.degrees(130))  // 旋转进度条起始点到顶部
-                   .frame(width: 198.5, height: 186)  // 设置圆的大小
+                    .trim(from: 0, to: 0.75)
+                    .stroke(
+                        Constants.gray4, // Assuming Constants.gray4 is defined elsewhere
+                        style: StrokeStyle(lineWidth: 21, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(135))
+                    .frame(width: 200, height: 200)
 
-                
-                
-                // 显示进度和消息的区域
+                // Foreground white circle
+                Circle()
+                    .trim(from: 0, to: 0.75)
+                    .stroke(
+                        Constants.white,
+                        style: StrokeStyle(lineWidth: 20, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(135))
+                    .frame(width: 200, height: 200)
+
+                // Foreground progress circle
+                Circle()
+                    .trim(from: 0.0, to: CGFloat(min(self.score / 100 * 0.75, 0.75)))
+                    .stroke(
+                        Constants.Yellow1,
+                        style: StrokeStyle(lineWidth: 20, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(135))
+                    .frame(width: 200, height: 200)
+                    .animation(.easeOut(duration: 0.3), value: score)
+
                 VStack {
-                    Text("\(Int(progress))")  // 显示百分比
-                        .font(.system(size: 48))
-                        .bold()
-                    
-                    Text(message)  // 显示消息
-                        .font(.system(size: 12))
+                    Text("\(Int(score))%")
+                        .font(Constants.bigTitle)
+                        .padding(.top, 24)
+                        .fontWeight(.bold)
+                        .foregroundColor(Constants.gray3) // Assuming Constants.gray3 is defined elsewhere
+                    VStack {
+                        Text(warmingGreeting(for: Int(score)))
+                            .font(Constants.caption)
+                            .foregroundColor(Constants.gray3)
+                        Text(emoji(for: Int(score)))
+                            .font(.largeTitle)
+                    }
                 }
             }
-            .padding(20)
+        }
+        .padding(24)
+    }
+
+    private func emoji(for score: Int) -> String {
+        switch score {
+        case 0..<20: return "😵"
+        case 20..<40: return "🫨"
+        case 40..<60: return "😉"
+        case 60..<80: return "😀"
+        case 80...100: return "😃"
+        default: return "🤔"
+        }
+    }
+
+    private func warmingGreeting(for score: Int) -> String {
+        switch score {
+        case 0..<20: return "Get Out from Here"
+        case 20..<40: return "You Deserve Better"
+        case 40..<60: return "Keep It Up"
+        case 60..<80: return "Nice Place"
+        case 80...100: return "Wow Great!"
+        default: return "Check Your Score"
         }
     }
 }
 
-#Preview {
-    CircleChartView()
-}
+// Preview
+struct CircleChartView_Previews: PreviewProvider {
+    @State static var score = 75.0
 
+    static var previews: some View {
+        CircleChartView(score: $score)
+    }
+}

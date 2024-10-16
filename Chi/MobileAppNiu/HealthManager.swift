@@ -9,7 +9,17 @@
 import Foundation
 import HealthKit
 
+
+struct SuggestionData: Identifiable {
+    let id = UUID()
+    var text: String
+    var importance: Double  // 可以根据重要性排序或高亮显示
+}
+
+
+
 class HealthManager: ObservableObject {
+    @Published var healthSuggestions: [SuggestionData] = []
     let healthStore = HKHealthStore()
     
     init() {
@@ -32,6 +42,44 @@ class HealthManager: ObservableObject {
             }
         }
     }
+    
+    func updateHealthSuggestions() {
+        
+            
+            var suggestions: [SuggestionData] = []
+            
+            let group = DispatchGroup()
+            
+            group.enter()
+            fetchAverage(activity: .sleep, period: .day) { sleepAverage in
+                if sleepAverage < 7.0 {
+                    suggestions.append(SuggestionData(text: "You Need More Sleep", importance: 1.0))
+                }
+                group.leave()
+            }
+            
+            group.enter()
+            fetchAverage(activity: .daylight, period: .day) { daylightAverage in
+                if daylightAverage < 60.0 {
+                    suggestions.append(SuggestionData(text: "Spend More Time in Park", importance: 0.9))
+                }
+                group.leave()
+            }
+            
+            group.enter()
+            fetchAverage(activity: .steps, period: .day) { stepsAverage in
+                if stepsAverage < 5000 {
+                    suggestions.append(SuggestionData(text: "Stay Active", importance: 0.8))
+                }
+                group.leave()
+            }
+            
+            // 等待所有数据获取完成
+            group.notify(queue: .main) {
+                // update health suggestion
+                self.healthSuggestions = suggestions
+            }
+        }
     
     /// 获取特定活动和时间段的平均值
     func fetchAverage(endDate: Date = Date(), activity: Activity, period: TimePeriod, completion: @escaping (Double) -> Void) {

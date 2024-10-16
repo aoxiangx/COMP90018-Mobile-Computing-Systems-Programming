@@ -7,7 +7,7 @@ struct HomeView: View {
     
     @EnvironmentObject var manager : HealthManager
     @EnvironmentObject var locationManager: LocationManager
-    
+    @State private var score: Double = 34.0
     
     
     @AppStorage("log_Status") private var logStatus: Bool = false
@@ -85,21 +85,13 @@ struct HomeView: View {
                                 DateHomeView()
                                 
                                 PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
-                                
-                                ScoreEmojiView(score: 45)
+                               
+                                CircleChartView(score: $score)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .multilineTextAlignment(.center) // This helps in case you have text in your view
-//                                // Fetch Steps button
-//                                Button("Fetch Steps") {
-//                                    manager.fetchTodaySteps()
-//                                }
-//                                .padding(.leading, 15)
-                                
-                                // show location
-                                LocationView()
+                                    .multilineTextAlignment(.center)
+//                                LocationView()
                                 
                                 // TabView for sliding list of notifications
-                                VStack {
                                     TabView(selection: $currentPageIndex) {
                                         ForEach(0..<objectiveNotifications.count, id: \.self) { index in
                                             objectiveNotifications[index]
@@ -107,8 +99,9 @@ struct HomeView: View {
                                         }
                                     }
                                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                                    .frame(height: 300)
-        
+                                    .frame(height: 150)
+                                    .padding(.horizontal, 16)
+                                    .frame(maxWidth: .infinity, alignment: .topLeading)
                                     // Display page indicator if there are objectives set
                                     if objectiveNotifications.count > 1 {
                                         HStack {
@@ -118,11 +111,14 @@ struct HomeView: View {
                                                     .frame(width: 8, height: 8)
                                             }
                                         }
-                                        .padding(.top, -70)  // Adjust location of indicator
+                                         // Adjust location of indicator
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     }
                                 // end Vstack list of notifications
-                                }
                                 
+                                
+                                SummaryBoxesView()
+                                LocationView()
                             // end Vstack
                             }
                             

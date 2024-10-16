@@ -5,10 +5,16 @@
 //  Created by Jun Zhu on 16/9/2024.
 //
 import SwiftUI
+import HealthKit
+
+
 
 struct SuggestionsCapsules: View {
-    let suggestions = ["Take a Walk in the Park", "Go for a Run when it's Sunny"] // Example suggestions
+    @ObservedObject var healthManager = HealthManager()
     @State private var currentPage: Int = 0
+    
+    let suggestions = ["Take a Walk in the Park", "Go for a Run when it's Sunny"] // Example suggestions
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Section Title
@@ -61,8 +67,7 @@ struct SuggestionCapsule: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(text)
-                .font(Font.custom("Switzer", size: 16))
-                .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
+                .font(Constants.body)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
         }
         .padding(.horizontal, 16)
@@ -83,6 +88,6 @@ struct SuggestionCapsule: View {
 // Preview
 struct SuggestionsCapsules_Previews: PreviewProvider {
     static var previews: some View {
-        SuggestionsCapsules()
+        SuggestionsCapsules(healthManager: HealthManager())
     }
 }
