@@ -9,6 +9,9 @@ import Foundation
 import MapKit
 import UserNotifications
 import UIKit
+import Firebase
+import FirebaseAuth
+
 
 @MainActor
 class LocationManager: NSObject, ObservableObject {
@@ -19,10 +22,15 @@ class LocationManager: NSObject, ObservableObject {
     private let geocoder = CLGeocoder()
     @Published var locationDescription: String = "Unknown"
     
-    // Add property to track last notification time
     private var lastNotificationDate: Date?
     private let notificationInterval: TimeInterval = 1800 // 30min for testing
+    private var timeInGreenSpace: TimeInterval = 0 // 用于记录在绿地的时间
+    private var greenSpaceTimer: Timer?
+    private var isInGreenSpace: Bool = false // 跟踪是否在绿地中
     
+    
+//    private let userId = getCurrentUserId()
+
     override init() {
         super.init()
         
@@ -32,7 +40,6 @@ class LocationManager: NSObject, ObservableObject {
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
         
-        // Request notification permission
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
                 print("Notification permission granted")
@@ -42,76 +49,85 @@ class LocationManager: NSObject, ObservableObject {
         }
     }
     
-    // Method to check if notification can be sent
+    private func getCurrentUserId() -> String? {
+        if let user = Auth.auth().currentUser {
+            return user.uid // 返回当前用户的唯一 ID
+        }
+        return nil // 如果没有用户登录，则返回 nil
+    }
+    
+
+    // 存储在绿地的时间到 Firebase
+//    private func saveTimeInGreenSpaceToFirebase() {
+//        let db = Storage.storage()
+//        db.collection("users").document(userId).setData(["timeInGreenSpace": timeInGreenSpace]) { error in
+//            if let error = error {
+//                print("Error saving time to Firebase: \(error.localizedDescription)")
+//            } else {
+//                print("Time in green space saved successfully.")
+//            }
+//        }
+//    }
+
+    // 从 Firebase 加载时间
+//    private func loadTimeInGreenSpaceFromFirebase() {
+//        let db = Storage.storage()
+//        db.collection("users").document(userId).getDocument { document, error in
+//            if let document = document, document.exists {
+//                if let time = document.get("timeInGreenSpace") as? TimeInterval {
+//                    self.timeInGreenSpace = time
+//                    print("Loaded time in green space: \(self.timeInGreenSpace) seconds")
+//                }
+//            } else {
+//                print("Error fetching document: \(error?.localizedDescription ?? "Unknown error")")
+//            }
+//        }
+//    }
+    
     private func canSendNotification() -> Bool {
         if let lastDate = lastNotificationDate {
-            // Check if the current time is at least 1 second after the last notification (for testing)
             return Date().timeIntervalSince(lastDate) > notificationInterval
         }
-        return true // If lastNotificationDate is nil, allow notification
+        return true
     }
     
-    // Method to show an alert as a notification
-    private func showAlert(title: String, message: String) {
-        // 获取当前活动的视图控制器
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if let topController = windowScene.windows.first?.rootViewController {
-                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                topController.present(alert, animated: true, completion: nil)
-            }
-        }
-    }
-    
-    // Method to send notification and update last notification time
-    func sendNotification() {
-        guard canSendNotification() else {
-            print("Notification cooldown in effect, not sending a new notification.")
-            return
-        }
-        
-        let content = UNMutableNotificationContent()
-        content.title = "Take a Break!"
-        content.body = "You are near a green space. Take a moment to relax and enjoy nature."
-        content.sound = .default
-        
-        // Display an alert instead of a local notification
-        showAlert(title: content.title, message: content.body)
 
-        // Record the time the notification was sent
-        lastNotificationDate = Date()
-        print("Notification sent: \(content.title) - \(content.body)")
+    private func getTopViewController() -> UIViewController? {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return nil
+        }
+        
+        // 获取 key window
+        guard let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+            return nil
+        }
+
+        // 遍历视图控制器以找到最上面的控制器
+        var topController = window.rootViewController
+        while let presentedViewController = topController?.presentedViewController {
+            topController = presentedViewController
+        }
+        return topController
     }
+
     
-    // Search for nearby green spaces like parks or gardens
-    func searchForGreenSpaces() {
-        guard let location = location else { return }
-        
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = "garden, park"
-        request.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-        
-        let search = MKLocalSearch(request: request)
-        search.start { response, error in
-            guard let response = response, error == nil else {
-                print("Error searching for gardens or parks: \(error?.localizedDescription ?? "Unknown error")")
+    func sendNotification() {
+            guard canSendNotification() else {
+                print("Notification cooldown in effect, not sending a new notification.")
                 return
             }
             
-            // Iterate through search results and check if they contain "garden" or "park"
-            if !response.mapItems.isEmpty {
-                for item in response.mapItems {
-                    if let name = item.name?.lowercased(),
-                       name.contains("garden") || name.contains("park") {
-                        print("Found a nearby garden or park: \(name)")
-                        self.sendNotification()
-                        break
-                    }
-                }
+            let alert = UIAlertController(title: "Take a Break!", message: "You are near a green space. Take a moment to relax and enjoy nature.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            if let topController = getTopViewController() {
+                topController.present(alert, animated: true, completion: nil)
             }
+            
+            lastNotificationDate = Date()
         }
-    }
 
+    
     // Reverse geocode
     func reverseGeocodeLocation(location: CLLocation) {
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
@@ -120,14 +136,49 @@ class LocationManager: NSObject, ObservableObject {
                 return
             }
             
-            if let name = placemark.name, let locality = placemark.locality {
-                self.locationDescription = "\(name), \(locality)"
-            } else if let locality = placemark.locality {
-                self.locationDescription = locality
-            } else {
-                self.locationDescription = "Unknown place"
+            if let name = placemark.name {
+                self.locationDescription = name
+                
+                // 检查是否在绿地
+                if name.lowercased().contains("park") || name.lowercased().contains("garden") {
+                    if !self.isInGreenSpace { // 如果刚刚进入绿地
+                        self.isInGreenSpace = true
+                        self.sendNotification()
+                        self.startGreenSpaceTimer()
+//                        self.saveTimeInGreenSpaceToFirebase() // 进入时保存时间
+                    }
+                } else {
+                    if self.isInGreenSpace { // 如果刚刚离开绿地
+                        self.isInGreenSpace = false
+                        self.stopGreenSpaceTimer()
+//                        self.saveTimeInGreenSpaceToFirebase() // 离开时保存时间
+                    }
+                }
             }
         }
+    }
+    
+    private func startGreenSpaceTimer() {
+        stopGreenSpaceTimer() // 确保没有重复的计时器
+        timeInGreenSpace = 0 // Reset timer
+        greenSpaceTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            Task {
+                await self.updateTimeInGreenSpace()
+            }
+        }
+    }
+
+    private func stopGreenSpaceTimer() {
+        greenSpaceTimer?.invalidate()
+        greenSpaceTimer = nil
+        // 不重置时间，因为要在用户再次返回时继续计时
+    }
+    
+    @MainActor
+    private func updateTimeInGreenSpace() {
+        timeInGreenSpace += 1
+        print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
 }
 
@@ -137,12 +188,6 @@ extension LocationManager: CLLocationManagerDelegate {
         self.location = location
         self.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         
-        // Reverse geocode
         reverseGeocodeLocation(location: location)
-        
-        // Search for green spaces nearby
-        searchForGreenSpaces()
     }
 }
-
-
