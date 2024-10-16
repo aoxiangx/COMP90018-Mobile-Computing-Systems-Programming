@@ -16,8 +16,7 @@ struct JourneyView: View {
     @State private var cachedImages: [UIImage] = []
 
     var body: some View {
-        NavigationView {
-            ZStack(alignment: .topLeading) {
+                    ZStack(alignment: .topLeading) {
                 // Background gradient for the entire view
                 LinearGradient(gradient: Gradient(stops: [
                     .init(color: Color(hex: "FFF8C9"), location: 0.0),
@@ -76,7 +75,6 @@ struct JourneyView: View {
             }
         }
     }
-}
 
 #Preview {
     JourneyView()

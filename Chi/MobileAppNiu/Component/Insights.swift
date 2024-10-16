@@ -12,7 +12,6 @@ struct Insights: View {
     @State private var score: Double = 75.0
     
     var body: some View {
-        NavigationView{
             ZStack{
                 LinearGradient(gradient: Gradient(stops: [
                     .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
@@ -47,7 +46,6 @@ struct Insights: View {
             
         }
         
-    }
 }
 
 struct Insights_Previews: PreviewProvider {

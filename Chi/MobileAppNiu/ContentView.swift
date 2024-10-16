@@ -20,7 +20,9 @@ struct ContentView: View {
         if logStatus {
             TabView {
                 NavigationView {
+                    
                     HomeView()
+                        .navigationBarHidden(true)
                         .environmentObject(LocationManager())
                 }
                 .tabItem {
