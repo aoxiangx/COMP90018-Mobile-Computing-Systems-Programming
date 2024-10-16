@@ -99,7 +99,7 @@ struct CalendarView: View {
                                     .background(
                                         Circle()
                                             .foregroundColor(
-                                                isSelected(day: day) ? Constants.Blue3 :
+                                                isSelected(day: day) ? Color.yellow :
                                                 (Calendar.current.isDateInToday(day) && selectedDate == nil ? Constants.Blue2 : Color.white)
                                             )
                                     )
