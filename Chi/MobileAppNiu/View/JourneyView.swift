@@ -8,17 +8,16 @@
 import SwiftUI
 import PhotosUI
 
-
 // MARK: - JourneyView
 struct JourneyView: View {
     @State private var dateImages: [Date: [UIImage]] = [:]
-    @State private var selectedDate: Date? = Date() // Set default to today
+    @State private var selectedDate: Date? = Calendar.current.startOfDay(for: Date()) // 标准化为今天的开始
     @State private var cachedImages: [UIImage] = []
 
     var body: some View {
         NavigationView {
             ZStack(alignment: .topLeading) {
-                // Background gradient for the entire view
+                // 整个视图的背景渐变
                 LinearGradient(gradient: Gradient(stops: [
                     .init(color: Color(hex: "FFF8C9"), location: 0.0),
                     .init(color: Color(hex: "EDF5FF"), location: 0.6)
@@ -31,10 +30,10 @@ struct JourneyView: View {
                     VStack(alignment: .leading) {
                         VStack {
                             Spacer()
-                                .frame(minHeight: 20) // Space at the top for padding
+                                .frame(minHeight: 20) // 顶部留白
                             
                             HStack {
-                                // Title for the Journey section
+                                // Journey 部分的标题
                                 Text("Journey")
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
@@ -42,14 +41,14 @@ struct JourneyView: View {
                                 
                                 Spacer()
                                 
-                                // Photo button for adding images
+                                // 添加图片的按钮
                                 PhotoButtonView(dateImages: $dateImages, selectedDate: $selectedDate)
                                     .frame(width: 48, height: 32)
                             }
                             .padding(.leading, 15)
                             .padding(.trailing, 15)
                             
-                            // Display selected images or placeholder if no images
+                            // 显示选定的图片或占位符
                             if let selectedDate = selectedDate, let images = dateImages[selectedDate] {
                                 PhotoCarouselView(images: images)
                                     .frame(maxWidth: .infinity)
@@ -65,7 +64,7 @@ struct JourneyView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 10) {
-                                // Calendar view for selecting a date
+                                // 日期选择的日历视图
                                 CalendarView(selectedDate: $selectedDate)
                                     .padding([.leading, .trailing], 20)
                             }
@@ -81,11 +80,3 @@ struct JourneyView: View {
 #Preview {
     JourneyView()
 }
-
-
-
-
-
-
-
-
