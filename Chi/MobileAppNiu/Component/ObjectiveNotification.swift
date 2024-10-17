@@ -37,6 +37,7 @@ struct ObjectiveNotification: View {
             if activity != nil
             {
                 let objectiveDataActivity = activity!.objectiveInfo(viewModel: viewModel) // Assuming this is not optional
+                
                 // Display the message and the objective based on progress
                 Text(progressMessage)
                     .font(Constants.caption)
@@ -61,7 +62,7 @@ struct ObjectiveNotification: View {
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                             }
                             Spacer()
-                            Text("Objective: \(objectiveDataActivity.objectiveTime ?? 0) Min") // Display the objective time
+                            Text("Objective: \(objectiveDataActivity.objectiveTime ?? 0) \(objectiveDataActivity.subtitle)") // Display the objective time
                                 .font(Font.custom("Roboto", size: 12))
                                 .foregroundColor(Constants.gray3)
                         }
@@ -79,7 +80,7 @@ struct ObjectiveNotification: View {
                             // Foreground progress bar
                             Rectangle()
                                 .frame(
-                                    width: min((currentTime / Double(objectiveTime ?? 1)) * geometry.size.width, geometry.size.width),
+                                    width: min((currentTime / Double(objectiveDataActivity.objectiveTime ?? 1)) * geometry.size.width, geometry.size.width),
                                     height: 20
                                 )
                                 .foregroundColor(objectiveDataActivity.color) // Use dynamic color based on activity type
@@ -130,6 +131,7 @@ struct ObjectiveNotification: View {
                 )
             }
         }.onAppear {
+            objectiveTime = objectiveDataActivity?.objectiveTime
             fetchTodayValue() // Fetch today's step value when the view appears
         }
     }
