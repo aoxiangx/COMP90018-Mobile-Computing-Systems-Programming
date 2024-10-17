@@ -22,6 +22,17 @@ struct LocationView: View {
                 .font(.headline)
                 .padding(.bottom, 5)
             
+            Text("Place Description:")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            Text(locationManager.locationDescription)
+                .font(.body)
+                .multilineTextAlignment(.leading)
+                .padding(.top, 5)
+            
+            Divider()
+                .padding(.vertical, 10)
+            
             HStack {
                 Text("Latitude:")
                     .font(.subheadline)
@@ -37,17 +48,6 @@ struct LocationView: View {
                 Text(String(format: "%.5f", locationManager.location?.coordinate.longitude ?? 0.0))
                     .font(.body)
             }
-            
-            Divider()
-                .padding(.vertical, 10)
-            
-            Text("Place Description:")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            Text(locationManager.locationDescription)
-                .font(.body)
-                .multilineTextAlignment(.leading)
-                .padding(.top, 5)
             
             Divider()
                 .padding(.vertical, 10)
