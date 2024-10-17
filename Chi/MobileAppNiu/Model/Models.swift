@@ -136,7 +136,7 @@ enum Activity {
         let objectiveTime: Int // Define a local variable to hold the objective time
         switch self {
         case .steps:
-            objectiveTime = viewModel.objectives.greenAreaActivityDuration
+            objectiveTime = viewModel.objectives.stepCount
             return ObjectiveData(color: Constants.Red, icon: .activeIndexIcon, title: "Active Index", subtitle: "Step(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .steps)
             
         case .daylight:
@@ -152,7 +152,7 @@ enum Activity {
             return ObjectiveData(color: Constants.Blue3, icon: .stress, title: "Stress Level", subtitle: "Pascals", objectiveTime: objectiveTime, paddingSpace: 50, activity: .hrv)
             
         case .sleep:
-            objectiveTime = viewModel.objectives.totalActivityDuration
+            objectiveTime = viewModel.objectives.stepCount
             return ObjectiveData(color: Constants.Blue2, icon: .sleep, title: "Sleep Time", subtitle: "Hour(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
         }
     }

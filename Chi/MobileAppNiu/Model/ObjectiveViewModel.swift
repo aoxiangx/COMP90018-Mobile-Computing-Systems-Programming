@@ -14,7 +14,7 @@ class ObjectiveViewModel: ObservableObject {
     /// 任何对此属性的更改都会自动将新的目标保存到 UserDefaults。
     @Published var objectives: DailyObjectives {
         didSet {
-            print("目标更新: 日照时间 \(objectives.sunlightDuration) 分钟, 绿地活动时间 \(objectives.greenAreaActivityDuration) 分钟, 总活动时间 \(objectives.totalActivityDuration) 分钟")
+            print("目标更新: 日照时间 \(objectives.sunlightDuration) 分钟, 绿地活动时间 \(objectives.greenAreaActivityDuration) 分钟, 总活动时间 \(objectives.stepCount) 分钟")
             UserDefaults.standard.setDailyObjectives(objectives, forKey: "UserObjectives")
         }
     }
@@ -27,7 +27,7 @@ class ObjectiveViewModel: ObservableObject {
 
     /// 定义目标类型的枚举。
     enum ObjectiveType {
-        case sunlight, greenArea, totalActivity
+        case sunlight, greenArea, stepCount
     }
     
     /// 初始化视图模型，从 UserDefaults 加载现有目标，
@@ -36,7 +36,7 @@ class ObjectiveViewModel: ObservableObject {
         if let loadedObjectives = UserDefaults.standard.getDailyObjectives(forKey: "UserObjectives") {
             self.objectives = loadedObjectives
         } else {
-            self.objectives = DailyObjectives(sunlightDuration: 30, greenAreaActivityDuration: 60, totalActivityDuration: 90)
+            self.objectives = DailyObjectives(sunlightDuration: 30, greenAreaActivityDuration: 60, stepCount: 90)
         }
     }
     

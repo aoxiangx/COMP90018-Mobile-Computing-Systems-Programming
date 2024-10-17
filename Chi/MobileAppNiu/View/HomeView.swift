@@ -35,7 +35,7 @@ struct HomeView: View {
             )
         }
         
-        if objectiveViewModel.objectives.totalActivityDuration > 0 {
+        if objectiveViewModel.objectives.stepCount > 0 {
             notifications.append(
                 ObjectiveNotification(
                     activity: .steps

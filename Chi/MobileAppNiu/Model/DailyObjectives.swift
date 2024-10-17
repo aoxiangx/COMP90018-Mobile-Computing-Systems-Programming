@@ -10,7 +10,7 @@ import Foundation
 struct DailyObjectives: Codable {
     var sunlightDuration: Int  // 日照时间（分钟）
     var greenAreaActivityDuration: Int  // 绿地活动时间（分钟）
-    var totalActivityDuration: Int  // 总活动时间（分钟）
+    var stepCount: Int  // 总活动时间（分钟）
     
 }
 
