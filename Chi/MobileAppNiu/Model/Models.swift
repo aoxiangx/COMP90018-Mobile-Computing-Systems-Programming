@@ -8,6 +8,38 @@
 
 import Foundation
 import HealthKit
+import SwiftUI
+
+
+struct LineChartData: Identifiable {
+    var id = UUID()
+    var date: String
+    var value: Double
+}
+
+enum TimePeriod: String, CaseIterable {
+    case day = "Day"
+    case week = "Week"
+    case month = "Month"
+    case sixMonths = "6Ms"
+    case year = "Year"
+}
+
+extension Date {
+    static var startOfDay: Date {
+        Calendar.current.startOfDay(for: Date())
+    }
+}
+struct ObjectiveData: Identifiable {
+    var id = UUID()
+    var color: Color
+    var icon: ImageResource
+    var title: String
+    var subtitle: String
+    var objectiveTime: Int
+    var paddingSpace: CGFloat // 用于控制 padding 大小
+    let activity: Activity // 添加此属性
+}
 
 enum Activity {
     case steps
@@ -86,24 +118,69 @@ enum Activity {
             return "Hours"
         }
     }
-}
-
-struct LineChartData: Identifiable {
-    var id = UUID()
-    var date: String
-    var value: Double
-}
-
-enum TimePeriod: String, CaseIterable {
-    case day = "Day"
-    case week = "Week"
-    case month = "Month"
-    case sixMonths = "6Ms"
-    case year = "Year"
-}
-
-extension Date {
-    static var startOfDay: Date {
-        Calendar.current.startOfDay(for: Date())
+//    var objectiveInfo: BoxData {
+//        switch self {
+//        case .steps:
+//            return BoxData(color: Constants.Red, icon: .activeIndexIcon, title: "Active Index", subtitle: "Step(s)", description: "Past 7 Days", paddingSpace: 50, activity: .steps)
+//        case .daylight:
+//            return BoxData(color: Constants.Yellow1, icon: .sunLightIcon, title: "Daylight Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 40, activity: .daylight)
+//        case .noise:
+//            return BoxData(color: Constants.Blue1, icon: .noise, title: "Noise Level", subtitle: "dB", description: "Past 7 Days", paddingSpace: 56, activity: .noise)
+//        case .hrv:
+//            return BoxData(color: Constants.Blue3, icon: .stress, title: "Stress Level", subtitle: "Pascals", description: "Past 7 Days", paddingSpace: 50, activity: .hrv)
+//        case .sleep:
+//            return BoxData(color: Constants.Blue2, icon: .sleep, title: "Sleep Time", subtitle: "Hour(s)", description: "Past 7 Days", paddingSpace: 50, activity: .sleep)
+//        }
+//    }
+    func objectiveInfo(viewModel: ObjectiveViewModel) -> ObjectiveData {
+        let objectiveTime: Int // Define a local variable to hold the objective time
+        switch self {
+        case .steps:
+            objectiveTime = viewModel.objectives.greenAreaActivityDuration
+            return ObjectiveData(color: Constants.Red, icon: .activeIndexIcon, title: "Active Index", subtitle: "Step(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .steps)
+            
+        case .daylight:
+            objectiveTime = viewModel.objectives.sunlightDuration
+            return ObjectiveData(color: Constants.Yellow1, icon: .sunLightIcon, title: "Daylight Time", subtitle: "Min(s)", objectiveTime: objectiveTime, paddingSpace: 40, activity: .daylight)
+            
+        case .noise:
+            objectiveTime = viewModel.objectives.greenAreaActivityDuration
+            return ObjectiveData(color: Constants.Blue1, icon: .noise, title: "Noise Level", subtitle: "dB", objectiveTime: objectiveTime, paddingSpace: 56, activity: .noise)
+            
+        case .hrv:
+            objectiveTime = viewModel.objectives.sunlightDuration
+            return ObjectiveData(color: Constants.Blue3, icon: .stress, title: "Stress Level", subtitle: "Pascals", objectiveTime: objectiveTime, paddingSpace: 50, activity: .hrv)
+            
+        case .sleep:
+            objectiveTime = viewModel.objectives.totalActivityDuration
+            return ObjectiveData(color: Constants.Blue2, icon: .sleep, title: "Sleep Time", subtitle: "Hour(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
+        }
     }
+
+
+    func dayValue(using manager: HealthManager, completion: @escaping (Double?, Error?) -> Void) {
+            switch self {
+            case .steps:
+                manager.fetchTodaySteps { (steps, error) in
+                    completion(steps, error)
+                }
+            case .hrv:
+                manager.fetchTodayHRV { (hrv, error) in
+                    completion(hrv, error)
+                }
+            case .sleep:
+                manager.fetchTodaySleep { (sleep, error) in
+                    completion(sleep, error)
+                }
+            case .daylight:
+                manager.fetchTodayDaylight { (daylight, error) in
+                    completion(daylight, error)
+                }
+            case .noise:
+                manager.fetchTodayNoiseLevels { (noise, error) in
+                    completion(noise, error)
+                }
+            }
+        }
 }
+

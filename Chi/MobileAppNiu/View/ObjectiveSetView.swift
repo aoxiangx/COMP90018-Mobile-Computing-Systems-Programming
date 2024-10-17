@@ -5,10 +5,9 @@
 //  Created by Jun Zhu on 2/10/2024.
 //
 
-
 import SwiftUI
 
-// 确保 ObjectiveSetView 使用的是正确的 ObjectiveViewModel 和 DailyObjectives
+// Ensure that ObjectiveSetView uses the correct ObjectiveViewModel and DailyObjectives
 
 struct ObjectiveDetail: View {
     let type: ObjectiveViewModel.ObjectiveType
@@ -16,9 +15,9 @@ struct ObjectiveDetail: View {
 
     var body: some View {
         VStack {
-            Text("修改 \(type == .sunlight ? "日照时间" : type == .greenArea ? "绿地活动时间" : "总活动时间")")
-            Stepper("目标：\(self.binding(for: type).wrappedValue) 分钟", value: self.binding(for: type), in: 0...480)
-            Button("完成") {
+            Text("Edit \(type == .sunlight ? "Daylight Time" : type == .greenArea ? "Green Space Activity Time" : "Total Activity Time")")
+            Stepper("Objective: \(self.binding(for: type).wrappedValue) minutes", value: self.binding(for: type), in: 0...480)
+            Button("Done") {
                 viewModel.showDetail = false
             }
             .padding()
@@ -63,8 +62,7 @@ struct ObjectiveCard: View {
 }
 
 struct ObjectiveSetView: View {
-    @StateObject var viewModel = ObjectiveViewModel()  // 这应引用 Model 文件夹中的 ObjectiveViewModel
-    
+    @StateObject var viewModel = ObjectiveViewModel()  // Reference to ObjectiveViewModel from the Model folder
 
     var body: some View {
         NavigationView {
@@ -74,7 +72,7 @@ struct ObjectiveSetView: View {
                 ObjectiveCard(title: "Active Time", value: $viewModel.objectives.totalActivityDuration, type: .totalActivity, viewModel: viewModel)
             }
             .padding()
-            .navigationTitle("设置目标")
+            .navigationTitle("Set Your Objectives")
         }
         .sheet(isPresented: $viewModel.showDetail) {
             if let type = viewModel.activeCard {
@@ -84,9 +82,6 @@ struct ObjectiveSetView: View {
     }
 }
 
-
-
 #Preview {
     ObjectiveSetView()
 }
-

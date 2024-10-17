@@ -1,64 +1,42 @@
 import SwiftUI
 
 struct ObjectiveNotification: View {
-    var currentTime: Int? // Current time (can be nil)
-    var objectiveTime: Int? // User-set objective time (can be nil)
+    @EnvironmentObject var healthManager: HealthManager
+    var activity: Activity?
+    @State var objectiveTime: Int? // User-set objective time (can be nil)
     var objectiveType: String? // Objective type, can be nil
-
-    init(currentTime: Int? = nil, objectiveTime: Int? = nil, objectiveType: String? = nil) {
-        self.currentTime = currentTime
-        self.objectiveTime = objectiveTime
-        self.objectiveType = objectiveType
-    }
-
+    @StateObject private var viewModel = ObjectiveViewModel() // StateObject instantiated here
+    @State private var currentTime: Double = 0.0
+    @State private var objectiveDataActivity: ObjectiveData? // Using Optional, since it might be set later
+        
     // Determine the message based on progress
     private var progressMessage: String {
-        let progress = currentTime != nil && objectiveTime != nil ? Double(currentTime!) / Double(objectiveTime!) : 0
-        switch progress {
-        case ..<0.25:
-            return "Just starting—let’s keep going!"
-        case 0.25..<0.5:
-            return "Nice progress, keep it up!"
-        case 0.5..<0.75:
-            return "You're doing great, almost there!"
-        case 1.0...:
-            return "Awesome job—you did it!"
-        default:
+        // Ensure that `objectiveTime` is greater than 0 to avoid division by zero
+        if let objectiveTime = objectiveDataActivity?.objectiveTime, objectiveTime > 0 {
+            let progress = currentTime / Double(objectiveTime)
+
+            switch progress {
+            case ..<0.25:
+                return "Just starting—let’s keep going!"
+            case 0.25..<0.5:
+                return "Nice progress, keep it up!"
+            case 0.5..<0.75:
+                return "You're doing great, almost there!"
+            case 1.0...:
+                return "Awesome job—you did it!"
+            default:
+                return "Stay focused and keep tracking!"
+            }
+        } else {
             return "Stay focused and keep tracking!"
-        }
-    }
-
-    // Determine the icon based on the objective type
-    private var objectiveIcon: String {
-        switch objectiveType {
-        case "Daylight time":
-            return "Sun_Light_Icon"
-        case "Green Space Time":
-            return "Green_Space_Icon" // You need to provide the corresponding icon name
-        case "Active Index":
-            return "Active_Index_Icon" // You need to provide the corresponding icon name
-        default:
-            return "Default_Icon" // You need to provide the default icon name
-        }
-    }
-
-    // Determine the progress bar color based on the objective type
-    private var progressBarColor: Color {
-        switch objectiveType {
-        case "Daylight time":
-            return Constants.Yellow1
-        case "Green Space Time":
-            return Constants.Green
-        case "Active Index":
-            return Constants.Red
-        default:
-            return .gray // Default color
         }
     }
 
     var body: some View {
         VStack {
-            if let objective = objectiveTime, let current = currentTime, let objectiveType = objectiveType {
+            if activity != nil
+            {
+                let objectiveDataActivity = activity!.objectiveInfo(viewModel: viewModel) // Assuming this is not optional
                 // Display the message and the objective based on progress
                 Text(progressMessage)
                     .font(Constants.caption)
@@ -67,15 +45,15 @@ struct ObjectiveNotification: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .center, spacing: 8) {
                         HStack(alignment: .bottom) {
-                            Image(objectiveIcon) // Dynamically display the icon
+                            Image(objectiveDataActivity.icon ?? .activeIndexIcon) // Dynamically display the icon
                                 .resizable()
                                 .padding(8)
                                 .frame(width: 48, height: 48)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("\(objectiveType.capitalized)") // Dynamically display the objective type
+                                Text(objectiveDataActivity.title) // Dynamically display the objective type
                                     .font(Font.custom("Roboto", size: 16))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
-                                Text("\(current) Min") // Display current time
+                                Text("\(Int(currentTime)) \(objectiveDataActivity.subtitle)") // Display current time
                                     .font(Font.custom("Roboto", size: 24))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                                 Text("per day") // Display time unit
@@ -83,7 +61,7 @@ struct ObjectiveNotification: View {
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                             }
                             Spacer()
-                            Text("Objective: \(objective) Min") // Display the objective time
+                            Text("Objective: \(objectiveDataActivity.objectiveTime ?? 0) Min") // Display the objective time
                                 .font(Font.custom("Roboto", size: 12))
                                 .foregroundColor(Constants.gray3)
                         }
@@ -91,15 +69,21 @@ struct ObjectiveNotification: View {
                     // Progress bar
                     GeometryReader { geometry in
                         ZStack(alignment: .leading) {
+                            // Background bar
                             Rectangle()
                                 .frame(width: geometry.size.width, height: 20)
                                 .foregroundColor(.gray)
                                 .opacity(0.3)
                                 .cornerRadius(10)
+
+                            // Foreground progress bar
                             Rectangle()
-                                .frame(width: min(Double(current) / Double(objective) * geometry.size.width, geometry.size.width), height: 20)
-                                .foregroundColor(progressBarColor) // Set the progress bar color dynamically
-                                .animation(.linear, value: currentTime)
+                                .frame(
+                                    width: min((currentTime / Double(objectiveTime ?? 1)) * geometry.size.width, geometry.size.width),
+                                    height: 20
+                                )
+                                .foregroundColor(objectiveDataActivity.color) // Use dynamic color based on activity type
+                                .animation(.linear, value: currentTime) // Animate the progress change
                                 .cornerRadius(10)
                         }
                     }
@@ -145,19 +129,26 @@ struct ObjectiveNotification: View {
                         .stroke(Constants.gray4, lineWidth: 0.3) // Keep consistent outer frame
                 )
             }
+        }.onAppear {
+            fetchTodayValue() // Fetch today's step value when the view appears
+        }
+    }
+    
+    private func fetchTodayValue() {
+        activity?.dayValue(using: healthManager) { (value, error) in
+            if let error = error {
+                print("Error fetching step value: \(error.localizedDescription)")
+            } else if let steps = value {
+                DispatchQueue.main.async {
+                    self.currentTime = steps // Update the currentTime state variable
+                }
+            }
         }
     }
 }
+
 #Preview {
     // Test case with no objective set
     ObjectiveNotification()
-    
-    // Test case with an objective set
-    ObjectiveNotification(currentTime: 20, objectiveTime: 100, objectiveType: "Daylight time")
-    
-    // Test case with green space objective
-    ObjectiveNotification(currentTime: 45, objectiveTime: 100, objectiveType: "Green Space Time")
-    
-    // Test case with active index objective
-    ObjectiveNotification(currentTime: 60, objectiveTime: 100, objectiveType: "Active Index")
+    ObjectiveNotification(activity: .steps).environmentObject(HealthManager())
 }

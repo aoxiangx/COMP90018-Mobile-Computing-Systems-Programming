@@ -22,9 +22,7 @@ struct HomeView: View {
         if objectiveViewModel.objectives.sunlightDuration > 0 {
             notifications.append(
                 ObjectiveNotification(
-                    currentTime: 5,
-                    objectiveTime: objectiveViewModel.objectives.sunlightDuration,
-                    objectiveType: "Daylight time"
+                    activity: .daylight
                 )
             )
         }
@@ -32,9 +30,7 @@ struct HomeView: View {
         if objectiveViewModel.objectives.greenAreaActivityDuration > 0 {
             notifications.append(
                 ObjectiveNotification(
-                    currentTime: 45,
-                    objectiveTime: objectiveViewModel.objectives.greenAreaActivityDuration,
-                    objectiveType: "Green Space Time"
+                    activity: .hrv
                 )
             )
         }
@@ -42,9 +38,7 @@ struct HomeView: View {
         if objectiveViewModel.objectives.totalActivityDuration > 0 {
             notifications.append(
                 ObjectiveNotification(
-                    currentTime: 80,
-                    objectiveTime: objectiveViewModel.objectives.totalActivityDuration,
-                    objectiveType: "Active Index"
+                    activity: .steps
                 )
             )
         }

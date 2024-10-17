@@ -42,7 +42,135 @@ class HealthManager: ObservableObject {
             }
         }
     }
+    func fetchTodaySteps(completion: @escaping (Double?, Error?) -> Void) {
+        guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create step count type"]))
+            return
+        }
+        
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0, nil) // No steps found, returning 0
+                return
+            }
+            
+            let stepCount = quantity.doubleValue(for: HKUnit.count())
+            completion(stepCount, nil)
+        }
+        
+        healthStore.execute(query)
+    }
+
     
+    /// 获取今天的日光时间
+    func fetchTodayDaylight(completion: @escaping (Double?, Error?) -> Void) {
+        guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create daylight type"]))
+            return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0, nil) // No daylight found, returning 0
+                return
+            }
+            
+            let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
+            completion(daylightMinutes, nil)
+        }
+        healthStore.execute(query)
+    }
+
+    /// 获取今天的噪音水平
+    func fetchTodayNoiseLevels(completion: @escaping (Double?, Error?) -> Void) {
+        guard let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create noise level type"]))
+            return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: noise, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let quantity = result?.averageQuantity() else {
+                completion(0.0, nil) // No noise level data found, returning 0
+                return
+            }
+            
+            let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
+            completion(averageNoise, nil)
+        }
+        healthStore.execute(query)
+    }
+
+    /// 获取今天的 HRV
+    func fetchTodayHRV(completion: @escaping (Double?, Error?) -> Void) {
+        guard let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create HRV type"]))
+            return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: hrv, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let quantity = result?.averageQuantity() else {
+                completion(0.0, nil) // No HRV data found, returning 0
+                return
+            }
+            
+            let hrvValue = quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
+            completion(hrvValue, nil)
+        }
+        healthStore.execute(query)
+    }
+
+    /// 获取今天的睡眠数据
+    func fetchTodaySleep(completion: @escaping (Double?, Error?) -> Void) {
+        let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: Date(), options: .strictStartDate)
+        
+        let query = HKSampleQuery(sampleType: sleepType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            // Filter for 'asleep' sleep state
+            let asleepSamples = results?.compactMap { sample -> HKCategorySample? in
+                guard let categorySample = sample as? HKCategorySample else { return nil }
+                return categorySample.value == HKCategoryValueSleepAnalysis.asleep.rawValue ? categorySample : nil
+            }
+            
+            if let asleepSamples = asleepSamples, !asleepSamples.isEmpty {
+                let totalAsleepTime = asleepSamples.reduce(0) { $0 + $1.endDate.timeIntervalSince($1.startDate) }
+                let asleepHours = totalAsleepTime / 3600.0
+                completion(asleepHours, nil)
+            } else {
+                completion(0.0, nil) // No sleep data found, returning 0
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+
     func updateHealthSuggestions() {
         
             
@@ -449,66 +577,5 @@ class HealthManager: ObservableObject {
             }
         }
         
-        
-        
-        /// 获取今天的步数
-        func fetchTodaySteps() {
-            guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
-            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                guard let quantity = result?.sumQuantity(), error == nil else {
-                    print("Error fetching today's step data")
-                    return
-                }
-                let stepCount = quantity.doubleValue(for: HKUnit.count())
-                print("Today's steps: \(stepCount)")
-            }
-            healthStore.execute(query)
-        }
-        
-        /// 获取今天的日光时间
-        func fetchTodayDaylight() {
-            guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else { return }
-            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-                guard let quantity = result?.sumQuantity(), error == nil else {
-                    print("Error fetching today's daylight data")
-                    return
-                }
-                let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
-                print("Today's daylight minutes: \(daylightMinutes)")
-            }
-            healthStore.execute(query)
-        }
-        
-        /// 获取今天的噪音水平
-        func fetchTodayNoiseLevels() {
-            guard let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure) else { return }
-            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: noise, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
-                guard let quantity = result?.averageQuantity(), error == nil else {
-                    print("Error fetching today's noise level data")
-                    return
-                }
-                let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
-                print("Today's average noise level: \(averageNoise) dB")
-            }
-            healthStore.execute(query)
-        }
-        
-        /// 获取今天的 HRV
-        func fetchTodayHRV() {
-            guard let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else { return }
-            let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date(), options: .strictStartDate)
-            let query = HKStatisticsQuery(quantityType: hrv, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
-                guard let quantity = result?.averageQuantity(), error == nil else {
-                    print("Error fetching today's HRV data")
-                    return
-                }
-                let hrvValue = quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
-                print("Today's HRV: \(hrvValue) ms")
-            }
-            healthStore.execute(query)
-        }
     }
 }

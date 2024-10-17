@@ -9,8 +9,13 @@ import SwiftUI
 
 struct PieHomeView: View {
     let percentages: [Double]
-    let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    
+    let daysOfWeek: [String]
+
+    init(percentages: [Double]) {
+        self.percentages = percentages
+        self.daysOfWeek = PieHomeView.generateLast7Days() // Dynamically generate days
+    }
+
     var body: some View {
         VStack {
             HStack(spacing: 10) {
@@ -29,6 +34,19 @@ struct PieHomeView: View {
             }
         }
         .frame(width: 361, height: 64) // Fixed view size
+    }
+
+    // Function to generate the last 7 days, starting from today
+    static func generateLast7Days() -> [String] {
+        let calendar = Calendar.current
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E" // Short day format (Mon, Tue, etc.)
+
+        return (0..<7).map { offset in
+            let date = calendar.date(byAdding: .day, value: -offset, to: today)!
+            return dateFormatter.string(from: date)
+        }.reversed() // Reverse to display from earlier to later
     }
 }
 
