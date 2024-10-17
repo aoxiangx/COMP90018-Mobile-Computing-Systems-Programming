@@ -133,6 +133,7 @@ enum Activity {
 //        }
 //    }
     func objectiveInfo(viewModel: ObjectiveViewModel) -> ObjectiveData {
+
         let objectiveTime: Int // Define a local variable to hold the objective time
         switch self {
         case .steps:

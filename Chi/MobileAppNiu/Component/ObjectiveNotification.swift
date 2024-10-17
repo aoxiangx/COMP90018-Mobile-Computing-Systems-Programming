@@ -3,7 +3,20 @@ import SwiftUI
 struct ObjectiveNotification: View {
     @EnvironmentObject var healthManager: HealthManager
     var activity: Activity?
-    @State var objectiveTime: Int? // User-set objective time (can be nil)
+    // Computed property to return the latest objective time
+    private var objectiveTime: Int {
+        switch activity {
+        case .daylight:
+            return viewModel.objectives.sunlightDuration
+        case .hrv:
+            return viewModel.objectives.greenAreaActivityDuration
+        case .steps:
+            return viewModel.objectives.stepCount
+        default:
+            return 0
+        }
+    }
+     // User-set objective time (can be nil)
     var objectiveType: String? // Objective type, can be nil
     @StateObject private var viewModel = ObjectiveViewModel() // StateObject instantiated here
     @State private var currentTime: Double = 0.0
@@ -12,7 +25,7 @@ struct ObjectiveNotification: View {
     // Determine the message based on progress
     private var progressMessage: String {
         // Ensure that `objectiveTime` is greater than 0 to avoid division by zero
-        if let objectiveTime = objectiveDataActivity?.objectiveTime, objectiveTime > 0 {
+        if  objectiveTime > 0 {
             let progress = currentTime / Double(objectiveTime)
 
             switch progress {
@@ -62,7 +75,7 @@ struct ObjectiveNotification: View {
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                             }
                             Spacer()
-                            Text("Objective: \(objectiveDataActivity.objectiveTime ?? 0) \(objectiveDataActivity.subtitle)") // Display the objective time
+                            Text("Objective: \(objectiveTime ?? 0) \(objectiveDataActivity.subtitle)") // Display the objective time
                                 .font(Font.custom("Roboto", size: 12))
                                 .foregroundColor(Constants.gray3)
                         }
@@ -131,7 +144,10 @@ struct ObjectiveNotification: View {
                 )
             }
         }.onAppear {
-            objectiveTime = objectiveDataActivity?.objectiveTime
+            let latestObjectives = UserDefaults.standard.getDailyObjectives(forKey: "UserObjectives")
+                if let loadedObjectives = latestObjectives {
+                    viewModel.objectives = loadedObjectives
+            }
             fetchTodayValue() // Fetch today's step value when the view appears
         }
     }
