@@ -108,6 +108,38 @@ class LocationManager: NSObject, ObservableObject {
         timeInGreenSpace += 1
         print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
+    
+    
+    // !!!!!! save green space time by using UserDefaults !!!!!!
+//    private func startGreenSpaceTimer() {
+//            stopGreenSpaceTimer() // Ensure no duplicate timer
+//            timeInGreenSpace = 0 // Reset timer
+//            loadSavedGreenSpaceTime() // Load previously saved time
+//            greenSpaceTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+//                guard let self = self else { return }
+//                Task {
+//                    await self.updateTimeInGreenSpace()
+//                }
+//            }
+//    }
+//
+//    private func stopGreenSpaceTimer() {
+//        greenSpaceTimer?.invalidate()
+//        greenSpaceTimer = nil
+//        // Save the time when stopping the timer
+//        saveGreenSpaceTime()
+//    }
+    
+    private func saveGreenSpaceTime() {
+            UserDefaults.standard.set(timeInGreenSpace, forKey: "greenSpaceTime")
+    }
+
+    private func loadSavedGreenSpaceTime() {
+        let savedTime = UserDefaults.standard.double(forKey: "greenSpaceTime")
+        timeInGreenSpace += savedTime // Add to current time
+    }
+    
+    
 }
 
 extension LocationManager: CLLocationManagerDelegate {
