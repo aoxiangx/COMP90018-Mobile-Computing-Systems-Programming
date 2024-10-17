@@ -57,5 +57,5 @@ struct LocationView: View {
 
 #Preview {
     LocationView()
-        .environmentObject(LocationManager())
+        .environmentObject(LocationManager.shared)
 }

@@ -12,9 +12,9 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-
 @MainActor
 class LocationManager: NSObject, ObservableObject {
+    static let shared = LocationManager() // 单例实例
     @Published var location: CLLocation?
     @Published var region = MKCoordinateRegion()
     
@@ -27,11 +27,10 @@ class LocationManager: NSObject, ObservableObject {
     private var timeInGreenSpace: TimeInterval = 0 // 用于记录在绿地的时间
     private var greenSpaceTimer: Timer?
     private var isInGreenSpace: Bool = false // 跟踪是否在绿地中
-    
-    
-//    private let userId = getCurrentUserId()
+    private var currentLocationName: String = "" // 用于存储当前地名
+    private var previousLocationName: String = "" // 用于存储上一个地名
 
-    override init() {
+    private override init() { // 防止外部初始化
         super.init()
         
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -49,86 +48,7 @@ class LocationManager: NSObject, ObservableObject {
         }
     }
     
-    private func getCurrentUserId() -> String? {
-        if let user = Auth.auth().currentUser {
-            return user.uid // 返回当前用户的唯一 ID
-        }
-        return nil // 如果没有用户登录，则返回 nil
-    }
-    
-
-    // 存储在绿地的时间到 Firebase
-//    private func saveTimeInGreenSpaceToFirebase() {
-//        let db = Storage.storage()
-//        db.collection("users").document(userId).setData(["timeInGreenSpace": timeInGreenSpace]) { error in
-//            if let error = error {
-//                print("Error saving time to Firebase: \(error.localizedDescription)")
-//            } else {
-//                print("Time in green space saved successfully.")
-//            }
-//        }
-//    }
-
-    // 从 Firebase 加载时间
-//    private func loadTimeInGreenSpaceFromFirebase() {
-//        let db = Storage.storage()
-//        db.collection("users").document(userId).getDocument { document, error in
-//            if let document = document, document.exists {
-//                if let time = document.get("timeInGreenSpace") as? TimeInterval {
-//                    self.timeInGreenSpace = time
-//                    print("Loaded time in green space: \(self.timeInGreenSpace) seconds")
-//                }
-//            } else {
-//                print("Error fetching document: \(error?.localizedDescription ?? "Unknown error")")
-//            }
-//        }
-//    }
-    
-    private func canSendNotification() -> Bool {
-        if let lastDate = lastNotificationDate {
-            return Date().timeIntervalSince(lastDate) > notificationInterval
-        }
-        return true
-    }
-    
-
-    private func getTopViewController() -> UIViewController? {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return nil
-        }
-        
-        // 获取 key window
-        guard let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
-            return nil
-        }
-
-        // 遍历视图控制器以找到最上面的控制器
-        var topController = window.rootViewController
-        while let presentedViewController = topController?.presentedViewController {
-            topController = presentedViewController
-        }
-        return topController
-    }
-
-    
-    func sendNotification() {
-            guard canSendNotification() else {
-                print("Notification cooldown in effect, not sending a new notification.")
-                return
-            }
-            
-            let alert = UIAlertController(title: "Take a Break!", message: "You are near a green space. Take a moment to relax and enjoy nature.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            
-            if let topController = getTopViewController() {
-                topController.present(alert, animated: true, completion: nil)
-            }
-            
-            lastNotificationDate = Date()
-        }
-
-    
-    // Reverse geocode
+    // 反向地理编码
     func reverseGeocodeLocation(location: CLLocation) {
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             guard let placemark = placemarks?.first, error == nil else {
@@ -138,21 +58,29 @@ class LocationManager: NSObject, ObservableObject {
             
             if let name = placemark.name {
                 self.locationDescription = name
+                self.currentLocationName = name // 存储当前地名
                 
-                // 检查是否在绿地
-                if name.lowercased().contains("park") || name.lowercased().contains("garden") {
-                    if !self.isInGreenSpace { // 如果刚刚进入绿地
-                        self.isInGreenSpace = true
-                        self.sendNotification()
-                        self.startGreenSpaceTimer()
-//                        self.saveTimeInGreenSpaceToFirebase() // 进入时保存时间
-                    }
-                } else {
-                    if self.isInGreenSpace { // 如果刚刚离开绿地
-                        self.isInGreenSpace = false
-                        self.stopGreenSpaceTimer()
-//                        self.saveTimeInGreenSpaceToFirebase() // 离开时保存时间
-                    }
+                // 检查位置变化
+                self.checkLocationChange()
+            }
+        }
+    }
+    
+    private func checkLocationChange() {
+        // 仅在地名发生变化时检查
+        if currentLocationName != previousLocationName {
+            previousLocationName = currentLocationName // 更新上一个地名
+            
+            // 检查当前地点名称是否包含"park"或"garden"
+            if currentLocationName.lowercased().contains("park") || currentLocationName.lowercased().contains("garden") {
+                if !isInGreenSpace { // 如果刚刚进入绿地
+                    isInGreenSpace = true
+                    startGreenSpaceTimer()
+                }
+            } else {
+                if isInGreenSpace { // 如果刚刚离开绿地
+                    isInGreenSpace = false
+                    stopGreenSpaceTimer()
                 }
             }
         }

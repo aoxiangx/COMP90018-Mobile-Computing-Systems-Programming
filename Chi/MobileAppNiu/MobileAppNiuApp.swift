@@ -29,7 +29,8 @@ import GoogleSignInSwift
      @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
      
      @StateObject var manager = HealthManager()
-     @StateObject var locationManager = LocationManager()
+//     @StateObject var locationManager = LocationManager()
+     var locationManager = LocationManager.shared
 
   var body: some Scene {
     WindowGroup {

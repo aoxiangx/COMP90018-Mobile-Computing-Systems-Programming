@@ -168,5 +168,5 @@ struct ObjectiveNotification: View {
 #Preview {
     // Test case with no objective set
     ObjectiveNotification()
-    ObjectiveNotification(activity: .steps).environmentObject(HealthManager())
+//    ObjectiveNotification(activity: .steps).environmentObject(HealthManager())
 }

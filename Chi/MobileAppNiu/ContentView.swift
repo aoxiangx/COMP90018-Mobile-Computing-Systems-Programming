@@ -23,7 +23,7 @@ struct ContentView: View {
                     
                     HomeView()
                         .navigationBarHidden(true)
-                        .environmentObject(LocationManager())
+                        .environmentObject(LocationManager.shared)
                 }
                 .tabItem {
                     Image(isReflectToggled ? .mindfulnessToggled : .mindfulUntoggled)

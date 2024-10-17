@@ -6,7 +6,10 @@ struct HomeView: View {
     
     
     @EnvironmentObject var manager : HealthManager
+    
     @EnvironmentObject var locationManager: LocationManager
+//    var locationManager = LocationManager.shared
+    
     @State private var score: Double = 34.0
     
     
@@ -128,5 +131,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environmentObject(HealthManager())
-        .environmentObject(LocationManager())
+        .environmentObject(LocationManager.shared)
 }
