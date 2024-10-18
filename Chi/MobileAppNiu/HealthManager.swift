@@ -67,6 +67,104 @@ class HealthManager: ObservableObject {
         
         healthStore.execute(query)
     }
+    
+    /// Fetch steps for a specific date
+    func fetchSteps(for date: Date, completion: @escaping (Double) -> Void) {
+        guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            completion(0.0)
+            return
+        }
+        
+        let startOfDay = Calendar.current.startOfDay(for: date)
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let _ = error {
+                completion(0.0)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0)
+                return
+            }
+            
+            let stepCount = quantity.doubleValue(for: HKUnit.count())
+            completion(stepCount)
+        }
+        
+        healthStore.execute(query)
+    }
+    
+    /// Fetch daylight for a specific date
+    func fetchDaylight(for date: Date, completion: @escaping (Double) -> Void) {
+        guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else {
+            completion(0.0)
+            return
+        }
+        
+        let startOfDay = Calendar.current.startOfDay(for: date)
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let _ = error {
+                completion(0.0)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0)
+                return
+            }
+            
+            let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
+            completion(daylightMinutes)
+        }
+        
+        healthStore.execute(query)
+    }
+    
+    /// Fetch steps for the last 7 days
+    func fetchLast7DaysSteps(completion: @escaping ([Double]) -> Void) {
+        var stepsArray: [Double] = []
+        let group = DispatchGroup()
+        
+        for day in 0..<7 {
+            group.enter()
+            let date = Calendar.current.date(byAdding: .day, value: -day, to: Date())!
+            fetchSteps(for: date) { steps in
+                stepsArray.append(steps)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            // Reverse to have oldest first
+            completion(stepsArray.reversed())
+        }
+    }
+    
+    /// Fetch daylight for the last 7 days
+    func fetchLast7DaysDaylight(completion: @escaping ([Double]) -> Void) {
+        var daylightArray: [Double] = []
+        let group = DispatchGroup()
+        
+        for day in 0..<7 {
+            group.enter()
+            let date = Calendar.current.date(byAdding: .day, value: -day, to: Date())!
+            fetchDaylight(for: date) { daylight in
+                daylightArray.append(daylight)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            // Reverse to have oldest first
+            completion(daylightArray.reversed())
+        }
+    }
 
     
     /// 获取今天的日光时间
