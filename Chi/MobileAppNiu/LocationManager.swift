@@ -23,7 +23,6 @@ class LocationManager: NSObject, ObservableObject {
     @Published var locationDescription: String = "Unknown"
     
     private var lastNotificationDate: Date?
-//    private let notificationInterval: TimeInterval = 1800 // 30 minutes for testing
     private var timeInGreenSpace: TimeInterval = 0 // Used to record time spent in green space
     private var greenSpaceTimer: Timer?
     private var isInGreenSpace: Bool = false // Tracks whether in green space
@@ -47,7 +46,48 @@ class LocationManager: NSObject, ObservableObject {
                 print("Notification permission denied")
             }
         }
+        
+        scheduleDailyNotifications()
     }
+    
+    private func scheduleDailyNotifications() {
+        let content = UNMutableNotificationContent()
+        content.title = "Daily Reminder"
+        content.body = "Remember to spend some time in nature today!"
+        content.sound = .default
+        
+        // Define the times you want notifications to be sent (e.g., 9:00 AM, 12:00 PM, 6:00 PM)
+        let times: [(hour: Int, minute: Int)] = [
+            (hour: 9, minute: 0),  // 9:00 AM
+            (hour: 12, minute: 47), // 12:00 PM
+            (hour: 18, minute: 0)  // 6:00 PM
+        ]
+        
+        for (index, time) in times.enumerated() {
+            // Set the time for each notification
+            var dateComponents = DateComponents()
+            dateComponents.hour = time.hour
+            dateComponents.minute = time.minute
+            
+            // Create the trigger for each time
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            let request = UNNotificationRequest(
+                identifier: "dailyGreenSpaceReminder_\(index)",
+                content: content,
+                trigger: trigger
+            )
+            
+            // Add the notification request
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("Failed to schedule daily notification for \(time.hour):\(time.minute): \(error.localizedDescription)")
+                } else {
+                    print("Daily notification scheduled for \(time.hour):\(time.minute).")
+                }
+            }
+        }
+    }
+
     
     // Reverse geocoding
     func reverseGeocodeLocation(location: CLLocation) {
@@ -122,19 +162,6 @@ class LocationManager: NSObject, ObservableObject {
     }
     
     private func sendGreenSpaceNotification() {
-//        let content = UNMutableNotificationContent()
-//        content.title = "Enjoy Your Time!"
-//        content.body = "You are in a green space. Take a moment to relax and enjoy the surroundings."
-//        content.sound = .default
-//
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-//        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-//
-//        UNUserNotificationCenter.current().add(request) { error in
-//            if let error = error {
-//                print("Failed to add notification: \(error.localizedDescription)")
-//            }
-//        }
         // Get the current active scene
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let rootViewController = windowScene.windows.first?.rootViewController else {
