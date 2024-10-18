@@ -30,16 +30,20 @@ struct SummeryBoxView: View {
                 .font(.system(size: 16))
                 .foregroundColor(Constants.gray3)
             // 显示平均值和副标题
-            Text(String(format: "%.1f", average))
-                .font(.system(size: 24))
-                .lineLimit(1)
-                .foregroundColor(Constants.gray3)
-                .fixedSize(horizontal: true, vertical: true) // 确保不会水平压缩
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(subtitle)
-                .font(Constants.caption)
-                .lineLimit(1)
-                .foregroundColor(Constants.gray3)
+            HStack(spacing: 4) {  // You can adjust the spacing as needed
+                Text(String(format: "%.1f", average))
+                    .font(.system(size: 24))
+                    .lineLimit(1)
+                    .foregroundColor(Constants.gray3)
+                    .fixedSize(horizontal: true, vertical: true)
+
+                Text(subtitle)
+                    .font(Constants.caption)
+                    .lineLimit(1)
+                    .foregroundColor(Constants.gray3)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
             // 过去7天
             Text(description)
                 .font(.system(size: 12))
