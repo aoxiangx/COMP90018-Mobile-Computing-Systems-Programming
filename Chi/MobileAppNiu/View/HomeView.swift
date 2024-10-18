@@ -3,22 +3,18 @@ import Firebase
 import FirebaseAuth
 
 struct HomeView: View {
-    
-    
-    @EnvironmentObject var manager : HealthManager
-    
+    @EnvironmentObject var manager: HealthManager
     @EnvironmentObject var locationManager: LocationManager
-//    var locationManager = LocationManager.shared
-    
-    @State private var score: Double = 34.0
-    
-    
-    @AppStorage("log_Status") private var logStatus: Bool = false
-    
-    // Import ObjectiveViewModel
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
     
+    @State private var score: Double = 34.0
+    @AppStorage("log_Status") private var logStatus: Bool = false
     @State private var currentPageIndex = 0
+    
+    // State variables for percentages and loading state
+    @State private var percentages: [Double] = Array(repeating: 0.0, count: 7)
+    @State private var loading: Bool = true
+    
     var objectiveNotifications: [ObjectiveNotification] {
         var notifications: [ObjectiveNotification] = []
         
@@ -55,78 +51,117 @@ struct HomeView: View {
     }
     
     var body: some View {
-            ZStack{
-                
-                // Background
-                LinearGradient(gradient: Gradient(stops: [
-                    .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
-                    .init(color: Color(hex: "EDF5FF"), location: 0.6)   // End with EDF5FF
-                ]),
-                               startPoint: .topLeading,
-                               endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)  // To fill the entire screen
-                
-                // start scroll view
-                ScrollView {
-                    
-                    VStack {
-                        
-                        // start Ztack
-                        ZStack (alignment: .topLeading){
+        ZStack {
+            // Background
+            LinearGradient(gradient: Gradient(stops: [
+                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
+                .init(color: Color(hex: "EDF5FF"), location: 0.6)   // End with EDF5FF
+            ]),
+                           startPoint: .topLeading,
+                           endPoint: .bottomTrailing)
+            .edgesIgnoringSafeArea(.all)  // To fill the entire screen
+            
+            // Start ScrollView
+            ScrollView {
+                VStack {
+                    // ZStack for overlapping views
+                    ZStack (alignment: .topLeading) {
+                        VStack(alignment: .leading) {
+                            // Date view
+                            DateHomeView()
                             
-                            // start Vstack
-                            VStack(alignment: .leading) {
-                                // Date view
-                                DateHomeView()
-                                
-                                PieHomeView(percentages: [35, 50, 65, 75, 85, 90, 55]).padding(.leading, 15)
-                               
-                                CircleChartView(score: $score)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .multilineTextAlignment(.center)
-//                                LocationView()
-                                
-                                // TabView for sliding list of notifications
-                                    TabView(selection: $currentPageIndex) {
-                                        ForEach(0..<objectiveNotifications.count, id: \.self) { index in
-                                            objectiveNotifications[index]
-                                                .tag(index)
-                                        }
-                                    }
-                                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                                    .frame(height: 150)
-                                    .padding(.horizontal, 16)
-                                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                                    // Display page indicator if there are objectives set
-                                    if objectiveNotifications.count > 1 {
-                                        HStack {
-                                            ForEach(0..<objectiveNotifications.count, id: \.self) { index in
-                                                Circle()
-                                                    .fill(currentPageIndex == index ? Color.blue : Color.gray)
-                                                    .frame(width: 8, height: 8)
-                                            }
-                                        }
-                                         // Adjust location of indicator
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    }
-                                // end Vstack list of notifications
-                                
-                                
-                                SummaryBoxesView()
-                                LocationView()
-                            // end Vstack
+                            // Conditional PieHomeView based on loading state
+                            if !loading {
+                                PieHomeView(percentages: percentages)
+                                    .padding(.leading, 15)
+                            } else {
+                                ProgressView()
+                                    .padding(.leading, 15)
                             }
                             
-                        // end Ztack
+                            CircleChartView(score: $score)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .multilineTextAlignment(.center)
+                            
+                            // TabView for sliding list of notifications
+                            TabView(selection: $currentPageIndex) {
+                                ForEach(0..<objectiveNotifications.count, id: \.self) { index in
+                                    objectiveNotifications[index]
+                                        .tag(index)
+                                }
+                            }
+                            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                            .frame(height: 150)
+                            .padding(.horizontal, 16)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            
+                            // Display page indicator if there are multiple notifications
+                            if objectiveNotifications.count > 1 {
+                                HStack {
+                                    ForEach(0..<objectiveNotifications.count, id: \.self) { index in
+                                        Circle()
+                                            .fill(currentPageIndex == index ? Color.blue : Color.gray)
+                                            .frame(width: 8, height: 8)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                            
+                            SummaryBoxesView()
+                            LocationView()
                         }
-                        
                     }
-                
-                // end scroll view
                 }
             }
         }
+        .onAppear {
+            fetchAndCalculatePercentages()
+        }
+    }
+    
+    /// Fetches health and green space data for the last 7 days, calculates percentages, and updates the state.
+    private func fetchAndCalculatePercentages() {
+        let group = DispatchGroup()
+        var steps: [Double] = []
+        var daylight: [Double] = []
+        
+        // Fetch last 7 days steps
+        group.enter()
+        manager.fetchLast7DaysSteps { fetchedSteps in
+            steps = fetchedSteps
+            group.leave()
+        }
+        
+        // Fetch last 7 days daylight
+        group.enter()
+        manager.fetchLast7DaysDaylight { fetchedDaylight in
+            daylight = fetchedDaylight
+            group.leave()
+        }
+        
+        // Once both steps and daylight are fetched
+        group.notify(queue: .main) {
+            // Fetch green space times for last 7 days
+            let greenSpace = locationManager.getGreenSpaceTimes(forLastNDays: 7)
+            
+            // Retrieve user objectives
+            let objectives = self.objectiveViewModel.objectives
+            let totalObjective = Double(objectives.sunlightDuration + objectives.greenAreaActivityDuration + objectives.stepCount)
+            
+            var newPercentages: [Double] = []
+            for day in 0..<7 {
+                let sum = Double(daylight[day] + greenSpace[day] + Double(steps[day]))
+                let percentage = (sum / totalObjective) * 100.0
+                newPercentages.append(Double(Int(percentage))) // Take integer part
+            }
+            
+            // Update the state with calculated percentages
+            self.percentages = newPercentages
+            self.loading = false
+        }
+    }
 }
+
 
 #Preview {
     HomeView()
