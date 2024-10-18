@@ -23,10 +23,11 @@ class LocationManager: NSObject, ObservableObject {
     @Published var locationDescription: String = "Unknown"
     
     private var lastNotificationDate: Date?
-    private let notificationInterval: TimeInterval = 1800 // 30 minutes for testing
+//    private let notificationInterval: TimeInterval = 1800 // 30 minutes for testing
     private var timeInGreenSpace: TimeInterval = 0 // Used to record time spent in green space
     private var greenSpaceTimer: Timer?
     private var isInGreenSpace: Bool = false // Tracks whether in green space
+    private var hasSentGreenSpaceNotification: Bool = false // Tracks whether notification has been sent
     private var currentLocationName: String = "" // Used to store the current location name
     private var previousLocationName: String = "" // Used to store the previous location name
 
@@ -74,13 +75,24 @@ class LocationManager: NSObject, ObservableObject {
             // Check if the current location name contains "park" or "garden"
             if currentLocationName.lowercased().contains("park") || currentLocationName.lowercased().contains("garden") {
                 if !isInGreenSpace { // If just entered green space
+                    
+                    // Send notification if not already sent
+                    if !self.hasSentGreenSpaceNotification {
+                        print("发送消息")
+                        sendGreenSpaceNotification()
+                        self.hasSentGreenSpaceNotification = true
+                    }
+
                     isInGreenSpace = true
                     startGreenSpaceTimer()
+                    
                 }
             } else {
                 if isInGreenSpace { // If just left green space
                     isInGreenSpace = false
                     stopGreenSpaceTimer()
+                    print("离开绿地")
+                    self.hasSentGreenSpaceNotification = false // Reset notification flag upon leaving green space
                 }
             }
         }
@@ -109,8 +121,51 @@ class LocationManager: NSObject, ObservableObject {
         print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
     
-    
-    // !!!!!! save green space time by using UserDefaults !!!!!!
+    private func sendGreenSpaceNotification() {
+//        let content = UNMutableNotificationContent()
+//        content.title = "Enjoy Your Time!"
+//        content.body = "You are in a green space. Take a moment to relax and enjoy the surroundings."
+//        content.sound = .default
+//
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+//        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+//
+//        UNUserNotificationCenter.current().add(request) { error in
+//            if let error = error {
+//                print("Failed to add notification: \(error.localizedDescription)")
+//            }
+//        }
+        // Get the current active scene
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            print("Unable to find root view controller.")
+            return
+        }
+        
+        let alert = UIAlertController(title: "Enjoy Your Time!", message: "You are in a green space. Take a moment to relax and enjoy the surroundings.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        Task { @MainActor in
+            rootViewController.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
+extension LocationManager: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        self.location = location
+        self.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+        
+        reverseGeocodeLocation(location: location)
+    }
+}
+
+
+
+
+
+// !!!!!! save green space time by using UserDefaults !!!!!!
 //    private func startGreenSpaceTimer() {
 //            stopGreenSpaceTimer() // Ensure no duplicate timer
 //            timeInGreenSpace = 0 // Reset timer
@@ -129,25 +184,12 @@ class LocationManager: NSObject, ObservableObject {
 //        // Save the time when stopping the timer
 //        saveGreenSpaceTime()
 //    }
-    
-    private func saveGreenSpaceTime() {
-            UserDefaults.standard.set(timeInGreenSpace, forKey: "greenSpaceTime")
-    }
 
-    private func loadSavedGreenSpaceTime() {
-        let savedTime = UserDefaults.standard.double(forKey: "greenSpaceTime")
-        timeInGreenSpace += savedTime // Add to current time
-    }
-    
-    
-}
-
-extension LocationManager: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        self.location = location
-        self.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
-        
-        reverseGeocodeLocation(location: location)
-    }
-}
+//    private func saveGreenSpaceTime() {
+//            UserDefaults.standard.set(timeInGreenSpace, forKey: "greenSpaceTime")
+//    }
+//
+//    private func loadSavedGreenSpaceTime() {
+//        let savedTime = UserDefaults.standard.double(forKey: "greenSpaceTime")
+//        timeInGreenSpace += savedTime // Add to current time
+//    }
