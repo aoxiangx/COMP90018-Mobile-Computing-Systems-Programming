@@ -13,6 +13,7 @@
 		32A6B5612C96887400F48E56 /* ExplainationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5602C96887400F48E56 /* ExplainationView.swift */; };
 		32A6B56A2C96920B00F48E56 /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */; };
 		8A4B8DFC2CAFA11E004A6BD1 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B8DFB2CAFA11E004A6BD1 /* JourneyView.swift */; };
+		8A7F30312CC2761700741314 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7F30302CC2761700741314 /* ImagePicker.swift */; };
 		BF0C59532C97A4D6000E0875 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C59522C97A4D6000E0875 /* Font.swift */; };
 		BF0C59572C97B266000E0875 /* RedHatDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */; };
 		BF0C595B2C97BB7A000E0875 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0C595A2C97BB7A000E0875 /* Constants.swift */; };
@@ -85,6 +86,7 @@
 		32A6B5602C96887400F48E56 /* ExplainationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplainationView.swift; sourceTree = "<group>"; };
 		32A6B5692C96920B00F48E56 /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		8A4B8DFB2CAFA11E004A6BD1 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
+		8A7F30302CC2761700741314 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		BF0C59522C97A4D6000E0875 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		BF0C59552C97A5BD000E0875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF0C59562C97B266000E0875 /* RedHatDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Bold.ttf"; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				F194148D2CA449F800B291BC /* PhotoButtonView.swift */,
 				BF409D702CA64825000A77E5 /* ScoreEmojiView.swift */,
 				F16264512CB24827007157B4 /* LocationView.swift */,
+				8A7F30302CC2761700741314 /* ImagePicker.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 				BF0F57E02CB9FC5F001B6144 /* Models.swift in Sources */,
 				F1CB26BF2CB405C2008CB89D /* Application_utility.swift in Sources */,
 				F1F28E562C9DBBDA00A82BDE /* LogoutView.swift in Sources */,
+				8A7F30312CC2761700741314 /* ImagePicker.swift in Sources */,
 				BF0C59602C97E52B000E0875 /* LandscapeInfoCard.swift in Sources */,
 				328DDD1E2C9BD6A900937126 /* Summary.swift in Sources */,
 				BF8021A22CAD163900C9C86D /* ProfileView.swift in Sources */,
@@ -656,11 +660,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
-				DEVELOPMENT_TEAM = J8U4QDLR8S;
+				DEVELOPMENT_TEAM = CBWC78R3M2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
+				INFOPLIST_KEY_NSCameraUsageDescription = "\"This app requires access to your camera to allow you to take photos and videos within the app.\"\n";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
@@ -675,7 +680,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = niuniu.MobileAppNiu;
+				PRODUCT_BUNDLE_IDENTIFIER = niuniu.MobileAppNiu1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -692,11 +697,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
-				DEVELOPMENT_TEAM = J8U4QDLR8S;
+				DEVELOPMENT_TEAM = CBWC78R3M2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
+				INFOPLIST_KEY_NSCameraUsageDescription = "\"This app requires access to your camera to allow you to take photos and videos within the app.\"\n";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
