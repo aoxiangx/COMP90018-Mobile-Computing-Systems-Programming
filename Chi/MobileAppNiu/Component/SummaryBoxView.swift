@@ -68,7 +68,7 @@ struct SummeryBoxView: View {
         manager.fetchAverage(endDate: Date(), activity: activity,period: period) { fetchedAverage in
             DispatchQueue.main.async {
                 self.average = fetchedAverage
-                print("Average for \(activity.title): \(fetchedAverage)")
+//                print("Average for \(activity.title): \(fetchedAverage)")
             }
         }
     }
