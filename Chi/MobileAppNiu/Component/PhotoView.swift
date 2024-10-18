@@ -37,8 +37,9 @@ struct PhotoCarouselView: View {
                             .opacity(index == currentIndex ? 1 : 0.5)
                             .scaleEffect(index == currentIndex ? 1.0 : 0.9)
                             .animation(.spring(), value: currentIndex)
-                            .offset(x: CGFloat(index - currentIndex) * 300)
-
+                            .offset(x: CGFloat(index - currentIndex) * 300) // Offset to simulate carousel effect
+                        
+                        // Delete button only on the current image
                         if index == currentIndex {
                             Button(action: {
                                 // Confirm deletion
@@ -50,7 +51,7 @@ struct PhotoCarouselView: View {
                                     .foregroundColor(.red)
                                     .padding(8)
                             }
-                            .zIndex(2) // button at the top
+                            .zIndex(2) // Ensure the button is on top
                         }
                     }
                 }
@@ -67,6 +68,12 @@ struct PhotoCarouselView: View {
                     }
             )
             .contentShape(Rectangle())
+            .onChange(of: images) { newImages in
+                // Adjust currentIndex if it exceeds the new images count
+                if currentIndex >= newImages.count {
+                    currentIndex = max(newImages.count - 1, 0)
+                }
+            }
         }
     }
     
