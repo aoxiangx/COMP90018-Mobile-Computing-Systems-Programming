@@ -284,7 +284,7 @@ class HealthManager: ObservableObject {
                         value = 0.0
                     }
                     dailyValues[day] = value
-                    print("Data for day \(day): \(value)")
+//                    print("Average Data for day \(day): \(value)")
                 }
                 group.enter()
                 healthStore.execute(query)
@@ -305,33 +305,50 @@ class HealthManager: ObservableObject {
     /// 根据活动和时间段获取数据
     func fetchTimeIntervalByActivity(timePeriod: TimePeriod, activity: Activity, completion: @escaping ([LineChartData]) -> Void) {
         let activityType = activity.activityType
-        
         let calendar = Calendar.current
-        let endDate = Date()
+        let endDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: Date())! // Set to end of today
         var startDate: Date
         var labels: [String] = []
-        
+
         switch timePeriod {
         case .day:
+            // Calculate the start of the current day in local time
             startDate = calendar.startOfDay(for: endDate)
-            labels = (0..<24).map { "\($0)" } // 小时标签
+            labels = (0..<24).map { "\($0)" } // Hour labels
             fetchHourly(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { hourlyData in
-                completion(hourlyData) // 返回每小时数据
+                completion(hourlyData) // Return hourly data
             }
-            
+
         case .week:
-            startDate = calendar.date(byAdding: .day, value: -7, to: endDate)!
-            labels = calendar.shortWeekdaySymbols // 天标签
+            // Calculate startDate for the past 7 days, starting from today
+            startDate = calendar.date(byAdding: .day, value: -6, to: calendar.startOfDay(for: endDate))! // This gives
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "EEE" // Format for abbreviated weekday names
+            labels = (0..<7).map {
+                let date = calendar.date(byAdding: .day, value: $0, to: startDate)!
+                return dateFormatter.string(from: date)
+            }
+
+//            print("adjustedStartDate: \(adjustedStartDate), adjustedEndDate: \(adjustedEndDate)")
+            print("labels: \(labels)")
             fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { dailyData in
                 completion(dailyData) // 返回每日数据
             }
             
         case .month:
-            startDate = calendar.date(byAdding: .month, value: -1, to: endDate)!
-            let daysInMonth = calendar.range(of: .day, in: .month, for: endDate)!.count
-            labels = (1...daysInMonth).map { "\($0)" } // 天数标签
+            // Start date is set to 30 days before today
+            startDate = calendar.date(byAdding: .day, value: -30, to: endDate)!
+
+            // Generate labels for the past 30 days including today
+            labels = (0..<31).map { dayOffset in
+                let date = calendar.date(byAdding: .day, value: -dayOffset, to: endDate)!
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "MM/dd" // Change format to include month and day
+                return dateFormatter.string(from: date)
+            }.reversed()
+            // Fetch daily data
             fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { dailyData in
-                completion(dailyData) // 返回每日数据
+                completion(dailyData) // Return daily data
             }
             
         case .sixMonths:
@@ -356,18 +373,21 @@ class HealthManager: ObservableObject {
         var dailyValues: [Double] = Array(repeating: 0.0, count: labels.count)
         let numberOfDays = labels.count
         let calendar = Calendar.current
-        let group = DispatchGroup() // 等待所有查询完成
-        
+        let group = DispatchGroup() // To wait for all queries to complete
+
         for day in 0..<numberOfDays {
-            guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate),
-                  let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
+            // Calculate dayStart as the start of the day for `endDate`
+            guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate)?.startOfDay,
+                  let dayEnd = calendar.date(byAdding: .second, value: -1, to: calendar.date(byAdding: .day, value: 1, to: dayStart)!) else {
                 print("Error calculating date range for day \(day)")
                 continue
             }
-            
+
             let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
+            print("day: \(day), dayStart: \(dayStart), dayEnd: \(dayEnd)") // Print the adjusted start and end dates
+
             let options = activity.statisticsOption
-            
+
             if activity == .sleep {
                 // Use HKSampleQuery for sleep activity
                 let query = HKSampleQuery(sampleType: activityType as! HKSampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
@@ -378,7 +398,7 @@ class HealthManager: ObservableObject {
                         print("Error fetching sleep data: \(String(describing: error))")
                         return
                     }
-                    
+
                     // Process sleep samples
                     var totalSleepTime = 0.0
                     if let samples = results as? [HKCategorySample] {
@@ -386,9 +406,10 @@ class HealthManager: ObservableObject {
                             totalSleepTime += sample.endDate.timeIntervalSince(sample.startDate) // Calculate sleep duration
                         }
                     }
-                    
-                    dailyValues[day] = totalSleepTime / 3600.0 // Convert seconds to hours
-                    print("Data for day \(day): \(dailyValues[day]) hours of sleep")
+
+                    // Store the total sleep time for the current day
+                    dailyValues[numberOfDays - 1 - day] = totalSleepTime / 3600.0 // Convert seconds to hours
+                    print("Data for day \(numberOfDays - 1 - day): \(dailyValues[numberOfDays - 1 - day]) hours of sleep")
                 }
                 group.enter() // Notify that a query is starting
                 healthStore.execute(query)
@@ -412,22 +433,24 @@ class HealthManager: ObservableObject {
                         value = 0.0 // This case should not be hit as we are already checking for sleep above
                     }
                     
-                    dailyValues[day] = value
-                    print("Data for day \(day): \(value)")
+                    // Store the value for the current day
+                    dailyValues[numberOfDays - 1 - day] = value
+                    print("Data for day \(numberOfDays - 1 - day): \(value)")
                 }
-                
+
                 group.enter() // Notify that a query is starting
                 healthStore.execute(query)
             }
         }
-        
-        // 所有查询完成后创建 LineChartData 并调用 completion
+
+        // Create LineChartData and call completion when all queries are done
         group.notify(queue: .main) {
             let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: dailyValues[$0]) }
             print("Daily activity: \(lineChartData)")
             completion(lineChartData)
         }
     }
+
     
     // fetch hourly
     private func fetchHourly(startDate: Date, endDate: Date, labels: [String], activity: Activity, activityType: HKObjectType, completion: @escaping ([LineChartData]) -> Void) {
