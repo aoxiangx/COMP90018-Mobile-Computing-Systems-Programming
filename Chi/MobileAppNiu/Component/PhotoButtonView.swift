@@ -72,10 +72,7 @@ struct PhotoButtonView: View {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
                            let image = UIImage(data: data) {
                             if let selectedDate = selectedDate {
-                                var images = dateImages[selectedDate] ?? []
-                                if images.count < 5 {
-                                    images.append(image)
-                                    dateImages[selectedDate] = images
+                                if (dateImages[selectedDate]?.count ?? 0) < 5 {
                                     newImages.append(image)
                                 } else {
                                     alertMessage = "You can only add up to 5 images per date."
@@ -90,18 +87,15 @@ struct PhotoButtonView: View {
                         }
                     }
                     if !newImages.isEmpty, let selectedDate = selectedDate {
-                        onImageAdded?(selectedDate, newImages) // Notify that images have been added
+                        onImageAdded?(selectedDate, newImages) // Only callback without modifying dateImages
                     }
                 }
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(sourceType: sourceType) { image in
                     if let selectedDate = selectedDate {
-                        var images = dateImages[selectedDate] ?? []
-                        if images.count < 5 {
-                            images.append(image)
-                            dateImages[selectedDate] = images
-                            onImageAdded?(selectedDate, [image]) // Notify that an image has been added
+                        if (dateImages[selectedDate]?.count ?? 0) < 5 {
+                            onImageAdded?(selectedDate, [image]) // Only callback without modifying dateImages
                         } else {
                             alertMessage = "You can only add up to 5 images per date."
                             showAlert = true
@@ -166,3 +160,4 @@ struct ImagePicker: UIViewControllerRepresentable {
         // Handle image saving logic
     })
 }
+
