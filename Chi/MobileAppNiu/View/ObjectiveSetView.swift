@@ -27,14 +27,23 @@ struct ObjectiveDetail: View {
                                     inputValue = "\(self.binding(for: type).wrappedValue)"
                                 }
                                 .onChange(of: inputValue) { newValue in
-                                    // Update the binding if the input is a valid number
-                                    if let intValue = Int(newValue), intValue >= 0, intValue <= 480 {
-                                        self.binding(for: type).wrappedValue = intValue
-                                    } else if newValue.isEmpty {
-                                        self.binding(for: type).wrappedValue = 0 // Reset to 0 if input is empty
-                                    }
-                                }
-                                .fixedSize(horizontal: true, vertical: false) // Prevent width growth
+                                                        if type == .stepCount {
+                                                            // Limit for Active Index (step count) is 0 to 50000
+                                                            if let intValue = Int(newValue), intValue >= 0, intValue <= 50000 {
+                                                                self.binding(for: type).wrappedValue = intValue
+                                                            } else if newValue.isEmpty {
+                                                                self.binding(for: type).wrappedValue = 0 // Reset to 0 if input is empty
+                                                            }
+                                                        } else {
+                                                            // Limit for other objectives is 0 to 480
+                                                            if let intValue = Int(newValue), intValue >= 0, intValue <= 480 {
+                                                                self.binding(for: type).wrappedValue = intValue
+                                                            } else if newValue.isEmpty {
+                                                                self.binding(for: type).wrappedValue = 0 // Reset to 0 if input is empty
+                                                            }
+                                                        }
+                                                    }
+                                                    .fixedSize(horizontal: true, vertical: false) // Prevent width growth
 
                             // Stepper for adjusting the objective
                             Stepper("", value: self.binding(for: type), in: 0...480)
@@ -133,6 +142,16 @@ struct ObjectiveSetView: View {
             if let type = viewModel.activeCard {
                 ObjectiveDetail(type: type, viewModel: viewModel)
             }
+        }
+    }
+    
+    // Function to define the stepper range for each objective type
+    private func stepperRange(for type: ObjectiveViewModel.ObjectiveType) -> ClosedRange<Int> {
+        switch type {
+        case .stepCount:
+            return 0...50000 // Limit for step count
+        default:
+            return 0...480 // Limit for other objectives
         }
     }
 }
