@@ -36,7 +36,7 @@ class ObjectiveViewModel: ObservableObject {
         if let loadedObjectives = UserDefaults.standard.getDailyObjectives(forKey: "UserObjectives") {
             self.objectives = loadedObjectives
         } else {
-            self.objectives = DailyObjectives(sunlightDuration: 30, greenAreaActivityDuration: 60, stepCount: 90)
+            self.objectives = DailyObjectives(sunlightDuration: 30, greenAreaActivityDuration: 60, stepCount: 900)
         }
     }
     
