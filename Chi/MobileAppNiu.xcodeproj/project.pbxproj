@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		328BAC432CC223D100DEC1B2 /* File.txt in Resources */ = {isa = PBXBuildFile; fileRef = 328BAC422CC223D000DEC1B2 /* File.txt */; };
 		328DDD1C2C9BC1D500937126 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328DDD1B2C9BC1D500937126 /* ChartView.swift */; };
 		328DDD1E2C9BD6A900937126 /* Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328DDD1D2C9BD6A900937126 /* Summary.swift */; };
 		32A6B55F2C96886400F48E56 /* GroupingDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6B55E2C96886400F48E56 /* GroupingDataView.swift */; };
@@ -80,7 +79,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		328BAC422CC223D000DEC1B2 /* File.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
 		328DDD1B2C9BC1D500937126 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		328DDD1D2C9BD6A900937126 /* Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Summary.swift; sourceTree = "<group>"; };
 		32A6B55E2C96886400F48E56 /* GroupingDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupingDataView.swift; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 				328DDD1D2C9BD6A900937126 /* Summary.swift */,
 				328DDD1B2C9BC1D500937126 /* ChartView.swift */,
 				F1F28E442C9D1AB400A82BDE /* SummaryBoxView.swift */,
-				328BAC422CC223D000DEC1B2 /* File.txt */,
 				F1F28E462C9D1AD700A82BDE /* SummaryBoxesView.swift */,
 				F1F28E492C9D1DBD00A82BDE /* CalendarView.swift */,
 				F1F28E4D2C9D248B00A82BDE /* Date+Extension.swift */,
@@ -425,7 +422,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				328BAC432CC223D100DEC1B2 /* File.txt in Resources */,
 				F1DF4BDA2C9591D90021FE1D /* Preview Assets.xcassets in Resources */,
 				F1DF4BD72C9591D90021FE1D /* Assets.xcassets in Resources */,
 				F1CB26B72CB3F97D008CB89D /* GoogleService-Info.plist in Resources */,
@@ -660,7 +656,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
-				DEVELOPMENT_TEAM = UDC5456Q7K;
+				DEVELOPMENT_TEAM = J8U4QDLR8S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
@@ -696,6 +692,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MobileAppNiu/Preview Content\"";
+				DEVELOPMENT_TEAM = J8U4QDLR8S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;

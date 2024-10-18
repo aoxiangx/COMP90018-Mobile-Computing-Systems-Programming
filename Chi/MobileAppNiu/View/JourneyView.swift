@@ -23,7 +23,6 @@ struct JourneyView: View {
     @State private var showDeleteSuccessAlert = false
     
     var body: some View {
-        NavigationView {
             ZStack(alignment: .topLeading) {
                 // Background gradient
                 LinearGradient(gradient: Gradient(stops: [
@@ -90,7 +89,7 @@ struct JourneyView: View {
                 Alert(title: Text("Success"), message: Text("Photo has been successfully deleted."), dismissButton: .default(Text("OK")))
             }
         }
-    }
+    
     
     // MARK: - Data Persistence Methods
     
