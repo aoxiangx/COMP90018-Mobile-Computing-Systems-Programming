@@ -35,12 +35,6 @@ struct PhotoButtonView: View {
         let currentCount = dateImages[selectedDate]?.count ?? 0
         print("🖼️ Current images count: \(currentCount)")
         
-        if currentCount >= 5 {
-            print("❌ Limit reached: \(currentCount) images")
-            alertMessage = "You can only add up to 5 images per date. Please delete some images first."
-            showAlert = true
-            return false
-        }
         
         print("✅ Below limit, can add more images")
         return true
@@ -114,7 +108,7 @@ struct PhotoButtonView: View {
                                     newImages.append(image)
                                 } else {
                                     print("❌ Limit would be exceeded with new images")
-                                    alertMessage = "You can only add up to 5 images per date."
+                                    alertMessage = "You can only add up to 5 images per date. Please delete some images first."
                                     showAlert = true
                                     break
                                 }
