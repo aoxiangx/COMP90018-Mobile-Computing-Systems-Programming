@@ -28,7 +28,7 @@ import GoogleSignInSwift
      
      @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
      
-     @StateObject var manager = HealthManager()
+     @StateObject var healthManager = HealthManager.shared
 //     @StateObject var locationManager = LocationManager()
      var locationManager = LocationManager.shared
 
@@ -36,7 +36,7 @@ import GoogleSignInSwift
     WindowGroup {
       NavigationView {
         ContentView()
-              .environmentObject(manager)
+              .environmentObject(healthManager)
               .environmentObject(locationManager)
       }
     }

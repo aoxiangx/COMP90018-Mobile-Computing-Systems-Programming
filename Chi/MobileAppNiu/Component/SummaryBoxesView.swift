@@ -21,7 +21,6 @@ struct BoxData: Identifiable {
 
 struct SummaryBoxesView: View {
     @EnvironmentObject var manager: HealthManager
-
     let columns = [
         GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20)
@@ -52,6 +51,7 @@ struct SummaryBoxesView: View {
                         paddingSpace: box.paddingSpace,
                         activity: box.activity
                     )
+                    .environmentObject(manager)
                     .frame(height: 142) // 确保一致的方块高度
                 }
             }

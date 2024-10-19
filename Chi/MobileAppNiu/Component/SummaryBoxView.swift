@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct SummeryBoxView: View {
-    @EnvironmentObject var manager: HealthManager
     var color: Color = .white  // 默认背景颜色
     var icon: ImageResource = .sunLightIcon // 默认图标
     var title: String = "Noise Level" // 第一个文本
@@ -18,7 +17,8 @@ struct SummeryBoxView: View {
     var paddingSpace: CGFloat = 50
     var activity: Activity = .sleep
     @State private var average: Double = 0.0
-
+    @State private var hasFetchedAverage: Bool = false
+    @EnvironmentObject var manager: HealthManager
     var body: some View {
         VStack(alignment: .leading, spacing: 7) { // 上下排列，左对齐
             Image(icon)
@@ -59,7 +59,11 @@ struct SummeryBoxView: View {
         )
         .shadow(radius: 1) // 阴影
         .onAppear {
-            fetchAverage(activity: activity,period: TimePeriod.week)
+            if !hasFetchedAverage {
+                fetchAverage(activity: activity, period: TimePeriod.week)
+                hasFetchedAverage = true // Set the flag to true after fetching
+                print("fetchedAverage: \(hasFetchedAverage)")
+            }
         }
     }
 

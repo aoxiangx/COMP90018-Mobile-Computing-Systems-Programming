@@ -308,7 +308,7 @@ class LocationManager: NSObject, ObservableObject {
     @MainActor
     private func updateTimeInGreenSpace() {
         timeInGreenSpace += 1
-        print("Time spent in green space: \(timeInGreenSpace) seconds")
+//        print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // 每隔一分钟保存一次
         if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {

@@ -37,7 +37,7 @@ struct Insights: View {
                             .multilineTextAlignment(.center)
                         
                         
-                        SummaryBoxesView()
+                        SummaryBoxesView().environmentObject(healthManager)
                     }
                     
                 }

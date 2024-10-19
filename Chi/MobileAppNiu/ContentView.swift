@@ -15,7 +15,7 @@ struct ContentView: View {
     @State private var isSettingsToggled = false
     @State private var score: Double = 0.0
 
-    @StateObject var healthManager = HealthManager() // Create a single instance
+    @EnvironmentObject var healthManager: HealthManager
 
     var body: some View {
         if logStatus {
@@ -24,6 +24,7 @@ struct ContentView: View {
                     
                     HomeView(score: $score)
                         .navigationBarHidden(true)
+                        .environmentObject(healthManager)
                         .environmentObject(LocationManager.shared)
                 }
                 .tabItem {
@@ -46,8 +47,8 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    Insights(score: $score)
-                        .environmentObject(healthManager) //Inject HealthManager to let child see the health
+                    Insights(score: $score).environmentObject(healthManager)
+                         //Inject HealthManager to let child see the health
                 }
                 .tabItem {
                     Image(isInsightsToggled ? .insightsToggled : .insightsUntoggled)
@@ -68,7 +69,7 @@ struct ContentView: View {
                     toggleTabs(settings: true)
                 }
             }
-            .environmentObject(healthManager) // Inject into the environment here
+             // Inject into the environment here
         } else {
             LoginView()
         }

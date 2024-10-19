@@ -3,7 +3,7 @@ import Firebase
 import FirebaseAuth
 
 struct HomeView: View {
-    @EnvironmentObject var manager: HealthManager
+    @EnvironmentObject var healthManager: HealthManager
     @EnvironmentObject var locationManager: LocationManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
     
@@ -108,7 +108,7 @@ struct HomeView: View {
                             }
                             
                             SummaryBoxesView()
-                            LocationView()
+//                            LocationView()
                         }
                     }
                 }
@@ -127,7 +127,7 @@ struct HomeView: View {
         
         // Fetch last 7 days steps
         group.enter()
-        manager.fetchLast7DaysSteps { fetchedSteps in
+        healthManager.fetchLast7DaysSteps { fetchedSteps in
             steps = fetchedSteps.map { $0.1 }
             print("7days steps: \(steps)")
             group.leave()
@@ -135,7 +135,7 @@ struct HomeView: View {
         
         // Fetch last 7 days daylight
         group.enter()
-        manager.fetchLast7DaysDaylight { fetchedDaylight in
+        healthManager.fetchLast7DaysDaylight { fetchedDaylight in
             daylight = fetchedDaylight.map { $0.1 }
             print("7days daylight: \(daylight)")
             group.leave()

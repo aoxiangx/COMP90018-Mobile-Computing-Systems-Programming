@@ -19,6 +19,7 @@ struct SuggestionData: Identifiable {
 
 
 class HealthManager: ObservableObject {
+    static let shared = HealthManager()
     @Published var healthSuggestions: [SuggestionData] = []
     let healthStore = HKHealthStore()
     
