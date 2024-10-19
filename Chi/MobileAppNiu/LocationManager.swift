@@ -122,7 +122,7 @@ class LocationManager: NSObject, ObservableObject {
         UserDefaults.standard.set(greenSpaceDict, forKey: greenSpaceTimeKey)
     }
     
-    
+    // day - 24 hour, week - 7 days, month - 30 days, 6months - 6 months, year - 12 month
     func getGreenSpaceTimes(forLastNDays n: Int) -> [Double] {
         var greenSpaceTimes: [Double] = []
         let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
