@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to your camera to allow you to take photos and videos within the app.</string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -22,6 +18,10 @@
 		<string>RedHatDisplay-Regular.ttf</string>
 		<string>Roboto-Regular.ttf</string>
 		<string>RedHatDisplay-Bold.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
 	</array>
 </dict>
 </plist>
