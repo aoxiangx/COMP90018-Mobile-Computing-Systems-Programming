@@ -208,7 +208,7 @@ class LocationManager: NSObject, ObservableObject {
     @MainActor
     private func updateTimeInGreenSpace() {
         timeInGreenSpace += 1
-        print("Time spent in green space: \(timeInGreenSpace) seconds")
+//        print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
     
     private func sendGreenSpaceNotification() {

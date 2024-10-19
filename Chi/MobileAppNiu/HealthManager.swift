@@ -353,20 +353,41 @@ class HealthManager: ObservableObject {
             
         case .sixMonths:
             startDate = calendar.date(byAdding: .month, value: -6, to: endDate)!
+            
+            // Create an array of the last six months (including the current month)
             let months = (0..<6).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
-            labels = months.compactMap { calendar.shortMonthSymbols[calendar.component(.month, from: $0) - 1] } // 使用缩写月份标签
+            
+            // Create month labels using abbreviated month names
+            labels = months.compactMap {
+                let monthIndex = calendar.component(.month, from: $0) - 1 // Get month index
+                return calendar.shortMonthSymbols[monthIndex] // Use short month names (e.g., Jan, Feb)
+            }.reversed() // Reverse to have the labels in chronological order
+            
+            // Fetch the monthly data using the start date and end date
             fetchMonthly(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { monthlyData in
-                completion(monthlyData) // 返回每月数据
+                completion(monthlyData) // Return the fetched monthly data
             }
             
         case .year:
             startDate = calendar.date(byAdding: .year, value: -1, to: endDate)!
+            
+            // Create an array of the last 12 months (including the current month)
             let months = (0..<12).map { calendar.date(byAdding: .month, value: -$0, to: endDate)! }
-            labels = months.compactMap { calendar.shortMonthSymbols[calendar.component(.month, from: $0) - 1] } // 使用缩写月份标签
+            
+            // Create month labels using abbreviated month names
+            labels = months.compactMap {
+                let monthIndex = calendar.component(.month, from: $0) - 1 // Get month index
+                return calendar.shortMonthSymbols[monthIndex] // Use short month names (e.g., Jan, Feb)
+            }.reversed() // Reverse to have the labels in chronological order
+            
+            // Fetch the monthly data using the start date and end date
             fetchMonthly(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { monthlyData in
-                completion(monthlyData) // 返回每月数据
+                completion(monthlyData) // Return the fetched monthly data
             }
+
         }
+        
+
     }
     /// 获取每日的数据
     private func fetchDaily(startDate: Date, endDate: Date, labels: [String], activity: Activity, activityType: HKObjectType, completion: @escaping ([LineChartData]) -> Void) {
@@ -533,49 +554,56 @@ class HealthManager: ObservableObject {
         var monthlyValues: [Double] = Array(repeating: 0.0, count: labels.count)
         let numberOfMonths = labels.count
         let calendar = Calendar.current
-        let group = DispatchGroup() // 等待所有查询完成
-        
+        let group = DispatchGroup() // DispatchGroup to wait for all queries to complete
+
         for month in 0..<numberOfMonths {
+            // Get the start of the month
             guard let monthStart = calendar.date(byAdding: .month, value: -month, to: endDate),
-                  let monthEnd = calendar.date(byAdding: .month, value: -month + 1, to: endDate) else {
+                  let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: monthStart)),
+                  let nextMonthStart = calendar.date(byAdding: .month, value: 1, to: startOfMonth),
+                  let monthEnd = calendar.date(byAdding: .second, value: -1, to: nextMonthStart) else {
                 print("Error calculating date range for month \(month)")
                 continue
             }
             
-            let predicate = HKQuery.predicateForSamples(withStart: monthStart, end: monthEnd, options: .strictStartDate)
+            print("month: \(month) monthStart: \(startOfMonth), monthEnd: \(monthEnd)")
+            let predicate = HKQuery.predicateForSamples(withStart: startOfMonth, end: monthEnd, options: .strictStartDate)
             
+            group.enter() // Notify that a query is starting
+
             // Check if the activity is sleep
             if activity == .sleep {
-                // Use HKSampleQuery for sleep activity
                 let query = HKSampleQuery(sampleType: activityType as! HKSampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
                     
                     defer { group.leave() } // Ensure the group leave is called
-                    
+
                     guard error == nil else {
                         print("Error fetching sleep data: \(String(describing: error))")
                         return
                     }
-                    
-                    // Process sleep samples
+
                     var totalSleepTime = 0.0
                     if let samples = results as? [HKCategorySample] {
                         for sample in samples {
                             totalSleepTime += sample.endDate.timeIntervalSince(sample.startDate) // Calculate sleep duration
                         }
                     }
-                    
+
                     monthlyValues[month] = totalSleepTime / 3600.0 // Convert seconds to hours
                     print("Data for month \(month): \(monthlyValues[month]) hours of sleep")
                 }
-                group.enter() // Notify that a query is starting
                 healthStore.execute(query)
             } else {
-                // Use HKStatisticsQuery for other activities
                 let options = activity.statisticsOption
                 let query = HKStatisticsQuery(quantityType: activityType as! HKQuantityType, quantitySamplePredicate: predicate, options: options) { _, result, error in
                     
                     defer { group.leave() } // Ensure the group leave is called
-                    
+
+                    guard error == nil else {
+                        print("Error fetching activity data: \(String(describing: error))")
+                        return
+                    }
+
                     var value = 0.0
                     switch activity {
                     case .steps, .daylight:
@@ -586,19 +614,24 @@ class HealthManager: ObservableObject {
                         if let avgQuantity = result?.averageQuantity() {
                             value = avgQuantity.doubleValue(for: activity.unit!)
                         }
-                    case .sleep:
-                        value = 0.0 // This case should not be hit as we are already checking for sleep above
+                    default:
+                        value = 0.0
                     }
                     monthlyValues[month] = value
                     print("Data for month \(month): \(value)")
                 }
-            }
-            group.notify(queue: .main) {
-                let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: monthlyValues[$0]) }
-                print("Monthly activity: \(lineChartData)")
-                completion(lineChartData)
+                healthStore.execute(query)
             }
         }
         
+        // Move group.notify outside the for loop to wait for all queries to complete
+        group.notify(queue: .main) {
+            print("monthlyValues: \(monthlyValues)")
+            monthlyValues = monthlyValues.reversed()
+            let lineChartData = labels.enumerated().map { LineChartData(date: $1, value: monthlyValues[$0]) }
+            print("Monthly activity: \(lineChartData)")
+            completion(lineChartData)
+        }
     }
+
 }
