@@ -11,9 +11,14 @@ import UserNotifications
 import UIKit
 import Firebase
 import FirebaseAuth
+import SwiftUI
 
 @MainActor
 class LocationManager: NSObject, ObservableObject {
+    
+    @AppStorage("log_Status") private var logStatus: Bool = false
+    
+    
     static let shared = LocationManager() // Singleton instance
     @Published var location: CLLocation?
     @Published var region = MKCoordinateRegion()
@@ -33,9 +38,48 @@ class LocationManager: NSObject, ObservableObject {
     private override init() { // Prevent external initialization
         super.init()
         
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.distanceFilter = kCLDistanceFilterNone
+//        locationManager.requestAlwaysAuthorization()
+//        locationManager.allowsBackgroundLocationUpdates = true // 允许后台位置更新
+//        locationManager.startUpdatingLocation()
+//        locationManager.delegate = self
+//        
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+//            if granted {
+//                print("Notification permission granted")
+//            } else {
+//                print("Notification permission denied")
+//            }
+//        }
+//        
+//        scheduleDailyNotifications()
+        if logStatus {
+                    startUpdatingLocationIfNeeded()
+        }
+        
+        // 监听登录状态的变化
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleLogStatusChange),
+            name: UserDefaults.didChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleLogStatusChange() {
+            if logStatus {
+                startUpdatingLocationIfNeeded()
+            } else {
+                stopUpdatingLocation()
+            }
+        }
+        
+    private func startUpdatingLocationIfNeeded() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.requestAlwaysAuthorization()
+        locationManager.allowsBackgroundLocationUpdates = true // 允许后台位置更新
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
         
@@ -48,6 +92,12 @@ class LocationManager: NSObject, ObservableObject {
         }
         
         scheduleDailyNotifications()
+    }
+    
+    
+    private func stopUpdatingLocation() {
+            locationManager.stopUpdatingLocation()
+            locationManager.allowsBackgroundLocationUpdates = false
     }
     
     private func scheduleDailyNotifications() {
@@ -117,7 +167,7 @@ class LocationManager: NSObject, ObservableObject {
                 if !isInGreenSpace { // If just entered green space
                     
                     // Send notification if not already sent
-                    if !self.hasSentGreenSpaceNotification {
+                    if !self.hasSentGreenSpaceNotification{
                         print("发送消息")
                         sendGreenSpaceNotification()
                         self.hasSentGreenSpaceNotification = true
@@ -158,7 +208,7 @@ class LocationManager: NSObject, ObservableObject {
     @MainActor
     private func updateTimeInGreenSpace() {
         timeInGreenSpace += 1
-//        print("Time spent in green space: \(timeInGreenSpace) seconds")
+        print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
     
     private func sendGreenSpaceNotification() {
@@ -185,6 +235,11 @@ extension LocationManager: CLLocationManagerDelegate {
         self.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         
         reverseGeocodeLocation(location: location)
+        
+        // 如果用户在绿地中且应用在后台，继续记录时间
+        if isInGreenSpace {
+            updateTimeInGreenSpace()
+        }
     }
 }
 
