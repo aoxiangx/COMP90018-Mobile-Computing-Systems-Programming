@@ -42,6 +42,9 @@ class HealthManager: ObservableObject {
             }
         }
     }
+    
+    
+    
     func fetchTodaySteps(completion: @escaping (Double?, Error?) -> Void) {
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
             completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create step count type"]))
@@ -281,6 +284,8 @@ class HealthManager: ObservableObject {
                         }
                     case .sleep:
                         value = 0.0
+                    case .green:
+                        value = 0.0
                     }
                     dailyValues[day] = value
                 }
@@ -450,6 +455,9 @@ class HealthManager: ObservableObject {
                         }
                     case .sleep:
                         value = 0.0 // This case should not be hit as we are already checking for sleep above
+                    case .green:
+                        value = 0.0 // This case should not be hit as we are already checking for green space time above
+                        
                     }
                     
                     // Store the value for the current day
@@ -529,6 +537,8 @@ class HealthManager: ObservableObject {
                             value = avgQuantity.doubleValue(for: activity.unit!)
                         }
                     case .sleep:
+                        value = 0.0 // This case should not be hit as we are already checking for sleep above
+                    case .green:
                         value = 0.0 // This case should not be hit as we are already checking for sleep above
                     }
                     hourlyValues[hour] = value
