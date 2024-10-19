@@ -236,7 +236,7 @@ class HealthManager: ObservableObject {
             let dayStart = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -day, to: endDate)!)
             let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
             
-            print("dayStart: \(dayStart), dayEnd: \(dayEnd)")
+//            print("dayStart: \(dayStart), dayEnd: \(dayEnd)")
             
             if activity == Activity.sleep {
                 let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
