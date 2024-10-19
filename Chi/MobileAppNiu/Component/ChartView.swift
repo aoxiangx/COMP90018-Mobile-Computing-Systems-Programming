@@ -58,19 +58,27 @@ struct ChartView: View {
     private func fetchChartData() {
         manager.fetchTimeIntervalByActivity(timePeriod: timePeriod, activity: activity) { data in
             self.chartData = data
+            print("chartData: \(self.chartData)")
         }
     }
     // Format the labels depending on the time period
     private func shouldShowLabel(for date: String) -> Bool {
-            switch timePeriod {
-            case .day:
-                return isImportantHour(date: date)
-            case .month:
-                return isImportantDay(date: date)
-            default:
-                return true // Show all labels for other time periods
-            }
+        let components = date.split(separator: "/") // Split the date into components
+
+        guard let dayString = components.last.map(String.init) else {
+            return false // Return false if there is no last component
         }
+
+        switch timePeriod {
+        case .day:
+            return isImportantHour(date: dayString) // Check if it's an important hour
+        case .month:
+            // Only show day labels, not month
+            return isImportantDay(date: dayString) // Check if it's an important day
+        default:
+            return true // Show all labels for other time periods
+        }
+    }
 
     // Helper function to determine if the hour is important (12 AM, 6 AM, 12 PM, 6 PM)
     private func isImportantHour(date: String) -> Bool {
@@ -80,9 +88,8 @@ struct ChartView: View {
 
     // Helper function to determine if the day is important (1, 5, 10, 15, 20, 25, 30)
     private func isImportantDay(date: String) -> Bool {
-        let importantDays = ["1", "8", "15", "22", "29"]
-        // Return true if the given date is an important day
-        return importantDays.contains(date)
+        let importantDays = ["1", "5", "10", "15", "20", "25", "30"] // Add days as needed
+        return importantDays.contains(date) // Return true if the given date is an important day
     }
 
 }

@@ -86,7 +86,7 @@ struct GroupingDataView: View {
 private func dynamicTimePeriodDescription(for period: TimePeriod) -> String {
     switch period {
     case .day:
-        return "Past 24 Hours"
+        return "Today"
     case .week:
         return "Past 7 Days"
     case .month:

@@ -19,13 +19,32 @@ struct PhotoButtonView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    // Closure to notify when images are added
     var onImageAdded: ((Date, [UIImage]) -> Void)?
+    
+    private func checkImageLimit() -> Bool {
+        print("➡️ Checking image limit...")
+        print("📅 Selected date: \(String(describing: selectedDate))")
+        
+        guard let selectedDate = selectedDate else {
+            print("❌ No date selected")
+            alertMessage = "Please select a date first."
+            showAlert = true
+            return false
+        }
+        
+        let currentCount = dateImages[selectedDate]?.count ?? 0
+        print("🖼️ Current images count: \(currentCount)")
+        
+        
+        print("✅ Below limit, can add more images")
+        return true
+    }
     
     var body: some View {
         VStack {
             Button(action: {
-                showActionSheet = true
+                print("🔘 Button tapped")
+                showActionSheet = true  // Remove the checkImageLimit here
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
@@ -49,15 +68,21 @@ struct PhotoButtonView: View {
                     message: Text("Please select a source to upload photos"),
                     buttons: [
                         .default(Text("Photo Library")) {
-                            showPhotosPicker = true
+                            print("📚 Photo Library selected")
+                            if checkImageLimit() {
+                                showPhotosPicker = true
+                            }
                         },
                         .default(Text("Camera")) {
-                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                                sourceType = .camera
-                                showImagePicker = true
-                            } else {
-                                alertMessage = "Camera is not available on this device."
-                                showAlert = true
+                            print("📸 Camera selected")
+                            if checkImageLimit() {
+                                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                    sourceType = .camera
+                                    showImagePicker = true
+                                } else {
+                                    alertMessage = "Camera is not available on this device."
+                                    showAlert = true
+                                }
                             }
                         },
                         .cancel()
@@ -66,99 +91,65 @@ struct PhotoButtonView: View {
             }
             .photosPicker(isPresented: $showPhotosPicker, selection: $selectedItems, matching: .images)
             .onChange(of: selectedItems) { newItems in
+                print("📸 Photos picker selection changed")
                 Task {
+                    if !checkImageLimit() {
+                        selectedItems = []
+                        return
+                    }
+                    
                     var newImages: [UIImage] = []
                     for newItem in newItems {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
                            let image = UIImage(data: data) {
                             if let selectedDate = selectedDate {
-                                var images = dateImages[selectedDate] ?? []
-                                if images.count < 5 {
-                                    images.append(image)
-                                    dateImages[selectedDate] = images
+                                let currentCount = dateImages[selectedDate]?.count ?? 0
+                                if currentCount + newImages.count < 5 {
                                     newImages.append(image)
                                 } else {
-                                    alertMessage = "You can only add up to 5 images per date."
+                                    print("❌ Limit would be exceeded with new images")
+                                    alertMessage = "You can only add up to 5 images per date. Please delete some images first."
                                     showAlert = true
                                     break
                                 }
-                            } else {
-                                alertMessage = "Please select a date first."
-                                showAlert = true
-                                break
                             }
                         }
                     }
                     if !newImages.isEmpty, let selectedDate = selectedDate {
-                        onImageAdded?(selectedDate, newImages) // Notify that images have been added
+                        print("✅ Adding \(newImages.count) new images")
+                        onImageAdded?(selectedDate, newImages)
                     }
+                    selectedItems = []
                 }
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(sourceType: sourceType) { image in
-                    if let selectedDate = selectedDate {
-                        var images = dateImages[selectedDate] ?? []
-                        if images.count < 5 {
-                            images.append(image)
-                            dateImages[selectedDate] = images
-                            onImageAdded?(selectedDate, [image]) // Notify that an image has been added
-                        } else {
-                            alertMessage = "You can only add up to 5 images per date."
-                            showAlert = true
+                    print("📸 Image picked from camera/library")
+                    if checkImageLimit() {
+                        if let selectedDate = selectedDate {
+                            onImageAdded?(selectedDate, [image])
                         }
-                    } else {
-                        alertMessage = "Please select a date first."
-                        showAlert = true
                     }
                 }
             }
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+        .alert("Notice", isPresented: $showAlert, actions: {
+            Button("OK") {
+                print("🔔 Alert dismissed")
+                showAlert = false
             }
+        }, message: {
+            Text(alertMessage)
+        })
+        .onChange(of: showAlert) { newValue in
+            print("🔔 Alert state changed to: \(newValue)")
+            print("📝 Alert message: \(alertMessage)")
         }
     }
 }
 
-// Custom ImagePicker to handle camera and photo library
-struct ImagePicker: UIViewControllerRepresentable {
-    var sourceType: UIImagePickerController.SourceType
-    var onImagePicked: (UIImage) -> Void
-
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.sourceType = sourceType
-        picker.delegate = context.coordinator
-        return picker
-    }
-
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: ImagePicker
-
-        init(_ parent: ImagePicker) {
-            self.parent = parent
-        }
-
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.onImagePicked(image)
-            }
-            DispatchQueue.main.async {
-                picker.dismiss(animated: true)
-            }
-        }
-
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            DispatchQueue.main.async {
-                picker.dismiss(animated: true)
-            }
-        }
-    }
+#Preview {
+    PhotoButtonView(dateImages: .constant([:]), selectedDate: .constant(nil)) { _, _ in }
 }
 
 #Preview {
@@ -166,3 +157,4 @@ struct ImagePicker: UIViewControllerRepresentable {
         // Handle image saving logic
     })
 }
+
