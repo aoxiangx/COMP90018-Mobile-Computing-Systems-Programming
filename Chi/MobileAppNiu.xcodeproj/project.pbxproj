@@ -665,7 +665,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
-				INFOPLIST_KEY_NSCameraUsageDescription = "\"This app requires access to your camera to allow you to take photos and videos within the app.\"\n";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to your camera to allow you to take photos and videos within the app.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
@@ -680,7 +680,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = niuniu.MobileAppNiu1;
+				PRODUCT_BUNDLE_IDENTIFIER = niuniu.MobileAppNiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -702,7 +702,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
-				INFOPLIST_KEY_NSCameraUsageDescription = "\"This app requires access to your camera to allow you to take photos and videos within the app.\"\n";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to your camera to allow you to take photos and videos within the app.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Please Allow Health Update Usage Access";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Our app needs your location information to record your green time!";
