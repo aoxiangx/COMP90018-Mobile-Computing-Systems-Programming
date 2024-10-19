@@ -128,14 +128,16 @@ struct HomeView: View {
         // Fetch last 7 days steps
         group.enter()
         manager.fetchLast7DaysSteps { fetchedSteps in
-            steps = fetchedSteps
+            steps = fetchedSteps.map { $0.1 }
+            print("7days steps: \(steps)")
             group.leave()
         }
         
         // Fetch last 7 days daylight
         group.enter()
         manager.fetchLast7DaysDaylight { fetchedDaylight in
-            daylight = fetchedDaylight
+            daylight = fetchedDaylight.map { $0.1 }
+            print("7days daylight: \(daylight)")
             group.leave()
         }
         
@@ -146,12 +148,20 @@ struct HomeView: View {
             
             // Retrieve user objectives
             let objectives = self.objectiveViewModel.objectives
-            let totalObjective = Double(objectives.sunlightDuration + objectives.greenAreaActivityDuration + objectives.stepCount)
             
             var newPercentages: [Double] = []
             for day in 0..<7 {
-                let sum = Double(daylight[day] + greenSpace[day] + Double(steps[day]))
-                let percentage = (sum / totalObjective) * 100.0
+                let green = min(greenSpace[day] / Double(objectives.greenAreaActivityDuration), 1.0)
+                let sunlight = min(daylight[day] / Double(objectives.sunlightDuration), 1.0)
+                let stepCount = min(steps[day] / Double(objectives.stepCount), 1.0)
+                
+                
+                // Correctly grouping the addition
+                let percentage = (green + sunlight + stepCount) / 3.0 * 100.0
+                if(day == 6 ){
+                    score = Double(percentage)
+    
+                }
                 newPercentages.append(Double(Int(percentage))) // Take integer part
             }
             

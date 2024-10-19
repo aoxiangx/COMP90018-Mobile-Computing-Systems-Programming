@@ -106,6 +106,7 @@ struct ObjectiveCard: View {
     @Binding var value: Int
     let type: ObjectiveViewModel.ObjectiveType
     @ObservedObject var viewModel: ObjectiveViewModel
+    let unit: String
 
     var body: some View {
         Button(action: {
@@ -114,7 +115,7 @@ struct ObjectiveCard: View {
             VStack {
                 Text(title)
                     .font(.headline)
-                Text("\(value) Minutes")
+                Text("\(value) \(unit)")
                     .font(.title)
             }
             .padding()
@@ -131,9 +132,9 @@ struct ObjectiveSetView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
-                ObjectiveCard(title: "Daylight Time", value: $viewModel.objectives.sunlightDuration, type: .sunlight, viewModel: viewModel)
-                ObjectiveCard(title: "Green Space Time", value: $viewModel.objectives.greenAreaActivityDuration, type: .greenArea, viewModel: viewModel)
-                ObjectiveCard(title: "Active Index", value: $viewModel.objectives.stepCount, type: .stepCount, viewModel: viewModel)
+                ObjectiveCard(title: "Daylight Time", value: $viewModel.objectives.sunlightDuration, type: .sunlight, viewModel: viewModel,unit: "Minute(s)")
+                ObjectiveCard(title: "Green Space Time", value: $viewModel.objectives.greenAreaActivityDuration, type: .greenArea, viewModel: viewModel,unit: "Minute(s)")
+                ObjectiveCard(title: "Active Index", value: $viewModel.objectives.stepCount, type: .stepCount, viewModel: viewModel,unit: "Step(s)")
             }
             .padding()
             .navigationTitle("Set Your Objectives")
