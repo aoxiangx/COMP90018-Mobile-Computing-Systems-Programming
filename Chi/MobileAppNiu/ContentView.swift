@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var isJourneyToggled = false
     @State private var isInsightsToggled = false
     @State private var isSettingsToggled = false
+    @State private var score: Double = 0.0
 
     @StateObject var healthManager = HealthManager() // Create a single instance
 
@@ -21,7 +22,7 @@ struct ContentView: View {
             TabView {
                 NavigationView {
                     
-                    HomeView()
+                    HomeView(score: $score)
                         .navigationBarHidden(true)
                         .environmentObject(LocationManager.shared)
                 }
@@ -45,7 +46,7 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    Insights()
+                    Insights(score: $score)
                         .environmentObject(healthManager) //Inject HealthManager to let child see the health
                 }
                 .tabItem {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Insights: View {
     @EnvironmentObject var healthManager: HealthManager
-    @State private var score: Double = 75.0
+    @Binding var score: Double
     
     var body: some View {
             ZStack{
@@ -48,9 +48,9 @@ struct Insights: View {
         
 }
 
-struct Insights_Previews: PreviewProvider {
-    static var previews: some View {
-        Insights()
-            .environmentObject(HealthManager()) // Assuming HealthManager is defined
-    }
-}
+//struct Insights_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Insights()
+//            .environmentObject(HealthManager()) // Assuming HealthManager is defined
+//    }
+//}

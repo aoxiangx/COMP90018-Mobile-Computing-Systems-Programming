@@ -7,7 +7,7 @@ struct HomeView: View {
     @EnvironmentObject var locationManager: LocationManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
     
-    @State private var score: Double = 34.0
+    @Binding var score: Double
     @AppStorage("log_Status") private var logStatus: Bool = false
     @State private var currentPageIndex = 0
     
@@ -173,8 +173,8 @@ struct HomeView: View {
 }
 
 
-#Preview {
-    HomeView()
-        .environmentObject(HealthManager())
-        .environmentObject(LocationManager.shared)
-}
+//#Preview {
+//    HomeView()
+//        .environmentObject(HealthManager())
+//        .environmentObject(LocationManager.shared)
+//}
