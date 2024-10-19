@@ -70,6 +70,133 @@ class HealthManager: ObservableObject {
         
         healthStore.execute(query)
     }
+    
+    /// Fetch steps for a specific date
+    func fetchSteps(for date: Date, completion: @escaping (Double) -> Void) {
+        guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            completion(0.0)
+            return
+        }
+        
+        let calendar = Calendar.current
+        
+        // Calculate the start and end of the given day
+        let startOfDay = calendar.startOfDay(for: date) // Start of day 00:00
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!.addingTimeInterval(-1) // End of day 23:59:59
+        
+        // Create the predicate for the query
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        
+        print("fetchSteps: startOfDay: \(startOfDay), endOfDay: \(endOfDay)")
+        
+        // Create and execute the query
+        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let _ = error {
+                completion(0.0)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0)
+                return
+            }
+            
+            let stepCount = quantity.doubleValue(for: HKUnit.count())
+            completion(stepCount)
+        }
+        
+        healthStore.execute(query)
+    }
+
+    /// Fetch daylight for a specific date
+    func fetchDaylight(for date: Date, completion: @escaping (Double) -> Void) {
+        guard let daylight = HKQuantityType.quantityType(forIdentifier: .timeInDaylight) else {
+            completion(0.0)
+            return
+        }
+        let calendar = Calendar.current
+        // Calculate the start and end of the given day
+        let startOfDay = calendar.startOfDay(for: date) // Start of day 00:00
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!.addingTimeInterval(-1) // End of day 23:59:59
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        
+        let query = HKStatisticsQuery(quantityType: daylight, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let _ = error {
+                completion(0.0)
+                return
+            }
+            
+            guard let quantity = result?.sumQuantity() else {
+                completion(0.0)
+                return
+            }
+            
+            let daylightMinutes = quantity.doubleValue(for: HKUnit.minute())
+            completion(daylightMinutes)
+        }
+        
+        healthStore.execute(query)
+    }
+    
+    /// Fetch steps for the last 7 days with date as key and steps as value, sorted by date
+    func fetchLast7DaysSteps(completion: @escaping ([(Date, Double)]) -> Void) {
+        var stepsDictionary: [Date: Double] = [:]
+        let group = DispatchGroup()
+        let calendar = Calendar.current
+        
+        for day in 0..<7 {
+            group.enter()
+            
+            // Calculate the start of each day by subtracting day-by-day
+            if let date = calendar.date(byAdding: .day, value: -day, to: Date()) {
+                let startOfDay = calendar.startOfDay(for: date) // Start of day at 00:00
+                
+                // Fetch steps for each day
+                fetchSteps(for: startOfDay) { steps in
+                    stepsDictionary[startOfDay] = steps
+                    group.leave()
+                }
+            }
+        }
+
+        // After all fetches are complete, return the result sorted by date from oldest to newest
+        group.notify(queue: .main) {
+            let sortedSteps = stepsDictionary.sorted(by: { $0.key < $1.key }) // Sort by date
+            print("Fetched and sorted steps for the last 7 days: \(sortedSteps)")
+            completion(sortedSteps) // Return the sorted array of tuples (Date, Steps)
+        }
+    }
+
+
+
+    /// Fetch daylight duration for the last 7 days with date as key and daylight as value, sorted by date
+    func fetchLast7DaysDaylight(completion: @escaping ([(Date, Double)]) -> Void) {
+        var daylightDictionary: [Date: Double] = [:]
+        let group = DispatchGroup()
+        let calendar = Calendar.current
+        
+        for day in 0..<7 {
+            group.enter()
+            
+            // Calculate the start of each day by subtracting day-by-day
+            if let date = calendar.date(byAdding: .day, value: -day, to: Date()) {
+                let startOfDay = calendar.startOfDay(for: date) // Start of day at 00:00
+                
+                // Fetch daylight for each day
+                fetchDaylight(for: startOfDay) { daylight in
+                    daylightDictionary[startOfDay] = daylight
+                    group.leave()
+                }
+            }
+        }
+
+        // After all fetches are complete, return the result sorted by date from oldest to newest
+        group.notify(queue: .main) {
+            let sortedDaylight = daylightDictionary.sorted(by: { $0.key < $1.key }) // Sort by date
+            print("Fetched and sorted daylight for the last 7 days: \(sortedDaylight)")
+            completion(sortedDaylight) // Return the sorted array of tuples (Date, Daylight)
+        }
+    }
 
     
     /// 获取今天的日光时间
