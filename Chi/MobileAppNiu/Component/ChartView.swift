@@ -16,6 +16,9 @@ struct ChartView: View {
     @EnvironmentObject var manager: HealthManager
     @State private var chartData: [LineChartData] = []
     
+    
+    @EnvironmentObject var locationManager: LocationManager
+    
 
     var body: some View {
         Chart {
@@ -51,16 +54,48 @@ struct ChartView: View {
             fetchChartData()
         }
         .onChange(of: timePeriod) {
-                    fetchChartData() // Fetch chart data when timePeriod changes
+            fetchChartData() // Fetch chart data when timePeriod changes
         }
     }
 
     private func fetchChartData() {
+        
+//        var greenSpaceTimes = 0.0
+//        var n = 0.0
+        // 用location
+//        if activity == Activity.green{
+//            // 获取最近n天的greenSpaceTime
+//            if timePeriod == TimePeriod.day{
+//                n = 1
+//                let greenSpaceTimes = locationManager.getGreenSpaceTimes(forLastNDays: 1)
+//            }
+//            
+//            if timePeriod == TimePeriod.month{
+//                n = 30
+//                let greenSpaceTimes = locationManager.getGreenSpaceTimes(forLastNDays: 30)
+//            }
+//            
+//            if timePeriod == TimePeriod.sixMonths{
+//                n = 180
+//                let greenSpaceTimes = locationManager.getGreenSpaceTimes(forLastNDays: 180)
+//            }
+//            
+//            if timePeriod == TimePeriod.year{
+//                n = 365
+//                let greenSpaceTimes = locationManager.getGreenSpaceTimes(forLastNDays: 365)
+//            }
+            // 将greenSpaceTimes转换为 LineChartData
+//            self.chartData = greenSpaceTimes.enumerated().map { index, value in
+//                LineChartData(id: UUID(), date: "\(index + 1)/\(n)", value: value)
+//            }
+//        }
+        
         manager.fetchTimeIntervalByActivity(timePeriod: timePeriod, activity: activity) { data in
             self.chartData = data
             print("chartData: \(self.chartData)")
         }
     }
+    
     // Format the labels depending on the time period
     private func shouldShowLabel(for date: String) -> Bool {
         let components = date.split(separator: "/") // Split the date into components
