@@ -8,7 +8,7 @@ import SwiftUI
 import AuthenticationServices
 
 struct ContentView: View {
-    @AppStorage("log_Status") private var logStatus: Bool = true // Remember to set as false
+    @AppStorage("log_Status") private var logStatus: Bool = false // Remember to set as false
     @State private var isReflectToggled = false
     @State private var isJourneyToggled = false
     @State private var isInsightsToggled = false
