@@ -46,13 +46,14 @@ struct PieView: View {
     // Determine the appropriate color based on the percentage
     func colorForPercentage(_ percentage: Double) -> Color {
         if percentage < 50 {
-            let index = Int((percentage / 50.0) * 3.0)
+            let index = min(2, max(0, Int((percentage / 50.0) * 3.0)))
             return [Constants.Blue3, Constants.Blue2, Constants.Blue1][index]
         } else {
-            let index = Int(((percentage - 50) / 50.0) * 3.0)
+            let index = min(2, max(0, Int(((percentage - 50) / 50.0) * 3.0)))
             return [Constants.Yellow1, Constants.Yellow2, Constants.Yellow3][index]
         }
     }
+
 }
 
 #Preview {
