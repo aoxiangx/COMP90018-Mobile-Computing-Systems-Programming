@@ -174,7 +174,21 @@ struct HomeView: View {
 
 
 //#Preview {
-//    HomeView()
+//    HomeView(score: 66.9)
 //        .environmentObject(HealthManager())
 //        .environmentObject(LocationManager.shared)
 //}
+
+struct HomeViewPreview: View {
+    @State private var score: Double = 66.9
+    
+    var body: some View {
+        HomeView(score: $score)
+            .environmentObject(HealthManager())
+            .environmentObject(LocationManager.shared)
+    }
+}
+
+#Preview {
+    HomeViewPreview()
+}
