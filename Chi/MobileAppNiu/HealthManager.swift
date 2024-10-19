@@ -230,15 +230,14 @@ class HealthManager: ObservableObject {
         var dailyValues: [Double] = Array(repeating: 0.0, count: numberOfDays)
         let calendar = Calendar.current
         let group = DispatchGroup()
-        let options = activity.statisticsOption
         
         for day in 0..<numberOfDays {
-            // Calculate each day's date range
-            guard let dayStart = calendar.date(byAdding: .day, value: -day, to: endDate),
-                  let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
-                print("Error calculating date range for day \(day)")
-                continue
-            }
+            // Calculate each day's date range (start of day to end of day)
+            let dayStart = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -day, to: endDate)!)
+            let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+            
+            print("dayStart: \(dayStart), dayEnd: \(dayEnd)")
+            
             if activity == Activity.sleep {
                 let predicate = HKQuery.predicateForSamples(withStart: dayStart, end: dayEnd, options: .strictStartDate)
                 let query = HKSampleQuery(sampleType: activityType as! HKSampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
@@ -284,7 +283,6 @@ class HealthManager: ObservableObject {
                         value = 0.0
                     }
                     dailyValues[day] = value
-//                    print("Average Data for day \(day): \(value)")
                 }
                 group.enter()
                 healthStore.execute(query)
@@ -297,10 +295,10 @@ class HealthManager: ObservableObject {
             let average = total / Double(numberOfDays)
             
             print("\(numberOfDays)-day average: \(average)")
-       
             completion(Double(String(format: "%.1f", average)) ?? 0.0)
         }
     }
+
     
     /// 根据活动和时间段获取数据
     func fetchTimeIntervalByActivity(timePeriod: TimePeriod, activity: Activity, completion: @escaping ([LineChartData]) -> Void) {
