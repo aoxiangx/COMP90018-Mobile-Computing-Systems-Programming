@@ -47,6 +47,7 @@ enum Activity {
     case noise
     case hrv
     case sleep
+    case green
     
     var activityType: HKObjectType {
         switch self {
@@ -59,6 +60,8 @@ enum Activity {
         case .hrv:
             return HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
         case .sleep:
+            return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+        case .green:
             return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
         }
     }
@@ -75,6 +78,8 @@ enum Activity {
             return HKUnit.secondUnit(with: .milli)
         case .sleep:
             return nil  // Sleep does not have a unit like the others
+        case .green:
+            return nil
         }
     }
     
@@ -86,6 +91,8 @@ enum Activity {
             return .discreteAverage
         case .sleep:
             return []  // No statistics options for sleep
+        case .green:
+            return []
         }
     }
     
@@ -101,6 +108,8 @@ enum Activity {
             return "Stress Level"
         case .sleep:
             return "Sleep Time"
+        case .green:
+            return "Green Space Time"
         }
     }
     
@@ -116,7 +125,10 @@ enum Activity {
             return "ms"
         case .sleep:
             return "Hours"
+        case .green:
+            return "Minutes"
         }
+    
     }
 //    var objectiveInfo: BoxData {
 //        switch self {
@@ -155,6 +167,10 @@ enum Activity {
         case .sleep:
             objectiveTime = viewModel.objectives.stepCount
             return ObjectiveData(color: Constants.Blue2, icon: .sleep, title: "Sleep Time", subtitle: "Hour(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
+            
+        case .green:
+            objectiveTime = viewModel.objectives.greenAreaActivityDuration
+            return ObjectiveData(color: Constants.Blue2, icon: .sleep, title: "Green Space Time", subtitle: "Min(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
         }
     }
 
@@ -180,6 +196,10 @@ enum Activity {
             case .noise:
                 manager.fetchTodayNoiseLevels { (noise, error) in
                     completion(noise, error)
+                }
+            case .green:
+                manager.fetchTodayNoiseLevels { (daylight, error) in
+                    completion(daylight, error)
                 }
             }
         }
