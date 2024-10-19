@@ -34,6 +34,31 @@ class LocationManager: NSObject, ObservableObject {
     private var hasSentGreenSpaceNotification: Bool = false // Tracks whether notification has been sent
     private var currentLocationName: String = "" // Used to store the current location name
     private var previousLocationName: String = "" // Used to store the previous location name
+    
+    // start date and end date for green space time
+    
+    // Keys for UserDefaults
+    private let greenSpaceTimeKey = "greenSpaceTime"
+    private let lastSavedDateKey = "lastSavedDate"
+    
+    // DateFormatter for consistent date keys
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    // Tracks the last date when green space time was saved
+    private var lastSavedDate: Date {
+        get {
+            UserDefaults.standard.object(forKey: lastSavedDateKey) as? Date ?? Calendar.current.startOfDay(for: Date())
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: lastSavedDateKey)
+        }
+    }
+    // save green space time end
+    
 
     private override init() { // Prevent external initialization
         super.init()
@@ -44,7 +69,7 @@ class LocationManager: NSObject, ObservableObject {
 //        locationManager.allowsBackgroundLocationUpdates = true // 允许后台位置更新
 //        locationManager.startUpdatingLocation()
 //        locationManager.delegate = self
-//        
+//
 //        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
 //            if granted {
 //                print("Notification permission granted")
@@ -52,10 +77,24 @@ class LocationManager: NSObject, ObservableObject {
 //                print("Notification permission denied")
 //            }
 //        }
-//        
+//
 //        scheduleDailyNotifications()
         if logStatus {
-                    startUpdatingLocationIfNeeded()
+                startUpdatingLocationIfNeeded()
+        }
+        
+        // Initialize lastSavedDate and handle day change
+        let storedLastSavedDate = UserDefaults.standard.object(forKey: lastSavedDateKey) as? Date
+        if let storedDate = storedLastSavedDate {
+            if !Calendar.current.isDate(storedDate, inSameDayAs: Date()) {
+                // Save the previous day's greenSpaceTime
+                saveGreenSpaceTime(for: storedDate)
+                // Reset the time
+                timeInGreenSpace = 0
+                lastSavedDate = Calendar.current.startOfDay(for: Date())
+            }
+        } else {
+            lastSavedDate = Calendar.current.startOfDay(for: Date())
         }
         
         // 监听登录状态的变化
@@ -65,7 +104,43 @@ class LocationManager: NSObject, ObservableObject {
             name: UserDefaults.didChangeNotification,
             object: nil
         )
+        
+        
+        
     }
+    
+    
+    private func saveGreenSpaceTime(for date: Date) {
+        // Convert timeInGreenSpace to minutes
+        let greenSpaceTimeInMinutes = timeInGreenSpace / 60.0
+        
+        // Retrieve existing dictionary or create a new one
+        var greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
+        let dateString = dateFormatter.string(from: date)
+        greenSpaceDict[dateString] = greenSpaceTimeInMinutes
+        UserDefaults.standard.set(greenSpaceDict, forKey: greenSpaceTimeKey)
+    }
+    
+    
+    func getGreenSpaceTimes(forLastNDays n: Int) -> [Double] {
+        var greenSpaceTimes: [Double] = []
+        let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
+        
+        for dayOffset in 0..<n {
+            if let date = Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date()) {
+                let dateString = dateFormatter.string(from: date)
+                if let time = greenSpaceDict[dateString] {
+                    greenSpaceTimes.append(time)
+                } else {
+                    greenSpaceTimes.append(0.0) // Default to 0 if no data
+                }
+            } else {
+                greenSpaceTimes.append(0.0) // Default to 0 if date calculation fails
+            }
+        }
+        return greenSpaceTimes
+    }
+    
     
     @objc private func handleLogStatusChange() {
             if logStatus {
@@ -73,7 +148,11 @@ class LocationManager: NSObject, ObservableObject {
             } else {
                 stopUpdatingLocation()
             }
-        }
+    }
+    
+    
+    
+    
         
     private func startUpdatingLocationIfNeeded() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -109,7 +188,7 @@ class LocationManager: NSObject, ObservableObject {
         // Define the times you want notifications to be sent (e.g., 9:00 AM, 12:00 PM, 6:00 PM)
         let times: [(hour: Int, minute: Int)] = [
             (hour: 9, minute: 0),  // 9:00 AM
-            (hour: 12, minute: 47), // 12:00 PM
+            (hour: 12, minute: 0), // 12:00 PM
             (hour: 18, minute: 0)  // 6:00 PM
         ]
         
@@ -188,6 +267,9 @@ class LocationManager: NSObject, ObservableObject {
         }
     }
     
+    
+    
+    
     private func startGreenSpaceTimer() {
         stopGreenSpaceTimer() // Ensure no duplicate timer
         timeInGreenSpace = 0 // Reset timer
@@ -208,7 +290,7 @@ class LocationManager: NSObject, ObservableObject {
     @MainActor
     private func updateTimeInGreenSpace() {
         timeInGreenSpace += 1
-//        print("Time spent in green space: \(timeInGreenSpace) seconds")
+        print("Time spent in green space: \(timeInGreenSpace) seconds")
     }
     
     private func sendGreenSpaceNotification() {
@@ -236,10 +318,24 @@ extension LocationManager: CLLocationManagerDelegate {
         
         reverseGeocodeLocation(location: location)
         
+        // Check if day has changed
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        if today != Calendar.current.startOfDay(for: lastSavedDate) {
+            // Save the previous day's greenSpaceTime
+            saveGreenSpaceTime(for: lastSavedDate)
+            // Reset the time
+            timeInGreenSpace = 0
+            // Update lastSavedDate
+            lastSavedDate = today
+        }
+        
         // 如果用户在绿地中且应用在后台，继续记录时间
         if isInGreenSpace {
             updateTimeInGreenSpace()
         }
+        
+        
     }
 }
 
