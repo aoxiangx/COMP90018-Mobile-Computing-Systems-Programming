@@ -108,7 +108,7 @@ struct HomeView: View {
                             }
                             
                             SummaryBoxesView()
-                            LocationView()
+//                            LocationView()
                         }
                     }
                 }
