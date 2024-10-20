@@ -4,7 +4,7 @@ import FirebaseAuth
 
 struct HomeView: View {
     @EnvironmentObject var healthManager: HealthManager
-    @EnvironmentObject var locationManager: LocationManager
+//    @EnvironmentObject var locationManager: LocationManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
     
     @Binding var score: Double
@@ -144,7 +144,9 @@ struct HomeView: View {
         // Once both steps and daylight are fetched
         group.notify(queue: .main) {
             // Fetch green space times for last 7 days
-            let greenSpace = locationManager.getGreenSpaceTimes(forLastNDays: 7)
+            
+//            let greenSpace = locationManager.getGreenSpaceTimes(forLastNDays: 7)
+            let greenSpace = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
             
             // Retrieve user objectives
             let objectives = self.objectiveViewModel.objectives
@@ -185,7 +187,7 @@ struct HomeViewPreview: View {
     var body: some View {
         HomeView(score: $score)
             .environmentObject(HealthManager())
-            .environmentObject(LocationManager.shared)
+//            .environmentObject(LocationManager.shared)
     }
 }
 
