@@ -1,5 +1,5 @@
 //
-//  GreenSpaceTimeManager.swift
+//  GreenSpaceManager.swift
 //  MobileAppNiu
 //
 //  Created by 关昊 on 20/10/2024.
@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class GreenSpaceTimeManager {
+class GreenSpaceManager {
     
     private let locationManager = LocationManager.shared
     
