@@ -29,7 +29,7 @@ struct SummaryBoxesView: View {
     // 创建方块的数据集合
     let boxes = [
         BoxData(color: Constants.white, icon: .sunLightIcon, title: "Daylight Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 40, activity: .daylight),
-        BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 0, activity: .daylight),
+        BoxData(color: Constants.white, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "Min(s)", description: "Past 7 Days", paddingSpace: 0, activity: .green),
         BoxData(color: Constants.white, icon: .noise, title: "Noise Level", subtitle: "dB", description: "Past 7 Days", paddingSpace: 56, activity: .noise),
         BoxData(color: Constants.white, icon: .sleep, title: "Sleep Time", subtitle: "Hour(s)", description: "Past 7 Days", paddingSpace: 50, activity: .sleep),
         BoxData(color: Constants.white, icon: .stress, title: "Stress Level", subtitle: "ms", description: "Past 7 Days", paddingSpace: 50, activity: .hrv),

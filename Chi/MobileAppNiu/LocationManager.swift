@@ -291,7 +291,7 @@ class LocationManager: NSObject, ObservableObject {
         timeInGreenSpace += 1
 //        let currentHour = Calendar.current.component(.hour, from: Date())
 //        let dateString = dateFormatter.string(from: Date()) + "-\(currentHour)"
-        
+//        
         print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // one min, save once

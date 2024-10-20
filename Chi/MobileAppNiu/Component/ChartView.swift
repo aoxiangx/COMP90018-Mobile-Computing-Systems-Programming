@@ -59,9 +59,20 @@ struct ChartView: View {
     }
 
     private func fetchChartData() {
-        manager.fetchTimeIntervalByActivity(timePeriod: timePeriod, activity: activity) { data in
-            self.chartData = data
-            print("chartData: \(self.chartData)")
+        if(activity == Activity.green){
+            let greenSpaceManager = GreenSpaceManager()
+            let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: timePeriod)
+            
+            self.chartData = greenSpaceTimes.enumerated().map { index, value in
+                LineChartData(id: UUID(), date: labels[index], value: value)
+            }
+           
+        }
+        else{
+            manager.fetchTimeIntervalByActivity(timePeriod: timePeriod, activity: activity) { data in
+                self.chartData = data
+//                print("chartData: \(self.chartData)")
+            }
         }
     }
     
