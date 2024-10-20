@@ -170,7 +170,7 @@ enum Activity {
             
         case .green:
             objectiveTime = viewModel.objectives.greenAreaActivityDuration
-            return ObjectiveData(color: Constants.Blue2, icon: .sleep, title: "Green Space Time", subtitle: "Min(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
+            return ObjectiveData(color: Constants.Blue2, icon: .greenSpaceIcon, title: "Green Space Time", subtitle: "Min(s)", objectiveTime: objectiveTime, paddingSpace: 50, activity: .sleep)
         }
     }
 

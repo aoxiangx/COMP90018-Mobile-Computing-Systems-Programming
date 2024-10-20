@@ -8,7 +8,7 @@ struct ObjectiveNotification: View {
         switch activity {
         case .daylight:
             return viewModel.objectives.sunlightDuration
-        case .hrv:
+        case .green:
             return viewModel.objectives.greenAreaActivityDuration
         case .steps:
             return viewModel.objectives.stepCount
@@ -153,12 +153,21 @@ struct ObjectiveNotification: View {
     }
     
     private func fetchTodayValue() {
-        activity?.dayValue(using: healthManager) { (value, error) in
-            if let error = error {
-                print("Error fetching step value: \(error.localizedDescription)")
-            } else if let steps = value {
-                DispatchQueue.main.async {
-                    self.currentTime = steps // Update the currentTime state variable
+        if(activity == Activity.sleep){
+            let greenSpaceManager = GreenSpaceManager()
+            let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: TimePeriod.day)
+            // Calculate the sum of greenSpaceTimes
+            let sumOfGreenSpaceTimes = greenSpaceTimes.reduce(0, +) // Sum all values in the array
+            self.currentTime = sumOfGreenSpaceTimes
+        }
+        else{
+            activity?.dayValue(using: healthManager) { (value, error) in
+                if let error = error {
+                    print("Error fetching step value: \(error.localizedDescription)")
+                } else if let steps = value {
+                    DispatchQueue.main.async {
+                        self.currentTime = steps // Update the currentTime state variable
+                    }
                 }
             }
         }
