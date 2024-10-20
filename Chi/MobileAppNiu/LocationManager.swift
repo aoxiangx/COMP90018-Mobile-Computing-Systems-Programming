@@ -35,6 +35,7 @@ class LocationManager: NSObject, ObservableObject {
     private var currentLocationName: String = "" // Used to store the current location name
     private var previousLocationName: String = "" // Used to store the previous location name
     
+    
     // start date and end date for green space time
     
     // Keys for UserDefaults
@@ -98,18 +99,6 @@ class LocationManager: NSObject, ObservableObject {
         )
         
     }
-    
-    
-//    private func saveGreenSpaceTime(for date: Date) {
-//        // Convert timeInGreenSpace
-//        let greenSpaceTimeInMinutes = timeInGreenSpace
-//        
-//        // Retrieve existing dictionary or create a new one
-//        var greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
-//        let dateString = dateFormatter.string(from: date)
-//        greenSpaceDict[dateString] = greenSpaceTimeInMinutes
-//        UserDefaults.standard.set(greenSpaceDict, forKey: greenSpaceTimeKey)
-//    }
     
     private func saveGreenSpaceTime(for date: Date, hour: Int) {
         // Convert timeInGreenSpace to minutes
@@ -300,10 +289,10 @@ class LocationManager: NSObject, ObservableObject {
     @MainActor
     private func updateTimeInGreenSpace() {
         timeInGreenSpace += 1
-        let currentHour = Calendar.current.component(.hour, from: Date())
+//        let currentHour = Calendar.current.component(.hour, from: Date())
 //        let dateString = dateFormatter.string(from: Date()) + "-\(currentHour)"
         
-//        print("Time spent in green space: \(timeInGreenSpace) seconds")
+        print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // one min, save once
         if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {
