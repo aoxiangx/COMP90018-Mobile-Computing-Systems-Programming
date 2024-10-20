@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class GreenSpaceManager {
+class GreenSpaceTimeManager {
     
     private let locationManager = LocationManager.shared
     
