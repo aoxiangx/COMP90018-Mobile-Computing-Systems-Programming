@@ -352,7 +352,7 @@ class LocationManager: NSObject, ObservableObject {
         
         case 30: // Return data for the past month (each day's 24 hours data)
             let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
-            for dayOffset in 0..<daysInMonth {
+            for dayOffset in 0..<30 {
                 var dailyTotalTime: Double = 0.0 // Initialize daily total time
                 if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) {
                     for hour in 0..<24 {
