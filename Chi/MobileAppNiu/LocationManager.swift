@@ -61,7 +61,7 @@ class LocationManager: NSObject, ObservableObject {
     // save green space time end
     
     // location update timer
-    private var locationUpdateTimer: Timer? // 用于控制位置更新频率
+    private var locationUpdateTimer: Timer? // control update frequency
     
 
     private override init() { // Prevent external initialization
@@ -89,7 +89,7 @@ class LocationManager: NSObject, ObservableObject {
             lastSavedDate = Calendar.current.startOfDay(for: Date())
         }
         
-        // 监听登录状态的变化
+        // listen to the log status
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleLogStatusChange),
@@ -135,7 +135,7 @@ class LocationManager: NSObject, ObservableObject {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.requestAlwaysAuthorization()
-        locationManager.allowsBackgroundLocationUpdates = true // 允许后台位置更新
+        locationManager.allowsBackgroundLocationUpdates = true // allow background mode
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
         
@@ -230,7 +230,7 @@ class LocationManager: NSObject, ObservableObject {
 
                     // Send notification if not already sent
                     if !self.hasSentGreenSpaceNotification {
-                        print("发送消息")
+//                        print("发送消息")
                         sendGreenSpaceNotification()
                         self.hasSentGreenSpaceNotification = true
                     }
@@ -246,7 +246,7 @@ class LocationManager: NSObject, ObservableObject {
                     // Save today's green space time
                     saveTodayGreenSpaceTime()
                     
-                    print("离开绿地")
+//                    print("离开绿地")
                     self.hasSentGreenSpaceNotification = false // Reset notification flag upon leaving green space
                 }
             }
@@ -254,28 +254,30 @@ class LocationManager: NSObject, ObservableObject {
     }
 
     private func saveTodayGreenSpaceTime() {
-        // 保存当天的绿地时间到字典中并同步
-        var greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
-        let dateString = dateFormatter.string(from: Date())
-        greenSpaceDict[dateString] = timeInGreenSpace
-        UserDefaults.standard.set(greenSpaceDict, forKey: greenSpaceTimeKey)
+        // Save today's green space time to the dictionary and synchronize it
+        var greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:] // Retrieve existing data or create a new dictionary
+        let dateString = dateFormatter.string(from: Date()) // Format the current date to string
+        greenSpaceDict[dateString] = timeInGreenSpace // Update the dictionary with today's green space time
+        UserDefaults.standard.set(greenSpaceDict, forKey: greenSpaceTimeKey) // Save the updated dictionary to UserDefaults
     }
-    
+
     private func startGreenSpaceTimer() {
-        stopGreenSpaceTimer() // 确保没有重复的计时器
+        stopGreenSpaceTimer() // Ensure no duplicate timers are running
         
-        // 读取当天已有的绿地时间
-        let dateString = dateFormatter.string(from: Date())
-        let storedTime = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
-        timeInGreenSpace = storedTime[dateString] ?? 0.0
+        // Read the existing green space time for today
+        let dateString = dateFormatter.string(from: Date()) // Format the current date to string
+        let storedTime = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:] // Retrieve stored time data
+        timeInGreenSpace = storedTime[dateString] ?? 0.0 // Initialize today's green space time
         
+        // Schedule a timer that updates the green space time every second
         greenSpaceTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self = self else { return } // Ensure self is not nil
             Task {
-                await self.updateTimeInGreenSpace()
+                await self.updateTimeInGreenSpace() // Update the time in green space asynchronously
             }
         }
     }
+
     
     private func stopGreenSpaceTimer() {
         greenSpaceTimer?.invalidate()
@@ -301,7 +303,7 @@ class LocationManager: NSObject, ObservableObject {
         let currentHour = Calendar.current.component(.hour, from: Date())
 //        let dateString = dateFormatter.string(from: Date()) + "-\(currentHour)"
         
-        print("Time spent in green space: \(timeInGreenSpace) seconds")
+//        print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // one min, save once
         if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {
@@ -330,97 +332,98 @@ class LocationManager: NSObject, ObservableObject {
     
     
     func getGreenSpaceTimes(forLastNDays n: Int) -> [Double] {
-        var greenSpaceTimes: [Double] = []
-        let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:]
+        var greenSpaceTimes: [Double] = [] // Array to hold green space times
+        let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:] // Retrieve stored data from UserDefaults
         
-        let calendar = Calendar.current
+        let calendar = Calendar.current // Get the current calendar
         
         switch n {
-        case 1: // 返回过去一天的数据（24小时）
+        case 1: // Return data for the past day (24 hours)
             for hour in 0..<24 {
                 if let date = calendar.date(byAdding: .hour, value: -hour, to: Date()) {
-                    let dateString = dateFormatter.string(from: date)
-                    greenSpaceTimes.append(greenSpaceDict[dateString] ?? 0.0) // 添加每小时的数据
+                    let dateString = dateFormatter.string(from: date) // Format the date to string
+                    greenSpaceTimes.append(greenSpaceDict[dateString] ?? 0.0) // Add each hour's data
                 } else {
-                    greenSpaceTimes.append(0.0) // 如果日期计算失败，默认添加0
+                    greenSpaceTimes.append(0.0) // Default to 0 if date calculation fails
                 }
             }
         
-        case 7: // 返回过去一周的数据（7天）
+        case 7: // Return data for the past week (7 days)
             for dayOffset in 0..<7 {
-                var dailyTotalTime: Double = 0.0
+                var dailyTotalTime: Double = 0.0 // Initialize daily total time
                 for hour in 0..<24 {
                     if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()),
                        let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
-                        let dateString = dateFormatter.string(from: hourDate)
-                        dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // 累加每一天每小时的数据
+                        let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+                        dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
                     }
                 }
-                greenSpaceTimes.append(dailyTotalTime) // 添加每一天的总时间
+                greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
             }
         
-        case 30: // 返回过去一个月的数据（每一天的24小时数据）
-            let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0
+        case 30: // Return data for the past month (each day's 24 hours data)
+            let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
             for dayOffset in 0..<daysInMonth {
-                var dailyTotalTime: Double = 0.0
+                var dailyTotalTime: Double = 0.0 // Initialize daily total time
                 if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) {
                     for hour in 0..<24 {
                         if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
-                            let dateString = dateFormatter.string(from: hourDate)
-                            dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // 累加每一天每小时的数据
+                            let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+                            dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
                         }
                     }
                 }
-                greenSpaceTimes.append(dailyTotalTime) // 添加每一天的总时间
+                greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
             }
         
-        case 180: // 返回过去六个月的数据
+        case 180: // Return data for the past six months
             for monthOffset in 0..<6 {
                 if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
-                    var monthlyTotalTime: Double = 0.0
-                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0
+                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
+                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
                     
                     for day in 1...daysInMonth {
                         if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
                             for hour in 0..<24 {
                                 if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
-                                    let dateString = dateFormatter.string(from: hourDate)
-                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // 统计这个月的总时间
+                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
                                 }
                             }
                         }
                     }
-                    greenSpaceTimes.append(monthlyTotalTime) // 添加该月的总时间
+                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
                 }
             }
         
-        case 365: // 返回过去一年的数据
+        case 365: // Return data for the past year
             for monthOffset in 0..<12 {
                 if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
-                    var monthlyTotalTime: Double = 0.0
-                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0
+                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
+                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
                     
                     for day in 1...daysInMonth {
                         if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
                             for hour in 0..<24 {
                                 if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
-                                    let dateString = dateFormatter.string(from: hourDate)
-                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // 统计这个月的总时间
+                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
                                 }
                             }
                         }
                     }
-                    greenSpaceTimes.append(monthlyTotalTime) // 添加该月的总时间
+                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
                 }
             }
         
         default:
-            break // 不支持的 n 值
+            break // No support for unsupported n values
         }
         
-        // 将时间转换为分钟
-        return greenSpaceTimes.map { $0 / 60.0 }
+        // Convert time to minutes
+        return greenSpaceTimes.map { $0 / 60.0 } // Return the times in minutes
     }
+
 
 }
 
@@ -447,9 +450,13 @@ extension LocationManager: CLLocationManagerDelegate {
             lastSavedDate = today
         }
         
-        // 如果用户在绿地中且应用在后台，继续记录时间
+        // keep update green space time while the app running at the backmode
         if isInGreenSpace {
             updateTimeInGreenSpace()
         }
+        
+        // test get green space times
+        // print(getGreenSpaceTimes(forLastNDays: 180))
+        
     }
 }
