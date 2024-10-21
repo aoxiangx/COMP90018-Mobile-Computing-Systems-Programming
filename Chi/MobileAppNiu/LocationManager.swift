@@ -300,6 +300,22 @@ class LocationManager: NSObject, ObservableObject {
         }
     }
     
+//    private func sendGreenSpaceNotification() {
+//        // Get the current active scene
+//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//              let rootViewController = windowScene.windows.first?.rootViewController else {
+//            print("Unable to find root view controller.")
+//            return
+//        }
+//        
+//        let alert = UIAlertController(title: "Enjoy Your Time!", message: "You are in a green space. Take a moment to relax and enjoy the surroundings.", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//        
+//        Task { @MainActor in
+//            rootViewController.present(alert, animated: true, completion: nil)
+//        }
+//    }
+
     private func sendGreenSpaceNotification() {
         // Get the current active scene
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -307,14 +323,64 @@ class LocationManager: NSObject, ObservableObject {
             print("Unable to find root view controller.")
             return
         }
-        
-        let alert = UIAlertController(title: "Enjoy Your Time!", message: "You are in a green space. Take a moment to relax and enjoy the surroundings.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        
-        Task { @MainActor in
-            rootViewController.present(alert, animated: true, completion: nil)
+
+        // Create a toast-like view with improved styling
+        let toastView = UIView(frame: CGRect(x: rootViewController.view.frame.size.width / 2 - 150,
+                                             y: rootViewController.view.frame.size.height - 150,
+                                             width: 300, height: 50))
+        toastView.backgroundColor = UIColor.white
+        toastView.layer.cornerRadius = 12
+        toastView.clipsToBounds = true
+
+        // Set border with green color from Constants
+        toastView.layer.borderWidth = 2
+        toastView.layer.borderColor = UIColor(
+            red: 193 / 255,
+            green: 242 / 255,
+            blue: 215 / 255,
+            alpha: 1.0
+        ).cgColor
+
+        // Add a label to the toast view with enhanced styling
+        let label = UILabel(frame: CGRect(x: 10, y: 5, width: 280, height: 40))
+        label.text = "You are in a green space. Take a moment to relax!"
+//        label.textColor = UIColor(
+//                red: 0.6,
+//                green: 0.61,
+//                blue: 0.61,
+//                alpha: 1.0
+//            ) // Use gray4 from Constants
+        label.textColor = .black
+        label.textAlignment = .center
+        label.font = UIFont(name: "Roboto", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 2
+        toastView.addSubview(label)
+
+        // Add shadow to the toastView for a more elevated look
+//        toastView.layer.shadowColor = UIColor.black.cgColor
+//        toastView.layer.shadowOpacity = 0.3
+//        toastView.layer.shadowOffset = CGSize(width: 0, height: 4)
+//        toastView.layer.shadowRadius = 4
+
+        // Add the toast view to the root view controller's view
+        rootViewController.view.addSubview(toastView)
+
+        // Animate the appearance and disappearance of the toast view
+        toastView.alpha = 0
+        UIView.animate(withDuration: 0.5, animations: {
+            toastView.alpha = 1
+        }) { _ in
+            UIView.animate(withDuration: 0.5, delay: 3.0, options: .curveEaseOut, animations: {
+                toastView.alpha = 0.0
+            }, completion: { _ in
+                toastView.removeFromSuperview()
+            })
         }
     }
+
+
+
+
     
     
     
