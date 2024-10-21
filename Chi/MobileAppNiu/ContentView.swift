@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var isInsightsToggled = false
     @State private var isSettingsToggled = false
     @State private var score: Double = 0.0
-
+    @State private var averageScore : Double = 0.0
     @EnvironmentObject var healthManager: HealthManager
 
     var body: some View {
@@ -47,7 +47,7 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    Insights(score: $score).environmentObject(healthManager)
+                    Insights(score: $averageScore).environmentObject(healthManager)
                          //Inject HealthManager to let child see the health
                 }
                 .tabItem {
