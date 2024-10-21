@@ -10,12 +10,14 @@ import HealthKit
 
 
 struct SuggestionsCapsules: View {
+    var activity: Activity
     @ObservedObject var healthManager = HealthManager()
     @State private var currentPage: Int = 0
     
-    let suggestions = ["Take a Walk in the Park", "Go for a Run when it's Sunny"] // Example suggestions
+    
     
     var body: some View {
+        let suggestions = activity.suggestions // Example suggestions
         VStack(alignment: .leading, spacing: 8) {
             // Section Title
             Text("How to Improve")
@@ -88,6 +90,7 @@ struct SuggestionCapsule: View {
 // Preview
 struct SuggestionsCapsules_Previews: PreviewProvider {
     static var previews: some View {
-        SuggestionsCapsules(healthManager: HealthManager())
+        SuggestionsCapsules(activity: .daylight,
+        healthManager: HealthManager())
     }
 }

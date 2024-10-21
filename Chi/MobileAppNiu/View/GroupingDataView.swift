@@ -50,9 +50,9 @@ struct GroupingDataView: View {
                 .environmentObject(manager)
                 .padding()
 
-            SuggestionsCapsules()
+            SuggestionsCapsules(activity: activity)
                 .padding(8)
-            ExplainationView()
+            ExplainationView(activity: activity)
                 .padding(8)
         }
         .navigationTitle("") // This avoids double titles

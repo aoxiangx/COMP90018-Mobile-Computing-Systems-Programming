@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ExplainationView: View {
+    var activity: Activity
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Secondary Section Title
-            Text("Why You Need Sunlight?")
+            Text("Why You Need \(activity.title)")
               .font(Font.custom("Roboto", size: 24))
               .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
               .frame(maxWidth: .infinity, alignment: .bottomLeading)
@@ -21,7 +22,7 @@ struct ExplainationView: View {
         
         VStack(alignment: .leading, spacing: 8) {
             // Body Text
-            Text("Sunlight does more than just light up your day—it's essential for mental wellness, helping to balance and energize you. Sunlight increases serotonin, boosting mood and calmness. It also aligns sleep-wake cycles for better rest and refreshment. As a key player in vitamin D production, sunlight supports brain health and maintains high energy levels. Additionally, exposure to natural light sharpens focus and enhances cognitive function, helping you think more clearly and perform better. Embrace natural light to uplift your mental health!")
+            Text("\(activity.reason)")
               .font(Font.custom("Roboto", size: 16))
               .foregroundColor(Color(red: 0.1, green: 0.1, blue: 0.1))
               .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -41,5 +42,5 @@ struct ExplainationView: View {
 }
 
 #Preview {
-    ExplainationView()
+    ExplainationView(activity:.daylight)
 }

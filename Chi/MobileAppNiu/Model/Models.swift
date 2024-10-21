@@ -113,6 +113,41 @@ enum Activity {
         }
     }
     
+    var suggestions: [String] {
+        switch self {
+        case .steps:
+            return ["Take a Walk in the Park", "Go for a Run when it's Sunny"]
+        case .daylight:
+            return ["Spend Time in Natural Sunlight", "Go Outside for Fresh Air"]
+        case .noise:
+            return ["Find a Quiet Spot to Relax", "Use Noise-Canceling Headphones"]
+        case .hrv:
+            return ["Practice Deep Breathing Exercises", "Try Meditation to Reduce Stress"]
+        case .sleep:
+            return ["Stick to a Consistent Sleep Schedule", "Create a Relaxing Bedtime Routine"]
+        case .green:
+            return ["Visit a Nearby Park or Nature Reserve", "Take a Break and Enjoy Green Spaces"]
+        }
+    }
+    
+    var reason: String {
+        switch self {
+        case .steps:
+            return "Physical activity like walking or running strengthens your cardiovascular system, improves muscle tone, and boosts overall energy levels. It also stimulates the release of endorphins, improving mood and reducing stress. Regular steps help maintain a healthy weight, increase stamina, and enhance brain function, keeping you physically and mentally sharp."
+        case .daylight:
+            return "Sunlight does more than just light up your day—it's essential for mental wellness, helping to balance and energize you. Sunlight increases serotonin, boosting mood and calmness. It also aligns sleep-wake cycles for better rest and refreshment. As a key player in vitamin D production, sunlight supports brain health and maintains high energy levels. Additionally, exposure to natural light sharpens focus and enhances cognitive function, helping you think more clearly and perform better. Embrace natural light to uplift your mental health!"
+        case .noise:
+            return "Excessive noise can lead to heightened stress, anxiety, and difficulty concentrating. Reducing noise exposure promotes calmness, improves focus, and lowers blood pressure. Quiet environments are essential for better mental clarity, improved productivity, and enhanced overall well-being. Protect your hearing and mental peace by managing the noise levels around you."
+        case .hrv:
+            return "Heart Rate Variability (HRV) is a key indicator of stress and overall heart health. Maintaining a healthy HRV reflects strong emotional resilience and a balanced autonomic nervous system. By engaging in activities that reduce stress, such as mindfulness or breathing exercises, you can improve your HRV, leading to better emotional control, enhanced focus, and a healthier heart."
+        case .sleep:
+            return "Quality sleep is vital for your body to repair and rejuvenate. It strengthens the immune system, improves memory and cognitive function, and balances emotions. Poor sleep affects mood, concentration, and physical health. By getting consistent and restful sleep, you'll wake up energized, with better mental clarity and emotional stability."
+        case .green:
+            return "Spending time in green spaces improves mental health by reducing stress, enhancing mood, and boosting cognitive function. Nature exposure helps lower anxiety and depression symptoms, while also encouraging physical activity. The peaceful atmosphere of green spaces promotes relaxation, creativity, and an overall sense of well-being."
+        }
+    }
+
+    
     var unitDescription: String {
         switch self {
         case .steps:
