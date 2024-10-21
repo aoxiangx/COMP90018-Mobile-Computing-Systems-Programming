@@ -26,6 +26,7 @@ import GoogleSignInSwift
         ContentView()
               .environmentObject(healthManager)
               .environmentObject(locationManager)
+              .preferredColorScheme(.light)
               .onAppear {
                   // Force the app to be in portrait mode when it launches
                   UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
