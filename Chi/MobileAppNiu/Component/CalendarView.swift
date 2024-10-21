@@ -9,12 +9,12 @@ import SwiftUI
 
 // MARK: - CalendarView
 struct CalendarView: View {
-    @Binding var selectedDate: Date? // 当前选定的日期绑定
+    @Binding var selectedDate: Date? // Current selected date binding
     @State private var date = Date()
-    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date()) // 当前选定的月份
-    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays // 星期几的名称
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7) // 日历的网格列
-    @State private var days: [Date] = [] // 当前月份的日期数组
+    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date()) // Current selected month
+    let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays // Weekday names
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7) // Calendar grid columns
+    @State private var days: [Date] = [] // Array of dates for current month
 
     var body: some View {
         VStack {
@@ -25,12 +25,12 @@ struct CalendarView: View {
                 
                 Spacer()
                 
-                // 选择月份的下拉菜单
+                // Month selection dropdown menu
                 Menu {
                     ForEach(1...12, id: \.self) { month in
                         Button(action: {
                             selectedMonth = month
-                            updateDays() // 选择新月份时更新日期
+                            updateDays() // Update dates when new month is selected
                         }) {
                             Text("\(DateFormatter().monthSymbols[month - 1])")
                                 .font(.system(size: 12))
@@ -56,7 +56,7 @@ struct CalendarView: View {
             }
             
             ZStack {
-                // 日历网格的背景
+                // Calendar grid background
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.white)
                     .overlay(
@@ -65,7 +65,7 @@ struct CalendarView: View {
                     )
                 
                 VStack(spacing: 0) {
-                    // 显示星期几作为标题
+                    // Display weekdays as headers
                     HStack(spacing: 0) {
                         ForEach(daysOfWeek.indices, id: \.self) { index in
                             Text(daysOfWeek[index])
@@ -76,35 +76,32 @@ struct CalendarView: View {
                     }
                     .padding(.bottom, 5)
                     
-                    // 分隔线
+                    // Divider line
                     Rectangle()
                         .fill(Constants.gray2)
                         .frame(height: 0.7)
                     
-                    // 显示日期的网格
+                    // Date grid display
                     LazyVGrid(columns: columns, spacing: 0) {
                         ForEach(days, id: \.self) { day in
                             if day.monthInt != selectedMonth {
                                 Text("")
                                     .font(.system(size: 12))
                                     .frame(maxWidth: .infinity, minHeight: 40)
-                                    .border(Color.clear) // 隐藏不属于当前月份的日期
+                                    .border(Color.clear) // Hide dates not in current month
                             } else {
                                 Text(day.formatted(.dateTime.day()))
                                     .font(.system(size: 12))
-                                    .foregroundColor(
-                                        isSelected(day: day) ? Color.white : Constants.gray3
-                                    )
+                                    .foregroundColor(getDateColor(for: day))
                                     .frame(maxWidth: .infinity, minHeight: 40)
                                     .background(
                                         Circle()
-                                            .foregroundColor(
-                                                isSelected(day: day) ? Color.yellow :
-                                                (Calendar.current.isDateInToday(day) && selectedDate == nil ? Constants.Blue2 : Color.white)
-                                            )
+                                            .foregroundColor(getBackgroundColor(for: day))
                                     )
                                     .onTapGesture {
-                                        selectedDate = Calendar.current.startOfDay(for: day) // 选择日期时标准化
+                                        if !isFutureDate(day) {
+                                            selectedDate = Calendar.current.startOfDay(for: day)
+                                        }
                                     }
                             }
                         }
@@ -115,30 +112,55 @@ struct CalendarView: View {
         }
         .padding()
         .onAppear {
-            updateDays() // 视图出现时初始化日期
+            updateDays() // Initialize dates when view appears
         }
         .onChange(of: selectedMonth) { _ in
-            updateDays() // 选择新月份时更新日期
+            updateDays() // Update dates when month changes
         }
     }
 
-    // 检查某个日期是否被选中
+    // Get text color for date
+    private func getDateColor(for day: Date) -> Color {
+        if isFutureDate(day) {
+            return Constants.gray3.opacity(0.3)
+        } else if isSelected(day: day) {
+            return Color.white
+        } else {
+            return Constants.gray3
+        }
+    }
+
+    // Get background color for date
+    private func getBackgroundColor(for day: Date) -> Color {
+        if isSelected(day: day) {
+            return Color.yellow
+        } else if Calendar.current.isDateInToday(day) && selectedDate == nil {
+            return Color.yellow
+        } else {
+            return Color.white
+        }
+    }
+
+    // Check if a date is selected
     private func isSelected(day: Date) -> Bool {
         guard let selectedDate = selectedDate else { return false }
         return Calendar.current.isDate(selectedDate, inSameDayAs: day)
     }
 
-    // 根据选定的月份更新日期数组
+    // Check if a date is in the future
+    private func isFutureDate(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return calendar.compare(date, to: today, toGranularity: .day) == .orderedDescending
+    }
+
+    // Update date array based on selected month
     private func updateDays() {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
         guard let monthDate = calendar.date(from: DateComponents(year: year, month: selectedMonth)) else { return }
-        days = monthDate.calendarDisplayDays.map { Calendar.current.startOfDay(for: $0) } // 标准化所有日期
+        days = monthDate.calendarDisplayDays.map { Calendar.current.startOfDay(for: $0) }
     }
-}
-
-#Preview {
-    CalendarView(selectedDate: .constant(nil))
 }
 
 // MARK: - Date Extension for Formatting
@@ -187,4 +209,8 @@ extension FileManager {
         let url = documentsDirectory.appendingPathComponent(filename)
         return UIImage(contentsOfFile: url.path)
     }
+}
+
+#Preview {
+    CalendarView(selectedDate: .constant(nil))
 }
