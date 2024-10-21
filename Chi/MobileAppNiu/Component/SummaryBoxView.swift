@@ -31,17 +31,42 @@ struct SummeryBoxView: View {
                 .foregroundColor(Constants.gray3)
             // 显示平均值和副标题
             HStack(spacing: 4) {  // You can adjust the spacing as needed
-                Text(String(format: "%.1f", average))
-                    .font(.system(size: 24))
-                    .lineLimit(1)
-                    .foregroundColor(Constants.gray3)
-                    .fixedSize(horizontal: true, vertical: true)
+                if activity == .hrv {
+                    let averageText: String
+                    if average < 30 {
+                        Text("High")
+                            .font(.system(size: 24))
+                            .lineLimit(1)
+                            .foregroundColor(Constants.gray3)
+                            .fixedSize(horizontal: true, vertical: true)
+                    } else if average <= 50 {
+                        Text("Medium")
+                            .font(.system(size: 24))
+                            .lineLimit(1)
+                            .foregroundColor(Constants.gray3)
+                            .fixedSize(horizontal: true, vertical: true)
+                    } else {
+                        Text("Low")
+                            .font(.system(size: 24))
+                            .lineLimit(1)
+                            .foregroundColor(Constants.gray3)
+                            .fixedSize(horizontal: true, vertical: true)
+                    }
+                    
+                } else {
+                    Text(String(format: "%.1f", average))
+                        .font(.system(size: 24))
+                        .lineLimit(1)
+                        .foregroundColor(Constants.gray3)
+                        .fixedSize(horizontal: true, vertical: true)
 
-                Text(subtitle)
-                    .font(Constants.caption)
-                    .lineLimit(1)
-                    .foregroundColor(Constants.gray3)
+                    Text(subtitle)
+                        .font(Constants.caption)
+                        .lineLimit(1)
+                        .foregroundColor(Constants.gray3)
+                }
             }
+
             .frame(maxWidth: .infinity, alignment: .leading)
 
             // 过去7天
