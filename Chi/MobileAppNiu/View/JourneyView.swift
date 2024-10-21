@@ -35,16 +35,16 @@ struct JourneyView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading) {
+                        // Title
+                        Text("Journey")
+                            .font(Constants.bigTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(Constants.gray2)
+                            .padding(.leading, 16)
+                            .padding(.top, 16)
                         VStack {
-                            Spacer()
-                                .frame(minHeight: 20) // Top padding
                             
                             HStack {
-                                // Title
-                                Text("Journey")
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.black)
                                 
                                 Spacer()
                                 
