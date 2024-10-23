@@ -38,7 +38,7 @@ struct Insights: View {
                             .multilineTextAlignment(.center)
                         
                         
-                        SummaryBoxesView().environmentObject(healthManager)
+                        SummaryBoxesView(period: .week).environmentObject(healthManager)
                     }
                     
                 }.onAppear {

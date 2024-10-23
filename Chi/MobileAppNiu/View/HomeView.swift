@@ -107,7 +107,7 @@ struct HomeView: View {
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             
-                            SummaryBoxesView()
+                            SummaryBoxesView(period: .day)
 //                            LocationView()
                         }
                     }

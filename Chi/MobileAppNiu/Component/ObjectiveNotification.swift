@@ -153,7 +153,7 @@ struct ObjectiveNotification: View {
     }
     
     private func fetchTodayValue() {
-        if(activity == Activity.sleep){
+        if(activity == Activity.green){
             let greenSpaceManager = GreenSpaceManager()
             let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: TimePeriod.day)
             // Calculate the sum of greenSpaceTimes

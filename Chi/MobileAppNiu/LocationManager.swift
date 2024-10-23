@@ -292,7 +292,7 @@ class LocationManager: NSObject, ObservableObject {
 //        let currentHour = Calendar.current.component(.hour, from: Date())
 //        let dateString = dateFormatter.string(from: Date()) + "-\(currentHour)"
 //        
-        print("Time spent in green space: \(timeInGreenSpace) seconds")
+//        print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // one min, save once
         if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {

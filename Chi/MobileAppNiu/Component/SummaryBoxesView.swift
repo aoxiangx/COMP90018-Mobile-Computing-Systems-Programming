@@ -20,6 +20,7 @@ struct BoxData: Identifiable {
 }
 
 struct SummaryBoxesView: View {
+    var period:TimePeriod = .week
     @EnvironmentObject var manager: HealthManager
     let columns = [
         GridItem(.flexible(), spacing: 20),
@@ -47,9 +48,10 @@ struct SummaryBoxesView: View {
                         icon: box.icon,
                         title: box.title,
                         subtitle: box.subtitle,
-                        description: box.description,
+                        description: period == .day ? "Today" : box.description,
                         paddingSpace: box.paddingSpace,
-                        activity: box.activity
+                        activity: box.activity,
+                        period: period
                     )
                     .environmentObject(manager)
                     .frame(height: 142) // 确保一致的方块高度
@@ -62,7 +64,7 @@ struct SummaryBoxesView: View {
 
 struct SummaryBoxesView_Previews: PreviewProvider {
     static var previews: some View {
-        SummaryBoxesView()
+        SummaryBoxesView(period: .week)
             .environmentObject(HealthManager()) // 在预览中注入 HealthManager
     }
 }

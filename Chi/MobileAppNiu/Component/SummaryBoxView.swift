@@ -16,6 +16,7 @@ struct SummeryBoxView: View {
     var description: String = "Past 7 Days" // 第三个文本
     var paddingSpace: CGFloat = 50
     var activity: Activity = .sleep
+    var period: TimePeriod = .day
     @State private var average: Double = 0.0
     @State private var hasFetchedAverage: Bool = false
     @EnvironmentObject var manager: HealthManager
@@ -85,7 +86,7 @@ struct SummeryBoxView: View {
         .shadow(radius: 1) // 阴影
         .onAppear {
             if !hasFetchedAverage {
-                fetchAverage(activity: activity, period: TimePeriod.week)
+                fetchAverage(activity: activity, period: period)
                 hasFetchedAverage = true // Set the flag to true after fetching
                 print("fetchedAverage: \(hasFetchedAverage)")
             }
@@ -99,9 +100,12 @@ struct SummeryBoxView: View {
             let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: period)
             // Calculate the sum of greenSpaceTimes
             let sumOfGreenSpaceTimes = greenSpaceTimes.reduce(0, +) // Sum all values in the array
-            
-            // Calculate the average (if the array is not empty)
-            self.average = greenSpaceTimes.isEmpty ? 0 : sumOfGreenSpaceTimes / Double(greenSpaceTimes.count)
+            if period == .day{
+                self.average = greenSpaceTimes.isEmpty ? 0 : sumOfGreenSpaceTimes
+            }else{
+                // Calculate the average (if the array is not empty)
+                self.average = greenSpaceTimes.isEmpty ? 0 : sumOfGreenSpaceTimes / Double(greenSpaceTimes.count)
+            }
             
         }
         else{
