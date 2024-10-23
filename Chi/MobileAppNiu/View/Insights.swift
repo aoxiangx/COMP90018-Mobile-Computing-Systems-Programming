@@ -38,7 +38,11 @@ struct Insights: View {
                             .multilineTextAlignment(.center)
                         
                         
-                        SummaryBoxesView(period: .week).environmentObject(healthManager)
+//                        SummaryBoxesView(period: .week).environmentObject(healthManager)
+//                        Summary().frame(maxWidth: 360, maxHeight: .infinity)
+                        Summary().padding(.leading, 16)
+                            .padding(.top, 16)
+                            .padding(.trailing,16)
                     }
                     
                 }.onAppear {
@@ -94,6 +98,9 @@ struct Insights: View {
         }
     }
         
+}
+#Preview {
+    Insights(score: .constant(0.5)).environmentObject(HealthManager())
 }
 
 //struct Insights_Previews: PreviewProvider {

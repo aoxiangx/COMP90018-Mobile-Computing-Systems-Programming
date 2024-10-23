@@ -18,33 +18,47 @@ struct LineData: Identifiable, Equatable {
     }
     // Equatable is to implement animation for the graph 
 }
-
 struct SmallGraph: View {
-    
+    var activity: Activity
+    func colorForActivity() -> Color {
+           switch activity {
+           case .green:
+               return Constants.Green.opacity(0.3)
+           case .daylight:
+               return Constants.Yellow3
+           case .hrv:
+               return Constants.Purple
+           case .noise:
+               return Constants.Orange
+           case .sleep:
+               return Constants.Blue2
+           case .steps:
+               return Constants.Red
+               
+           }
+       }
     var body: some View {
         ZStack {
-            ChartView(timePeriod: TimePeriod.week, hideDetail: true,activity: .steps)
-            .scaleEffect(x: 1, y: 0.5)
-            .frame(maxWidth: .infinity, maxHeight: 59)
-            .padding(.top,30)
+            // Squeeze the chart vertically with scaleEffect
+            ChartView(timePeriod: TimePeriod.week, hideDetail: true, activity: activity)
+                .scaleEffect(x: 1, y: 0.3) // Adjusted to squeeze even more
+                .frame(maxWidth: .infinity, maxHeight: 59)
+//                .padding(.top, 30)
             
-          
+            // Add background rectangle
+            
             Rectangle()
-            .foregroundStyle(Color.yellow.opacity(0.3))
-            .cornerRadius(12)
-            .zIndex(-1)
-            .frame(width:217, height: 26)
-        
+                .foregroundStyle(colorForActivity())
+                .cornerRadius(12)
+                .zIndex(-1)
+                .frame(width: 217, height: 26)
         }
-        
-        .frame(width:217, height: 59)
-
-        
+        .frame(width: 217, height: 59)
     }
 }
 
 struct SmallGraph_Previews: PreviewProvider {
     static var previews: some View {
-        SmallGraph().environmentObject(HealthManager())
+        SmallGraph(activity: .green).environmentObject(HealthManager())
     }
 }

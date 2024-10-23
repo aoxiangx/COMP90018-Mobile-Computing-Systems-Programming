@@ -28,8 +28,15 @@ struct ChartView: View {
                     y: .value("Value", item.value)
                 )
                 .interpolationMethod(.catmullRom)
-                .symbol(Circle().strokeBorder())
                 .foregroundStyle(Constants.gray3)
+                
+                if !hideDetail {
+                    LineMark(
+                        x: .value("Date", item.date),
+                        y: .value("Value", item.value)
+                    )
+                    .symbol(Circle().strokeBorder()) // Show points when hideDetail is false
+                }
             }
         }
         .frame(height: 195)
