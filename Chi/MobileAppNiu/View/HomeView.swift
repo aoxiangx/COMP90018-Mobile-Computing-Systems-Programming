@@ -107,6 +107,27 @@ struct HomeView: View {
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             
+                            // Dynamically change SuggestionsCapsules based on index
+                            switch currentPageIndex {
+                            case 0:
+                                SuggestionsCapsules(activity: .daylight)
+                                    .padding(.leading)
+                                    .padding(.top)
+                            case 1:
+                                SuggestionsCapsules(activity: .green)
+                                    .padding(.leading)
+                                    .padding(.top)
+                            case 2:
+                                SuggestionsCapsules(activity: .steps)
+                                    .padding(.leading)
+                                    .padding(.top)
+                            default:
+                                SuggestionsCapsules(activity: .daylight)
+                                    .padding(.leading)
+                                    .padding(.top)// Default activity in case index is out of expected range
+                            }
+                                                        
+                              
                             SummaryBoxesView(period: .day)
 //                            LocationView()
                         }
