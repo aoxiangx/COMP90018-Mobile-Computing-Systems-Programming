@@ -10,7 +10,7 @@ import SwiftUI
 struct Insights: View {
     @EnvironmentObject var healthManager: HealthManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
-    @Binding var score: Double
+    @State private var insightScore: Double = 0.0
     
     var body: some View {
             ZStack{
@@ -33,7 +33,7 @@ struct Insights: View {
                             .padding(.leading, 16)
                             .padding(.top, 16)
                         
-                        CircleChartView(score: $score)
+                        CircleChartView(score: insightScore)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .multilineTextAlignment(.center)
                         
@@ -45,11 +45,11 @@ struct Insights: View {
                             .padding(.trailing,16)
                     }
                     
-                }.onAppear {
-                    fetchAveragePercentages()
                 }
-                
+            }.onAppear {
+                fetchAveragePercentages()
             }
+            
             
         }
     private func fetchAveragePercentages() {
@@ -82,7 +82,7 @@ struct Insights: View {
         
         // Retrieve user objectives
         let objectives = self.objectiveViewModel.objectives
-        
+        var total = 0.0
         for day in 0..<7 {
             let green = min(greenSpace[day] / Double(objectives.greenAreaActivityDuration), 1.0)
             let sunlight = min(daylight[day] / Double(objectives.sunlightDuration), 1.0)
@@ -91,17 +91,19 @@ struct Insights: View {
             print("green \(green), sunlight \(sunlight), stepCount \(stepCount)")
             // Correctly grouping the addition
             let percentage = (green + sunlight + stepCount) / 3.0 * 100.0
-            score += percentage
-        }
-        score = score / 7.0
+            print("day \(day), percentage \(percentage)")
+            total += percentage
             
+        }
+            insightScore = total / 7.0
+        
         }
     }
         
 }
-#Preview {
-    Insights(score: .constant(0.5)).environmentObject(HealthManager())
-}
+//#Preview {
+//    Insights().environmentObject(HealthManager())
+//}
 
 //struct Insights_Previews: PreviewProvider {
 //    static var previews: some View {

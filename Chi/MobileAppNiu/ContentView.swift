@@ -22,7 +22,7 @@ struct ContentView: View {
             TabView {
                 NavigationView {
                     
-                    HomeView(score: $score)
+                    HomeView(score: score)
                         .navigationBarHidden(true)
                         .environmentObject(healthManager)
                         .environmentObject(LocationManager.shared)
@@ -47,7 +47,7 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    Insights(score: $averageScore).environmentObject(healthManager)
+                    Insights().environmentObject(healthManager)
                          //Inject HealthManager to let child see the health
                 }
                 .tabItem {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CircleChartView: View {
-    @Binding var score: Double  // Binding to the external score
+    var score: Double  // Binding to the external score
     var message: String = "Keep it up!"
 
     var body: some View {
@@ -92,6 +92,6 @@ struct CircleChartView_Previews: PreviewProvider {
     @State static var score = 75.0
 
     static var previews: some View {
-        CircleChartView(score: $score)
+        CircleChartView(score: score)
     }
 }
