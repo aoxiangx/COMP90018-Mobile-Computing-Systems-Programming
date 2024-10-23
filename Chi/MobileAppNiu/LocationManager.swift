@@ -177,7 +177,7 @@ class LocationManager: NSObject, ObservableObject {
                 if let error = error {
                     print("Failed to schedule daily notification for \(time.hour):\(time.minute): \(error.localizedDescription)")
                 } else {
-                    print("Daily notification scheduled for \(time.hour):\(time.minute).")
+//                    print("Daily notification scheduled for \(time.hour):\(time.minute).")
                 }
             }
         }
@@ -492,7 +492,7 @@ class LocationManager: NSObject, ObservableObject {
                     let dateString = dateFormatter.string(from: date) // Format the date to string
                     let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
                     greenSpaceTimes.append(greenSpaceTime) // Add each hour's data
-                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
+//                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                 } else {
                     greenSpaceTimes.append(0.0) // Default to 0 if date calculation fails
                 }
@@ -506,7 +506,7 @@ class LocationManager: NSObject, ObservableObject {
                         let dateString = dateFormatter.string(from: hourDate) // Format the date to string
                         let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
                         dailyTotalTime += greenSpaceTime // Accumulate each hour's data for the day
-                        print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
+//                        print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                     }
                 }
                 greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
@@ -514,7 +514,7 @@ class LocationManager: NSObject, ObservableObject {
             greenSpaceTimes.reverse() // Reverse the array to get data in the correct order
         
         case 30: // Return data for the past month (each day's 24 hours data)
-            let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
+//            let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
             for dayOffset in 0..<30 {
                 var dailyTotalTime: Double = 0.0 // Initialize daily total time
                 if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) {
@@ -532,47 +532,67 @@ class LocationManager: NSObject, ObservableObject {
             greenSpaceTimes.reverse()
         
         case 180: // Return data for the past six months
+            let currentDate = Date()
+            let currentMonthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: currentDate))!
+
             for monthOffset in 0..<6 {
-                if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
-                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
-                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
+                if let monthDate = calendar.date(byAdding: .month, value: -monthOffset, to: currentMonthStart) {
+                    // Get the start and end of this month
+                    let monthComponents = calendar.dateComponents([.year, .month], from: monthDate)
+                    let startOfMonth = calendar.date(from: monthComponents)!
+                    let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
                     
-                    for day in 1...daysInMonth {
-                        if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
-                            for hour in 0..<24 {
-                                if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
-                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                                    let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
-                                    monthlyTotalTime += greenSpaceTime // Accumulate total time for the month
-                                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
-                                }
-                            }
+                    var monthlyTotalTime: Double = 0.0
+                    
+                    // Debug print for month boundaries
+//                    print("Processing month: \(calendar.component(.month, from: monthDate))")
+//                    print("Month start: \(dateFormatter.string(from: startOfMonth))")
+//                    print("Month end: \(dateFormatter.string(from: nextMonth))")
+                    
+                    // Iterate through the green space dictionary
+                    for (dateString, time) in greenSpaceDict {
+                        if let recordDate = dateFormatter.date(from: dateString),
+                           recordDate >= startOfMonth && recordDate < nextMonth {
+                            monthlyTotalTime += time
+                            print("Including record - Month: \(calendar.component(.month, from: recordDate)), Date: \(dateString), Time: \(time)")
                         }
                     }
-                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
+                    
+                    // Convert to hours if needed and append
+                    greenSpaceTimes.append(monthlyTotalTime)
                 }
             }
+
+            // Reverse the array to get chronological order
             greenSpaceTimes.reverse()
         
         case 365: // Return data for the past year
+            let currentDate = Date()
+            let currentMonthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: currentDate))!
             for monthOffset in 0..<12 {
-                if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
-                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
-                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
+                if let monthDate = calendar.date(byAdding: .month, value: -monthOffset, to: currentMonthStart) {
+                    let (startOfMonth, endOfMonth) = getMonthBoundaries(for: monthDate)
+                    var monthlyTotalTime: Double = 0.0
                     
-                    for day in 1...daysInMonth {
-                        if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
-                            for hour in 0..<24 {
-                                if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
-                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                                    let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
-                                    monthlyTotalTime += greenSpaceTime // Accumulate total time for the month
-                                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
-                                }
+                    // Debug prints for month boundaries
+//                    print("\nProcessing Month: \(calendar.component(.month, from: monthDate))")
+//                    print("Start: \(dateFormatter.string(from: startOfMonth))")
+//                    print("End: \(dateFormatter.string(from: endOfMonth))")
+                    
+                    // Iterate through the dictionary entries
+                    for (dateString, time) in greenSpaceDict {
+                        if let recordDate = dateFormatter.date(from: dateString),
+                           recordDate >= startOfMonth && recordDate < endOfMonth {
+                            monthlyTotalTime += time
+                            if time != 0 {
+                                print("Including - Date: \(dateString), Time: \(time)")
                             }
                         }
                     }
-                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
+                    
+                    // Store the monthly total
+                    greenSpaceTimes.append(monthlyTotalTime)
+                    print("Monthly Total (seconds): \(monthlyTotalTime)")
                 }
             }
             greenSpaceTimes.reverse()
@@ -583,6 +603,22 @@ class LocationManager: NSObject, ObservableObject {
         
         // Convert time to minutes
         return greenSpaceTimes.map { $0 / 60.0 } // Return the times in minutes
+    }
+    
+//    func getMonthBoundaries(for date: Date) -> (start: Date, end: Date)? {
+//        let calendar = Calendar.current
+//        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date)),
+//              let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth) else {
+//            return nil
+//        }
+//        return (startOfMonth, endOfMonth)
+//    }
+    func getMonthBoundaries(for date: Date) -> (start: Date, end: Date) {
+        let calendar = Calendar.current
+        let monthComponents = calendar.dateComponents([.year, .month], from: date)
+        let startOfMonth = calendar.date(from: monthComponents)!
+        let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
+        return (startOfMonth, nextMonth)
     }
 
 
