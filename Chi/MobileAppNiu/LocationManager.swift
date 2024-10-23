@@ -191,7 +191,7 @@ class LocationManager: NSObject, ObservableObject {
                 self.locationDescription = "Unknown place"
                 return
             }
-            print(placemark)
+//            print(placemark)
             if let name = placemark.name {
                 self.locationDescription = name
                 self.currentLocationName = name // Store current location name
@@ -295,9 +295,9 @@ class LocationManager: NSObject, ObservableObject {
         print("Time spent in green space: \(timeInGreenSpace) seconds")
         
         // one min, save once
-        if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {
-            saveTodayGreenSpaceTime()
-        }
+//        if timeInGreenSpace.truncatingRemainder(dividingBy: 60) == 0 {
+//            saveTodayGreenSpaceTime()
+//        }
     }
     
 //    private func sendGreenSpaceNotification() {
@@ -386,6 +386,98 @@ class LocationManager: NSObject, ObservableObject {
     
     
     
+//    func getGreenSpaceTimes(forLastNDays n: Int) -> [Double] {
+//        var greenSpaceTimes: [Double] = [] // Array to hold green space times
+//        let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:] // Retrieve stored data from UserDefaults
+//        
+//        let calendar = Calendar.current // Get the current calendar
+//        
+//        switch n {
+//        case 1: // Return data for the past day (24 hours)
+//            for hour in 0..<24 {
+//                if let date = calendar.date(byAdding: .hour, value: -hour, to: Date()) {
+//                    let dateString = dateFormatter.string(from: date) // Format the date to string
+//                    greenSpaceTimes.append(greenSpaceDict[dateString] ?? 0.0) // Add each hour's data
+//                } else {
+//                    greenSpaceTimes.append(0.0) // Default to 0 if date calculation fails
+//                }
+//            }
+//        
+//        case 7: // Return data for the past week (7 days)
+//            for dayOffset in 0..<7 {
+//                var dailyTotalTime: Double = 0.0 // Initialize daily total time
+//                for hour in 0..<24 {
+//                    if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()),
+//                       let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
+//                        let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+//                        dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
+//                    }
+//                }
+//                greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
+//            }
+//        
+//        case 30: // Return data for the past month (each day's 24 hours data)
+//            let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
+//            for dayOffset in 0..<30 {
+//                var dailyTotalTime: Double = 0.0 // Initialize daily total time
+//                if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) {
+//                    for hour in 0..<24 {
+//                        if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
+//                            let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+//                            dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
+//                        }
+//                    }
+//                }
+//                greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
+//            }
+//        
+//        case 180: // Return data for the past six months
+//            for monthOffset in 0..<6 {
+//                if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
+//                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
+//                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
+//                    
+//                    for day in 1...daysInMonth {
+//                        if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
+//                            for hour in 0..<24 {
+//                                if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
+//                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+//                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
+//                                }
+//                            }
+//                        }
+//                    }
+//                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
+//                }
+//            }
+//        
+//        case 365: // Return data for the past year
+//            for monthOffset in 0..<12 {
+//                if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
+//                    var monthlyTotalTime: Double = 0.0 // Initialize monthly total time
+//                    let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 0 // Get number of days in the month
+//                    
+//                    for day in 1...daysInMonth {
+//                        if let specificDate = calendar.date(bySetting: .day, value: day, of: date) {
+//                            for hour in 0..<24 {
+//                                if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
+//                                    let dateString = dateFormatter.string(from: hourDate) // Format the date to string
+//                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
+//                                }
+//                            }
+//                        }
+//                    }
+//                    greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
+//                }
+//            }
+//        
+//        default:
+//            break // No support for unsupported n values
+//        }
+//        
+//        // Convert time to minutes
+//        return greenSpaceTimes.map { $0 / 60.0 } // Return the times in minutes
+//    }
     func getGreenSpaceTimes(forLastNDays n: Int) -> [Double] {
         var greenSpaceTimes: [Double] = [] // Array to hold green space times
         let greenSpaceDict = UserDefaults.standard.dictionary(forKey: greenSpaceTimeKey) as? [String: Double] ?? [:] // Retrieve stored data from UserDefaults
@@ -394,15 +486,17 @@ class LocationManager: NSObject, ObservableObject {
         
         switch n {
         case 1: // Return data for the past day (24 hours)
+            let startOfDay = calendar.startOfDay(for: Date()) // Get the start of the current day (0:00)
             for hour in 0..<24 {
-                if let date = calendar.date(byAdding: .hour, value: -hour, to: Date()) {
+                if let date = calendar.date(byAdding: .hour, value: hour, to: startOfDay) {
                     let dateString = dateFormatter.string(from: date) // Format the date to string
-                    greenSpaceTimes.append(greenSpaceDict[dateString] ?? 0.0) // Add each hour's data
+                    let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
+                    greenSpaceTimes.append(greenSpaceTime) // Add each hour's data
+                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                 } else {
                     greenSpaceTimes.append(0.0) // Default to 0 if date calculation fails
                 }
             }
-        
         case 7: // Return data for the past week (7 days)
             for dayOffset in 0..<7 {
                 var dailyTotalTime: Double = 0.0 // Initialize daily total time
@@ -410,11 +504,14 @@ class LocationManager: NSObject, ObservableObject {
                     if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()),
                        let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
                         let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                        dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
+                        let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
+                        dailyTotalTime += greenSpaceTime // Accumulate each hour's data for the day
+                        print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                     }
                 }
                 greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
             }
+            greenSpaceTimes.reverse() // Reverse the array to get data in the correct order
         
         case 30: // Return data for the past month (each day's 24 hours data)
             let daysInMonth = calendar.range(of: .day, in: .month, for: Date())?.count ?? 0 // Get number of days in the current month
@@ -424,12 +521,15 @@ class LocationManager: NSObject, ObservableObject {
                     for hour in 0..<24 {
                         if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: date) {
                             let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                            dailyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate each hour's data for the day
+                            let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
+                            dailyTotalTime += greenSpaceTime // Accumulate each hour's data for the day
+                            print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                         }
                     }
                 }
                 greenSpaceTimes.append(dailyTotalTime) // Add the total time for the day
             }
+            greenSpaceTimes.reverse()
         
         case 180: // Return data for the past six months
             for monthOffset in 0..<6 {
@@ -442,7 +542,9 @@ class LocationManager: NSObject, ObservableObject {
                             for hour in 0..<24 {
                                 if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
                                     let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
+                                    let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
+                                    monthlyTotalTime += greenSpaceTime // Accumulate total time for the month
+                                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                                 }
                             }
                         }
@@ -450,6 +552,7 @@ class LocationManager: NSObject, ObservableObject {
                     greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
                 }
             }
+            greenSpaceTimes.reverse()
         
         case 365: // Return data for the past year
             for monthOffset in 0..<12 {
@@ -462,7 +565,9 @@ class LocationManager: NSObject, ObservableObject {
                             for hour in 0..<24 {
                                 if let hourDate = calendar.date(byAdding: .hour, value: -hour, to: specificDate) {
                                     let dateString = dateFormatter.string(from: hourDate) // Format the date to string
-                                    monthlyTotalTime += greenSpaceDict[dateString] ?? 0.0 // Accumulate total time for the month
+                                    let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
+                                    monthlyTotalTime += greenSpaceTime // Accumulate total time for the month
+                                    print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                                 }
                             }
                         }
@@ -470,6 +575,7 @@ class LocationManager: NSObject, ObservableObject {
                     greenSpaceTimes.append(monthlyTotalTime) // Add the total time for the month
                 }
             }
+            greenSpaceTimes.reverse()
         
         default:
             break // No support for unsupported n values
@@ -478,6 +584,7 @@ class LocationManager: NSObject, ObservableObject {
         // Convert time to minutes
         return greenSpaceTimes.map { $0 / 60.0 } // Return the times in minutes
     }
+
 
 
 }
