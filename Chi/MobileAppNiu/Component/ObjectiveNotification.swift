@@ -67,9 +67,18 @@ struct ObjectiveNotification: View {
                                 Text(objectiveDataActivity.title) // Dynamically display the objective type
                                     .font(Font.custom("Roboto", size: 16))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
-                                Text("\(Int(currentTime)) \(objectiveDataActivity.subtitle)") // Display current time
-                                    .font(Font.custom("Roboto", size: 24))
-                                    .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
+                                HStack{
+                                    Text("\(Int(currentTime))")
+                                        .font(.system(size: 24))
+                                        .lineLimit(1)
+                                        .foregroundColor(Constants.gray3)
+                                        .fixedSize(horizontal: true, vertical: true)
+                                
+                                Text(objectiveDataActivity.subtitle)
+                                    .font(Constants.caption)
+                                    .lineLimit(1)
+                                    .foregroundColor(Constants.gray3)
+                                }
                                 Text("per day") // Display time unit
                                     .font(Font.custom("Roboto", size: 12))
                                     .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
@@ -78,6 +87,7 @@ struct ObjectiveNotification: View {
                             Text("Objective: \(objectiveTime ?? 0) \(objectiveDataActivity.subtitle)") // Display the objective time
                                 .font(Font.custom("Roboto", size: 12))
                                 .foregroundColor(Constants.gray3)
+                            
                         }
                     }
                     // Progress bar

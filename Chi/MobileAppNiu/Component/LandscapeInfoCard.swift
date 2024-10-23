@@ -53,11 +53,21 @@ struct LandscapeInfoCard: View {
                     
                 } else {
                     HStack {
-                        Text(String(format: "%d", Int(average)))
-                            .font(.system(size: 24))
-                            .lineLimit(1)
-                            .foregroundColor(Constants.gray3)
-                            .fixedSize(horizontal: true, vertical: true)
+                        if activity == .sleep {
+                            // Format average as a decimal
+                            Text(String(format: "%.1f", average))
+                                .font(.system(size: 24))
+                                .lineLimit(1)
+                                .foregroundColor(Constants.gray3)
+                                .fixedSize(horizontal: true, vertical: true)
+                        } else {
+                            // Format average as an integer
+                            Text("\(Int(average))")
+                                .font(.system(size: 24))
+                                .lineLimit(1)
+                                .foregroundColor(Constants.gray3)
+                                .fixedSize(horizontal: true, vertical: true)
+                        }
                         
                         Text(subtitle)
                             .font(Constants.caption)

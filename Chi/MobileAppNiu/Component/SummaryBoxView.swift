@@ -15,7 +15,7 @@ struct SummeryBoxView: View {
     var subtitle: String = "Step(s)" // 第二个文本
     var description: String = "Past 7 Days" // 第三个文本
     var paddingSpace: CGFloat = 50
-    var activity: Activity = .sleep
+    var activity: Activity = .daylight
     var period: TimePeriod = .day
     @State private var average: Double = 0.0
     @State private var hasFetchedAverage: Bool = false
@@ -55,11 +55,21 @@ struct SummeryBoxView: View {
                     }
                     
                 } else {
-                    Text(String(format: "%.1f", average))
-                        .font(.system(size: 24))
-                        .lineLimit(1)
-                        .foregroundColor(Constants.gray3)
-                        .fixedSize(horizontal: true, vertical: true)
+                    if activity == .sleep {
+                        // Format average as a decimal
+                        Text(String(format: "%.1f", average))
+                            .font(.system(size: 24))
+                            .lineLimit(1)
+                            .foregroundColor(Constants.gray3)
+                            .fixedSize(horizontal: true, vertical: true)
+                    } else {
+                        // Format average as an integer
+                        Text("\(Int(average))")
+                            .font(.system(size: 24))
+                            .lineLimit(1)
+                            .foregroundColor(Constants.gray3)
+                            .fixedSize(horizontal: true, vertical: true)
+                    }
 
                     Text(subtitle)
                         .font(Constants.caption)
