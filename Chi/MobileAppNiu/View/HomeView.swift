@@ -140,7 +140,7 @@ struct HomeView: View {
         }
     }
     
-    /// Fetches health and green space data for the last 7 days, calculates percentages, and updates the state.
+    // Fetches health and green space data for the last 7 days, calculates percentages, and updates the state.
     private func fetchAndCalculatePercentages() {
         let group = DispatchGroup()
         var steps: [Double] = []

@@ -53,7 +53,7 @@ struct LandscapeInfoCard: View {
                     
                 } else {
                     HStack {
-                        Text(String(format: "%.1f", average))
+                        Text(String(format: "%d", Int(average)))
                             .font(.system(size: 24))
                             .lineLimit(1)
                             .foregroundColor(Constants.gray3)

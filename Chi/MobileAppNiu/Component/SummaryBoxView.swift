@@ -85,11 +85,8 @@ struct SummeryBoxView: View {
         )
         .shadow(radius: 1) // 阴影
         .onAppear {
-            if !hasFetchedAverage {
                 fetchAverage(activity: activity, period: period)
-                hasFetchedAverage = true // Set the flag to true after fetching
-                print("fetchedAverage: \(hasFetchedAverage)")
-            }
+            
         }
     }
 

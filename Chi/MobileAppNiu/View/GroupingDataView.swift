@@ -75,6 +75,20 @@ struct GroupingDataView: View {
 
     private func updateData(for period: TimePeriod) {
         if(activity == Activity.green){
+            var numberOfDays: Int
+            switch period {
+            case .day:
+                numberOfDays = 1
+            case .week:
+                numberOfDays = 7
+            case .month:
+                numberOfDays = 30
+            case .sixMonths:
+                numberOfDays = 180
+            case .year:
+                numberOfDays = 365
+            }
+                
             let greenSpaceManager = GreenSpaceManager()
             let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: period)
             // Calculate the sum of greenSpaceTimes
@@ -84,7 +98,7 @@ struct GroupingDataView: View {
                 average = greenSpaceTimes.isEmpty ? 0.0 : sumOfGreenSpaceTimes
             }else{
                 // Calculate the average (if the array is not empty)
-                average = greenSpaceTimes.isEmpty ? 0.0 : sumOfGreenSpaceTimes / Double(greenSpaceTimes.count)
+                average = greenSpaceTimes.isEmpty ? 0.0 : sumOfGreenSpaceTimes / Double(numberOfDays)
             }
             self.dynamicValue = "\(String(format: "%.1f", average)) \(activity.unitDescription)"
         }
