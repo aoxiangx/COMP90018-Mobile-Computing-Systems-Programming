@@ -100,16 +100,17 @@ struct GroupingDataView: View {
                 // Calculate the average (if the array is not empty)
                 average = greenSpaceTimes.isEmpty ? 0.0 : sumOfGreenSpaceTimes / Double(numberOfDays)
             }
-            self.dynamicValue = "\(Int(average)) \(activity.unitDescription)"
+            self.dynamicValue = String(format: "%.1f %@", average, activity.unitDescription)
+
         }
         else{
             manager.fetchAverage(endDate: Date(), activity: activity, period: period) { result in
                 DispatchQueue.main.async {
-                    if activity == .sleep{
-                        self.dynamicValue = "\(result) \(activity.unitDescription)"
+                    if activity == .steps{
+                        self.dynamicValue = "\(Int(result)) \(activity.unitDescription)"
                     }
                     else{
-                        self.dynamicValue = "\(Int(result)) \(activity.unitDescription)"
+                        self.dynamicValue = "\(result) \(activity.unitDescription)"
                     }
                 }
             }
