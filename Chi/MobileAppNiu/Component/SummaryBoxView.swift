@@ -15,7 +15,7 @@ struct SummeryBoxView: View {
     var subtitle: String = "Step(s)" // 第二个文本
     var description: String = "Past 7 Days" // 第三个文本
     var paddingSpace: CGFloat = 50
-    var activity: Activity = .daylight
+    var activity: Activity = .sleep
     var period: TimePeriod = .day
     @State private var average: Double = 0.0
     @State private var hasFetchedAverage: Bool = false
@@ -23,8 +23,8 @@ struct SummeryBoxView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 7) { // 上下排列，左对齐
             Image(icon)
-                .resizable() // 使图片可调整大小
-                .frame(width: 32, height: 32) // 设置大小为32x32
+                .scaledToFit()
+                .frame(height: 32) // 设置大小为32x32
                 .foregroundColor(.gray)
             // 标题
             Text(title)
@@ -71,11 +71,10 @@ struct SummeryBoxView: View {
                             .foregroundColor(Constants.gray3)
                             .fixedSize(horizontal: true, vertical: true)
                     }
-
                     Text(subtitle)
-                        .font(Constants.caption)
-                        .lineLimit(1)
-                        .foregroundColor(Constants.gray3)
+                    .font(Constants.caption)
+                    .lineLimit(1)
+                    .foregroundColor(Constants.gray3)
                 }
             }
 

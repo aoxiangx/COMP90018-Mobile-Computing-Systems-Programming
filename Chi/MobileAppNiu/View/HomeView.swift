@@ -7,7 +7,7 @@ struct HomeView: View {
 //    @EnvironmentObject var locationManager: LocationManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
     
-    @Binding var score: Double
+    @State  var score: Double
     @AppStorage("log_Status") private var logStatus: Bool = false
     @State private var currentPageIndex = 0
     
@@ -79,7 +79,7 @@ struct HomeView: View {
                                     .padding(.leading, 15)
                             }
                             
-                            CircleChartView(score: $score)
+                            CircleChartView(score: score)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .multilineTextAlignment(.center)
                             
@@ -206,7 +206,7 @@ struct HomeViewPreview: View {
     @State private var score: Double = 66.9
     
     var body: some View {
-        HomeView(score: $score)
+        HomeView(score: score)
             .environmentObject(HealthManager())
 //            .environmentObject(LocationManager.shared)
     }

@@ -19,15 +19,19 @@ struct LandscapeInfoCard: View {
         ZStack(alignment: .center) {
             
             VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .center, spacing: 4) {
+                HStack(spacing: 4) {
                     Image(iconName)
-                        .frame(width: 16, height: 16)
+                        .resizable() // 让图标可以调整大小
+                        .scaledToFit() // 保持原始比例缩放
+                        .frame(width: 24) // 只设置宽度，高度自动按比例缩小
                     Text(activity.title)
-                        .font(Font.custom("Switzer", size: 16))
+                        .font(Constants.body)
                         .foregroundColor(Color(red: 0.34, green: 0.35, blue: 0.35))
                         .frame(maxWidth:.infinity,alignment: .leading)
+                    Spacer()
                 }
-                .padding(.vertical, 3)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
                 
                 
                 if activity == .hrv {
@@ -61,6 +65,7 @@ struct LandscapeInfoCard: View {
                                 .lineLimit(1)
                                 .foregroundColor(Constants.gray3)
                                 .fixedSize(horizontal: true, vertical: true)
+                            
                         } else {
                             // Format average as an integer
                             Text(String(format: "%.1f", average))
@@ -69,7 +74,6 @@ struct LandscapeInfoCard: View {
                                 .foregroundColor(Constants.gray3)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
-                        
                         Text(subtitle)
                             .font(Constants.caption)
                             .lineLimit(1)

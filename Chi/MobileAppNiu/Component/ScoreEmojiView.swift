@@ -8,21 +8,14 @@
 import SwiftUI
 
 struct ScoreEmojiView: View {
-    @Binding var score: Int  // Use Binding to allow the parent view to manage the score
+    var score: Int  // Keep score as a regular variable
 
     var body: some View {
         ZStack {
-            CircleChartView(score: Binding<Double>(get: {
-                Double(self.score)  // Convert Int to Double
-            }, set: { newValue in
-                self.score = Int(newValue)  // Convert Double back to Int if needed
-            }))
+            // Ensure CircleChartView is correctly defined elsewhere in the project
+            CircleChartView(score: Double(score))
             
             VStack {
-//                Text("\(score)%")
-//                    .font(.largeTitle)
-//                Text(warmingGreeting(for: score))
-//                    .font(.body)
                 Text(emoji(for: score))
                     .font(.largeTitle)
             }
@@ -30,6 +23,7 @@ struct ScoreEmojiView: View {
         }
     }
 
+    // Function to return emojis based on score ranges
     private func emoji(for score: Int) -> String {
         switch score {
         case 0..<20: return "😵"
@@ -41,6 +35,7 @@ struct ScoreEmojiView: View {
         }
     }
 
+    // Function to return warming messages based on score ranges (optional)
     private func warmingGreeting(for score: Int) -> String {
         switch score {
         case 0..<20: return "Get Out from Here"
@@ -55,6 +50,6 @@ struct ScoreEmojiView: View {
 
 struct ScoreEmoji_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreEmojiView(score: .constant(75))  // Use a constant for preview
+        ScoreEmojiView(score: 75)  // Example score for preview
     }
 }
