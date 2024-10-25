@@ -208,7 +208,8 @@ class LocationManager: NSObject, ObservableObject {
             previousLocationName = currentLocationName // Update the previous location name
             
             // Check if the current location name contains "park" or "garden"
-            if currentLocationName.lowercased().contains("park") || currentLocationName.lowercased().contains("garden") || currentLocationName.lowercased().contains("square") || currentLocationName.lowercased().contains("lawn") || currentLocationName.lowercased().contains("memorial"){
+            if currentLocationName.lowercased().contains("park") || currentLocationName.lowercased().contains("garden") || currentLocationName.lowercased().contains("square") || currentLocationName.lowercased().contains("lawn") || currentLocationName.lowercased().contains("memorial")
+                || currentLocationName.lowercased().contains("playground") || currentLocationName.lowercased().contains("zoo") {
                 if !isInGreenSpace { // If just entered green space
                     
                     // Read today's stored green space time and continue timing
