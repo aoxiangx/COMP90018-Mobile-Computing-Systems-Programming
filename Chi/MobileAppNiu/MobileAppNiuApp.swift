@@ -29,15 +29,13 @@ import GoogleSignInSwift
               .preferredColorScheme(.light)
               .onAppear {
                   // Force the app to be in portrait mode when it launches
-                  UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                  // Lock orientation to portrait mode when the app launches
                   AppDelegate.orientationLock = .portrait
               }
       }
     }
   }
 }
-
-
 
 class AppDelegate: NSObject, UIApplicationDelegate{
     func application(_ application: UIApplication,
