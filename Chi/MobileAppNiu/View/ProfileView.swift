@@ -26,10 +26,8 @@ struct ProfileView: View {
     
     func toggleNotifications() {
         if isNotificationsEnabled {
-            // Show confirmation alert before directing to Settings
             showingSettingsAlert = true
         } else {
-            // Request notification permissions
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
                 DispatchQueue.main.async {
                     isNotificationsEnabled = granted
@@ -70,27 +68,6 @@ struct ProfileView: View {
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                         
                         VStack(alignment: .leading, spacing: 0) {
-                            // About You Button
-                            HStack(alignment: .center) {
-                                Text("About You")
-                                    .font(Font.custom("Roboto", size: 16))
-                                    .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 16)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .background(Constants.white)
-                            .cornerRadius(12)
-                            .overlay(
-                                Rectangle()
-                                    .frame(height: 0.3)
-                                    .foregroundColor(Color.gray),
-                                alignment: .bottom
-                            )
-                            
                             // Your Objectives Link
                             NavigationLink(destination: ObjectiveSetView()) {
                                 HStack(alignment: .center) {
@@ -106,28 +83,7 @@ struct ProfileView: View {
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .background(Constants.white)
                                 .cornerRadius(12)
-                                .overlay(
-                                    Rectangle()
-                                        .frame(height: 0.3)
-                                        .foregroundColor(Color.gray),
-                                    alignment: .bottom
-                                )
                             }
-                            
-                            // About You (Second Instance)
-                            HStack(alignment: .center) {
-                                Text("About You")
-                                    .font(Font.custom("Roboto", size: 16))
-                                    .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 16)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .background(Constants.white)
-                            .cornerRadius(12)
                         }
                         .padding(0)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -196,16 +152,13 @@ struct ProfileView: View {
         .onAppear {
             checkNotificationStatus()
         }
-        // Monitor scene phase changes
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
                 checkNotificationStatus()
             }
         }
-        // Add confirmation alert
         .alert("Notification Settings", isPresented: $showingSettingsAlert) {
             Button("Cancel") {
-                // Restore toggle state on cancel
                 isNotificationsEnabled = true
             }
             Button("Open Settings") {
@@ -217,7 +170,6 @@ struct ProfileView: View {
     }
 }
 
-// Preview Provider
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileView()
