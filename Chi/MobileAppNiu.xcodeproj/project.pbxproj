@@ -668,6 +668,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Chi;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to your camera to allow you to take photos and videos within the app.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
@@ -705,6 +706,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileAppNiu/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Chi;
 				INFOPLIST_KEY_LSApplicationCategoryType = NSHealthShareUsageDescription;
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to your camera to allow you to take photos and videos within the app.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please Allow Health Share Usage Access";
