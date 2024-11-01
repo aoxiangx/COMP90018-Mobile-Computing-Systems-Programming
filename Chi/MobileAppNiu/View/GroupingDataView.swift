@@ -18,58 +18,71 @@ struct GroupingDataView: View {
     @State private var dynamicValue: String = "Loading..."
 
     var body: some View {
-        VStack {
-            Picker("Select Time Period", selection: $selectedTimePeriod) {
-                ForEach(TimePeriod.allCases, id: \.self) { period in
-                    Text(period.rawValue).tag(period)
-                        .font(Font.custom("Roboto", size: 12))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
-                        .frame(width: 18, alignment: .top)
+        ZStack {
+            LinearGradient(gradient: Gradient(stops: [
+                .init(color: Color(hex: "FFF8C9"), location: 0.0),  // Start with FFF8C9
+                .init(color: Color(hex: "EDF5FF"), location: 0.6)   // End with EDF5FF
+            ]),
+                           startPoint: .topLeading,
+                           endPoint: .bottomTrailing)
+            .edgesIgnoringSafeArea(.all)  // To fill the entire screen
+            ScrollView {
+                VStack {
+                    Picker("Select Time Period", selection: $selectedTimePeriod) {
+                        ForEach(TimePeriod.allCases, id: \.self) { period in
+                            Text(period.rawValue).tag(period)
+                                .font(Font.custom("Roboto", size: 12))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(Color(red: 0.22, green: 0.23, blue: 0.23))
+                                .frame(width: 18, alignment: .top)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                    .frame(height: 22)
+                    .onChange(of: selectedTimePeriod) { newPeriod in
+                        updateData(for: newPeriod)
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        Text(dynamicValue)
+                            .font(.system(size: 32))
+                            .frame(height: 42)
+                        Text(dynamicTimePeriodDescription(for: selectedTimePeriod))
+                            .font(.system(size: 12))
+                    }
+                    .padding(.leading)
+                    .padding(.vertical, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    ChartView(timePeriod: selectedTimePeriod, hideDetail: false, activity: activity)
+                        .environmentObject(manager)
+                        .padding()
+                    
+                    SuggestionsCapsules(activity: activity)
+                        .padding(8)
+                    ExplainationView(activity: activity)
+                        .padding(8)
+                }
+                .navigationTitle("") // This avoids double titles
+                .navigationBarTitleDisplayMode(.inline) // Set title display mode
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        HStack {
+                            Image(icon)
+                                .foregroundColor(.yellow)
+                            Text(activity.title) // Dynamic title based on activity
+                                .font(Font.custom("Roboto", size: 16))
+                                .foregroundColor(Constants.gray3)
+                        }
+                    }
+                    
+                }
+                .padding(.top, 16)
+                .onAppear {
+                    updateData(for: selectedTimePeriod)
                 }
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-            .frame(height: 22)
-            .onChange(of: selectedTimePeriod) { newPeriod in
-                updateData(for: newPeriod)
-            }
-
-            VStack(alignment: .leading) {
-                Text(dynamicValue)
-                    .font(.system(size: 32))
-                    .frame(height: 42)
-                Text(dynamicTimePeriodDescription(for: selectedTimePeriod))
-                    .font(.system(size: 12))
-            }
-            .padding(.leading)
-            .padding(.vertical, 16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            ChartView(timePeriod: selectedTimePeriod, hideDetail: false, activity: activity)
-                .environmentObject(manager)
-                .padding()
-
-            SuggestionsCapsules(activity: activity)
-                .padding(8)
-            ExplainationView(activity: activity)
-                .padding(8)
-        }
-        .navigationTitle("") // This avoids double titles
-        .navigationBarTitleDisplayMode(.inline) // Set title display mode
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                HStack {
-                    Image(icon)
-                        .foregroundColor(.yellow)
-                    Text(activity.title) // Dynamic title based on activity
-                        .font(Font.custom("Roboto", size: 16))
-                        .foregroundColor(Constants.gray3)
-                }
-            }
-        }
-        .onAppear {
-            updateData(for: selectedTimePeriod)
         }
     }
 

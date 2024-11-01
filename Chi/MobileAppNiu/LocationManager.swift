@@ -151,38 +151,52 @@ class LocationManager: NSObject, ObservableObject {
         content.body = "Remember to spend some time in nature today!"
         content.sound = .default
         
-        // Define the times you want notifications to be sent (e.g., 9:00 AM, 12:00 PM, 6:00 PM)
+    
         let times: [(hour: Int, minute: Int)] = [
-            (hour: 9, minute: 0),  // 9:00 AM
-            (hour: 12, minute: 0), // 12:00 PM
-            (hour: 18, minute: 0)  // 6:00 PM
+            (hour: 9, minute: 0),    // 9:00 AM
+            (hour: 12, minute: 0),   // 12:00 PM
+            (hour: 12, minute: 45),  // 12:45 PM
+            (hour: 13, minute: 20),  // 1:20 PM
+            (hour: 13, minute: 25),  // 1:30 PM
+            (hour: 14, minute: 0),   // 2:00 PM
+            (hour: 14, minute: 30),  // 2:30 PM
+            (hour: 15, minute: 0),   // 3:00 PM
+            (hour: 15, minute: 15),  // 3:15 PM
+            (hour: 15, minute: 30),  // 3:30 PM
+            (hour: 15, minute: 45),  // 3:45 PM
+            (hour: 16, minute: 0),   // 4:00 PM
+            (hour: 16, minute: 15),  // 4:15 PM
+            (hour: 16, minute: 30),  // 4:30 PM
+            (hour: 16, minute: 45),  // 4:45 PM
+            (hour: 18, minute: 0)    // 6:00 PM
         ]
         
         for (index, time) in times.enumerated() {
-            // Set the time for each notification
+            
             var dateComponents = DateComponents()
             dateComponents.hour = time.hour
             dateComponents.minute = time.minute
             
-            // Create the trigger for each time
+            
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            
             let request = UNNotificationRequest(
                 identifier: "dailyGreenSpaceReminder_\(index)",
                 content: content,
                 trigger: trigger
             )
             
-            // Add the notification request
+            
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
                     print("Failed to schedule daily notification for \(time.hour):\(time.minute): \(error.localizedDescription)")
                 } else {
-//                    print("Daily notification scheduled for \(time.hour):\(time.minute).")
+                    print("Daily notification scheduled for \(time.hour):\(time.minute).")
                 }
             }
         }
     }
-
     
     // Reverse geocoding
     func reverseGeocodeLocation(location: CLLocation) {

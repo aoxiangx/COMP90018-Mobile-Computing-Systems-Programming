@@ -18,7 +18,10 @@ struct CustomNavigationBar: View {
                 Spacer()
                 HStack {
                     Image(iconName)
-                        .foregroundColor(.yellow)  // Customize the icon color
+                        .resizable()
+                        .frame(width: 24, height:24)
+
+//                        .foregroundColor(.yellow)  // Customize the icon color
                     Text(title)
                         .font(Font.custom("Roboto", size: 16))
                         .foregroundColor(Constants.gray3) // Customize the title style
