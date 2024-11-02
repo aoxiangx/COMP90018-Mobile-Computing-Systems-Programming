@@ -173,7 +173,7 @@ struct ObjectiveNotification: View {
         else{
             activity?.dayValue(using: healthManager) { (value, error) in
                 if let error = error {
-                    print("Error fetching step value: \(error.localizedDescription)")
+                    print("Fetching step value: \(error.localizedDescription)")
                 } else if let steps = value {
                     DispatchQueue.main.async {
                         self.currentTime = steps // Update the currentTime state variable

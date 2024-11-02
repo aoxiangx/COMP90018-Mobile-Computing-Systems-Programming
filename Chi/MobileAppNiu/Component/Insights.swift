@@ -61,7 +61,7 @@ struct Insights: View {
         group.enter()
         healthManager.fetchLast7DaysSteps { fetchedSteps in
             steps = fetchedSteps.map { $0.1 }
-            print("7days steps: \(steps)")
+//            print("7days steps: \(steps)")
             group.leave()
         }
         

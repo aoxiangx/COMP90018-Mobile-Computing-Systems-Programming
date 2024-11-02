@@ -550,7 +550,7 @@ class LocationManager: NSObject, ObservableObject {
                             let dateString = dateFormatter.string(from: hourDate) // Format the date to string
                             let greenSpaceTime = greenSpaceDict[dateString] ?? 0.0
                             dailyTotalTime += greenSpaceTime // Accumulate each hour's data for the day
-                            print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
+//                            print("Date: \(dateString), GreenSpaceTime (seconds): \(greenSpaceTime)")
                         }
                     }
                 }
@@ -581,7 +581,7 @@ class LocationManager: NSObject, ObservableObject {
                         if let recordDate = dateFormatter.date(from: dateString),
                            recordDate >= startOfMonth && recordDate < nextMonth {
                             monthlyTotalTime += time
-                            print("Including record - Month: \(calendar.component(.month, from: recordDate)), Date: \(dateString), Time: \(time)")
+//                            print("Including record - Month: \(calendar.component(.month, from: recordDate)), Date: \(dateString), Time: \(time)")
                         }
                     }
                     
@@ -619,7 +619,7 @@ class LocationManager: NSObject, ObservableObject {
                     
                     // Store the monthly total
                     greenSpaceTimes.append(monthlyTotalTime)
-                    print("Monthly Total (seconds): \(monthlyTotalTime)")
+//                    print("Monthly Total (seconds): \(monthlyTotalTime)")
                 }
             }
             greenSpaceTimes.reverse()

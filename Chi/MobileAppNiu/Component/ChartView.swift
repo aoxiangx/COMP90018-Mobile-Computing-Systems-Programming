@@ -69,7 +69,7 @@ struct ChartView: View {
         if(activity == Activity.green){
             let greenSpaceManager = GreenSpaceManager()
             let (labels, greenSpaceTimes) = greenSpaceManager.fetchGreenSpaceTimes(for: timePeriod)
-            print("date: \(labels), value: \(greenSpaceTimes)")
+//            print("date: \(labels), value: \(greenSpaceTimes)")
             self.chartData = greenSpaceTimes.enumerated().map { index, value in
                 
                 LineChartData(id: UUID(), date: labels[index], value: value)

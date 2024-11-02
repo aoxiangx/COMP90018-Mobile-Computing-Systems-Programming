@@ -67,7 +67,7 @@ class GreenSpaceManager {
             }.reversed() // Order from past to today
             greenSpaceTimes = locationManager.getGreenSpaceTimes(forLastNDays: 365)
         }
-        print("labels: \(labels), greenSpaceTimes: \(greenSpaceTimes)")
+//        print("labels: \(labels), greenSpaceTimes: \(greenSpaceTimes)")
         return (labels, greenSpaceTimes)
     }
 

@@ -88,7 +88,7 @@ class HealthManager: ObservableObject {
         // Create the predicate for the query
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
         
-        print("fetchSteps: startOfDay: \(startOfDay), endOfDay: \(endOfDay)")
+//        print("fetchSteps: startOfDay: \(startOfDay), endOfDay: \(endOfDay)")
         
         // Create and execute the query
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
@@ -163,7 +163,7 @@ class HealthManager: ObservableObject {
         // After all fetches are complete, return the result sorted by date from oldest to newest
         group.notify(queue: .main) {
             let sortedSteps = stepsDictionary.sorted(by: { $0.key < $1.key }) // Sort by date
-            print("Fetched and sorted steps for the last 7 days: \(sortedSteps)")
+//            print("Fetched and sorted steps for the last 7 days: \(sortedSteps)")
             completion(sortedSteps) // Return the sorted array of tuples (Date, Steps)
         }
     }
@@ -194,7 +194,7 @@ class HealthManager: ObservableObject {
         // After all fetches are complete, return the result sorted by date from oldest to newest
         group.notify(queue: .main) {
             let sortedDaylight = daylightDictionary.sorted(by: { $0.key < $1.key }) // Sort by date
-            print("Fetched and sorted daylight for the last 7 days: \(sortedDaylight)")
+//            print("Fetched and sorted daylight for the last 7 days: \(sortedDaylight)")
             completion(sortedDaylight) // Return the sorted array of tuples (Date, Daylight)
         }
     }
@@ -389,7 +389,7 @@ class HealthManager: ObservableObject {
                     }
                     
                     dailyValues[day] = totalSleepTime / 3600.0 // Convert seconds to hours
-                    print("Data for day \(day): \(dailyValues[day]) hours of sleep")
+//                    print("Data for day \(day): \(dailyValues[day]) hours of sleep")
                 }
                 group.enter()
                 healthStore.execute(query)
@@ -427,7 +427,7 @@ class HealthManager: ObservableObject {
             let total = dailyValues.reduce(0, +)
             let average = total / Double(numberOfDays)
             
-            print("\(numberOfDays)-day average: \(average)")
+//            print("\(numberOfDays)-day average: \(average)")
             completion(Double(String(format: "%.1f", average)) ?? 0.0)
         }
     }
@@ -461,7 +461,7 @@ class HealthManager: ObservableObject {
             }
 
 //            print("adjustedStartDate: \(adjustedStartDate), adjustedEndDate: \(adjustedEndDate)")
-            print("labels: \(labels)")
+//            print("labels: \(labels)")
             fetchDaily(startDate: startDate, endDate: endDate, labels: labels, activity: activity, activityType: activityType) { dailyData in
                 completion(dailyData) // 返回每日数据
             }

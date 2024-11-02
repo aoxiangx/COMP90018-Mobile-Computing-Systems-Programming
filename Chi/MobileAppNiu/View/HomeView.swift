@@ -150,7 +150,7 @@ struct HomeView: View {
         group.enter()
         healthManager.fetchLast7DaysSteps { fetchedSteps in
             steps = fetchedSteps.map { $0.1 }
-            print("7days steps: \(steps)")
+//            print("7days steps: \(steps)")
             group.leave()
         }
         
@@ -158,7 +158,7 @@ struct HomeView: View {
         group.enter()
         healthManager.fetchLast7DaysDaylight { fetchedDaylight in
             daylight = fetchedDaylight.map { $0.1 }
-            print("7days daylight: \(daylight)")
+//            print("7days daylight: \(daylight)")
             group.leave()
         }
         
@@ -178,7 +178,7 @@ struct HomeView: View {
                 let sunlight = min(daylight[day] / Double(objectives.sunlightDuration), 1.0)
                 let stepCount = min(steps[day] / Double(objectives.stepCount), 1.0)
                 
-                print("green \(green), sunlight \(sunlight), stepCount \(stepCount)")
+//                print("green \(green), sunlight \(sunlight), stepCount \(stepCount)")
                 // Correctly grouping the addition
                 let percentage = (green + sunlight + stepCount) / 3.0 * 100.0
                 if(day == 6 ){
