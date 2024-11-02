@@ -20,6 +20,7 @@ struct PieHomeView: View {
         VStack {
             HStack(spacing: 10) {
                 ForEach(0..<daysOfWeek.count, id: \.self) { index in
+                    
                     PieView(percentage: percentages[index])
                         .frame(maxWidth: .infinity)
                 }

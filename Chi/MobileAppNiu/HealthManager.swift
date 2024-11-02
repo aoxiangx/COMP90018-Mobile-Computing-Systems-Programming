@@ -45,7 +45,96 @@ class HealthManager: ObservableObject {
     }
     
     
-    
+    /// Fetches the noise levels for a specified day offset.
+    func fetchNoiseLevelsOnDay(_ dayOffset: Int, completion: @escaping (Double?, Error?) -> Void) {
+        guard let noise = HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create noise level type"]))
+            return
+        }
+
+        // Calculate start and end of the specified day
+        let startOfDay = Calendar.current.date(byAdding: .day, value: -dayOffset, to: Calendar.current.startOfDay(for: Date()))!
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: noise, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+
+            guard let quantity = result?.averageQuantity() else {
+                completion(0.0, nil) // No noise level data found, returning 0
+                return
+            }
+
+            let averageNoise = quantity.doubleValue(for: HKUnit.decibelAWeightedSoundPressureLevel())
+            completion(averageNoise, nil)
+        }
+        healthStore.execute(query)
+    }
+
+    /// Fetches the HRV for a specified day offset.
+    func fetchHRVOnDay(_ dayOffset: Int, completion: @escaping (Double?, Error?) -> Void) {
+        guard let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
+            completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create HRV type"]))
+            return
+        }
+
+        // Calculate start and end of the specified day
+        let startOfDay = Calendar.current.date(byAdding: .day, value: -dayOffset, to: Calendar.current.startOfDay(for: Date()))!
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: hrv, quantitySamplePredicate: predicate, options: .discreteAverage) { _, result, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+
+            guard let quantity = result?.averageQuantity() else {
+                completion(0.0, nil) // No HRV data found, returning 0
+                return
+            }
+
+            let hrvValue = quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
+            completion(hrvValue, nil)
+        }
+        healthStore.execute(query)
+    }
+    func fetchSleepOnDay(_ dayOffset: Int, completion: @escaping (Double?, Error?) -> Void) {
+        let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+        
+        // Calculate the start and end of the specified day
+        let startOfDay = Calendar.current.date(byAdding: .day, value: -dayOffset, to: Calendar.current.startOfDay(for: Date()))!
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+        
+        let query = HKSampleQuery(sampleType: sleepType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            // Filter for 'asleep' sleep state
+            let asleepSamples = results?.compactMap { sample -> HKCategorySample? in
+                guard let categorySample = sample as? HKCategorySample else { return nil }
+                return categorySample.value == HKCategoryValueSleepAnalysis.asleep.rawValue ? categorySample : nil
+            }
+            
+            if let asleepSamples = asleepSamples, !asleepSamples.isEmpty {
+                let totalAsleepTime = asleepSamples.reduce(0) { $0 + $1.endDate.timeIntervalSince($1.startDate) }
+                let asleepHours = totalAsleepTime / 3600.0
+                completion(asleepHours, nil)
+            } else {
+                completion(0.0, nil) // No sleep data found, returning 0
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+
     func fetchTodaySteps(completion: @escaping (Double?, Error?) -> Void) {
         guard let steps = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
             completion(nil, NSError(domain: "HealthKitError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to create step count type"]))

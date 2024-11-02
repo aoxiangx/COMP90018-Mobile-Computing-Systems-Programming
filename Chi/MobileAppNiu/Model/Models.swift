@@ -10,6 +10,9 @@ import Foundation
 import HealthKit
 import SwiftUI
 
+class SharedData: ObservableObject {
+    @Published var percentages: [Double] = Array(repeating: 0.0, count: 7)
+}
 
 struct LineChartData: Identifiable {
     var id = UUID()
