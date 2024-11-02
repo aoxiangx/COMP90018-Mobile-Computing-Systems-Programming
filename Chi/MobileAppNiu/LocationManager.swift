@@ -155,19 +155,19 @@ class LocationManager: NSObject, ObservableObject {
         let times: [(hour: Int, minute: Int)] = [
             (hour: 9, minute: 0),    // 9:00 AM
             (hour: 12, minute: 0),   // 12:00 PM
-            (hour: 12, minute: 45),  // 12:45 PM
-            (hour: 13, minute: 20),  // 1:20 PM
-            (hour: 13, minute: 25),  // 1:30 PM
-            (hour: 14, minute: 0),   // 2:00 PM
-            (hour: 14, minute: 30),  // 2:30 PM
-            (hour: 15, minute: 0),   // 3:00 PM
-            (hour: 15, minute: 15),  // 3:15 PM
-            (hour: 15, minute: 30),  // 3:30 PM
-            (hour: 15, minute: 45),  // 3:45 PM
-            (hour: 16, minute: 0),   // 4:00 PM
-            (hour: 16, minute: 15),  // 4:15 PM
-            (hour: 16, minute: 30),  // 4:30 PM
-            (hour: 16, minute: 45),  // 4:45 PM
+//            (hour: 12, minute: 45),  // 12:45 PM
+//            (hour: 13, minute: 20),  // 1:20 PM
+//            (hour: 13, minute: 25),  // 1:30 PM
+//            (hour: 14, minute: 0),   // 2:00 PM
+//            (hour: 14, minute: 30),  // 2:30 PM
+//            (hour: 15, minute: 0),   // 3:00 PM
+//            (hour: 15, minute: 15),  // 3:15 PM
+//            (hour: 15, minute: 30),  // 3:30 PM
+//            (hour: 15, minute: 45),  // 3:45 PM
+//            (hour: 16, minute: 0),   // 4:00 PM
+//            (hour: 16, minute: 15),  // 4:15 PM
+//            (hour: 16, minute: 30),  // 4:30 PM
+//            (hour: 16, minute: 45),  // 4:45 PM
             (hour: 18, minute: 0)    // 6:00 PM
         ]
         
