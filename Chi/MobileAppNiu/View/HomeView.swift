@@ -14,41 +14,41 @@ struct HomeView: View {
     // State variables for percentages and loading state
     @State private var percentages: [Double] = Array(repeating: 0.0, count: 7)
     @State private var loading: Bool = true
-    
-    var objectiveNotifications: [ObjectiveNotification] {
-        var notifications: [ObjectiveNotification] = []
-        
-        if objectiveViewModel.objectives.sunlightDuration > 0 {
-            notifications.append(
-                ObjectiveNotification(
-                    activity: .daylight
-                )
-            )
-        }
-        
-        if objectiveViewModel.objectives.greenAreaActivityDuration > 0 {
-            notifications.append(
-                ObjectiveNotification(
-                    activity: .green
-                )
-            )
-        }
-        
-        if objectiveViewModel.objectives.stepCount > 0 {
-            notifications.append(
-                ObjectiveNotification(
-                    activity: .steps
-                )
-            )
-        }
-        
-        // If no objectives are set, show default notification
-        if notifications.isEmpty {
-            notifications.append(ObjectiveNotification())
-        }
-        
-        return notifications
-    }
+    @State private var objectiveNotifications: [ObjectiveNotification] = []
+//    var objectiveNotifications: [ObjectiveNotification] {
+//        var notifications: [ObjectiveNotification] = []
+//        
+//        if objectiveViewModel.objectives.sunlightDuration >= 0 {
+//            notifications.append(
+//                ObjectiveNotification(
+//                    activity: .daylight
+//                )
+//            )
+//        }
+//        
+//        if objectiveViewModel.objectives.greenAreaActivityDuration >= 0 {
+//            notifications.append(
+//                ObjectiveNotification(
+//                    activity: .green
+//                )
+//            )
+//        }
+//        
+//        if objectiveViewModel.objectives.stepCount >= 0 {
+//            notifications.append(
+//                ObjectiveNotification(
+//                    activity: .steps
+//                )
+//            )
+//        }
+//        
+//        // If no objectives are set, show default notification
+//        if notifications.isEmpty {
+//            notifications.append(ObjectiveNotification())
+//        }
+//        
+//        return notifications
+//    }
     
     var body: some View {
         ZStack {
@@ -82,7 +82,7 @@ struct HomeView: View {
                             CircleChartView(score: score)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .multilineTextAlignment(.center)
-                            
+                                                            
                             // TabView for sliding list of notifications
                             TabView(selection: $currentPageIndex) {
                                 ForEach(0..<objectiveNotifications.count, id: \.self) { index in
@@ -132,14 +132,45 @@ struct HomeView: View {
 //                            LocationView()
                         }
                     }
+                    .refreshable {
+                        refreshData()
+                    }
                 }
             }
         }
         .onAppear {
             fetchAndCalculatePercentages()
+            refreshNotifications()
         }
     }
+    private func refreshData() {
+            loading = true
+            fetchAndCalculatePercentages()
+            refreshNotifications()
+    }
+    private func refreshNotifications() {
+            var notifications: [ObjectiveNotification] = []
+            
+            if objectiveViewModel.objectives.sunlightDuration >= 0 {
+                notifications.append(ObjectiveNotification(activity: .daylight))
+            }
+            
+            if objectiveViewModel.objectives.greenAreaActivityDuration >= 0 {
+                notifications.append(ObjectiveNotification(activity: .green))
+            }
+            
+            if objectiveViewModel.objectives.stepCount >= 0 {
+                notifications.append(ObjectiveNotification(activity: .steps))
+            }
+            
+            if notifications.isEmpty {
+                notifications.append(ObjectiveNotification())
+            }
+            
+            objectiveNotifications = notifications
+        }
     private func fetchAndCalculatePercentages() {
+        
         let group = DispatchGroup()
         var steps: [Double] = []
         var daylight: [Double] = []
@@ -163,7 +194,9 @@ struct HomeView: View {
             let greenSpace = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] // Example green space data
             
             // Retrieve user objectives
-            let objectives = self.objectiveViewModel.objectives
+            
+            @StateObject var objectiveViewModel = ObjectiveViewModel()
+            let objectives = objectiveViewModel.objectives
             
             var newPercentages: [Double] = []
             
@@ -227,7 +260,7 @@ struct HomeView: View {
                 let green = min(greenSpace[day] / Double(objectives.greenAreaActivityDuration), 1.0) * (50.0 / 3.0)
                 let sunlight = min(daylight[day] / Double(objectives.sunlightDuration), 1.0) * (50.0 / 3.0)
                 let stepCount = min(steps[day] / Double(objectives.stepCount), 1.0) * (50.0 / 3.0)
-                
+                print("stepcountObjective: \(Double(objectives.stepCount))")
                 // Check for NaN and set to 0 if needed
                 let safeGreen = green.isNaN ? 0.0 : green
                 let safeSunlight = sunlight.isNaN ? 0.0 : sunlight
@@ -237,6 +270,7 @@ struct HomeView: View {
                 print("Day \(day): safeGreen: \(safeGreen), safeSunlight: \(safeSunlight), safeStepCount: \(safeStepCount), percentage: \(percentage)")
                 if(day == 6){
                     score = percentage
+                    print("score: \(score)")
                 }
                 // Append percentage to the results
                 newPercentages.append(Double(percentage))
@@ -251,12 +285,6 @@ struct HomeView: View {
     
 }
 
-
-//#Preview {
-//    HomeView(score: 66.9)
-//        .environmentObject(HealthManager())
-//        .environmentObject(LocationManager.shared)
-//}
 
 struct HomeViewPreview: View {
     @State private var score: Double = 66.9
