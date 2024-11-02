@@ -1,44 +1,61 @@
-//
-//  ProfileView.swift
-//  MobileAppNiu
-//
-//  Created by Jun Zhu on 1/10/2024.
-//
-
 import SwiftUI
 import UserNotifications
 
 struct ProfileView: View {
     @AppStorage("log_Status") private var logStatus: Bool = true
     @State private var isNotificationsEnabled = false
-    @State private var hasCheckedInitialState = false
     @State private var showingSettingsAlert = false
     @Environment(\.scenePhase) private var scenePhase
     
+    // Check the current notification authorization status
     func checkNotificationStatus() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
                 isNotificationsEnabled = settings.authorizationStatus == .authorized
-                hasCheckedInitialState = true
             }
         }
     }
     
-    func toggleNotifications() {
-        if isNotificationsEnabled {
-            showingSettingsAlert = true
-        } else {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-                DispatchQueue.main.async {
-                    isNotificationsEnabled = granted
-                    if !granted {
-                        print("Notification permission denied")
+    // Handle notification toggle action
+    func handleNotificationToggle(newValue: Bool) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .authorized:
+                    // If currently authorized and user wants to turn off
+                    if !newValue {
+                        showingSettingsAlert = true
+                        isNotificationsEnabled = true  // Keep the toggle on
                     }
+                case .denied:
+                    // If previously denied and user wants to turn on
+                    if newValue {
+                        showingSettingsAlert = true
+                        isNotificationsEnabled = false  // Keep the toggle off
+                    }
+                case .notDetermined:
+                    // First time request
+                    requestNotificationPermission()
+                default:
+                    break
                 }
             }
         }
     }
     
+    // Request notification permission
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            DispatchQueue.main.async {
+                isNotificationsEnabled = granted
+                if !granted {
+                    print("Notification permission denied")
+                }
+            }
+        }
+    }
+    
+    // Open system settings
     func openSettings() {
         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
             DispatchQueue.main.async {
@@ -52,6 +69,7 @@ struct ProfileView: View {
             BackgroundView()
             ScrollView {
                 VStack(alignment: .leading) {
+                    // Header
                     HStack {
                         Text("Settings")
                             .font(.system(size: 48))
@@ -67,8 +85,8 @@ struct ProfileView: View {
                             .foregroundColor(Constants.gray2)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                         
+                        // Objectives Section
                         VStack(alignment: .leading, spacing: 0) {
-                            // Your Objectives Link
                             NavigationLink(destination: ObjectiveSetView()) {
                                 HStack(alignment: .center) {
                                     Text("Your Objectives")
@@ -95,13 +113,14 @@ struct ProfileView: View {
                         )
                         .padding(.bottom, 8)
                         
-                        // App Preference Section
+                        // App Preferences Section
                         VStack(alignment: .leading, spacing: 8) {
                             Text("App Preference")
                                 .font(Constants.body)
                                 .foregroundColor(Constants.gray2)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
                             
+                            // Notification Toggle
                             HStack(alignment: .center) {
                                 Text("System Notification")
                                     .font(Font.custom("Roboto", size: 16))
@@ -111,9 +130,7 @@ struct ProfileView: View {
                                     .labelsHidden()
                                     .tint(Constants.Yellow1)
                                     .onChange(of: isNotificationsEnabled) { newValue in
-                                        if hasCheckedInitialState {
-                                            toggleNotifications()
-                                        }
+                                        handleNotificationToggle(newValue: newValue)
                                     }
                             }
                             .padding(.horizontal, 16)
@@ -149,6 +166,7 @@ struct ProfileView: View {
                 .padding(16)
             }
         }
+        // View lifecycle and state management
         .onAppear {
             checkNotificationStatus()
         }
@@ -157,10 +175,9 @@ struct ProfileView: View {
                 checkNotificationStatus()
             }
         }
+        // Settings alert
         .alert("Notification Settings", isPresented: $showingSettingsAlert) {
-            Button("Cancel") {
-                isNotificationsEnabled = true
-            }
+            Button("Cancel", role: .cancel) { }
             Button("Open Settings") {
                 openSettings()
             }
