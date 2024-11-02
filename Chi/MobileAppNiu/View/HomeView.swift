@@ -6,7 +6,7 @@ struct HomeView: View {
     @EnvironmentObject var healthManager: HealthManager
 //    @EnvironmentObject var locationManager: LocationManager
     @StateObject private var objectiveViewModel = ObjectiveViewModel()
-    
+    @EnvironmentObject var sharedDataModel: SharedData // Use SharedDataModel
     @State  var score: Double
     @AppStorage("log_Status") private var logStatus: Bool = false
     @State private var currentPageIndex = 0
@@ -244,126 +244,11 @@ struct HomeView: View {
             
             // Update the state with calculated percentages
             self.percentages = newPercentages
+            self.sharedDataModel.percentages = newPercentages
             self.loading = false
         }
     }
     
-    // Fetches health and green space data for the last 7 days, calculates percentages, and updates the state.
-//    private func fetchAndCalculatePercentages() {
-//        let group = DispatchGroup()
-//        var steps: [Double] = []
-//        var daylight: [Double] = []
-//        
-//        // Fetch last 7 days steps
-//        group.enter()
-//        healthManager.fetchLast7DaysSteps { fetchedSteps in
-//            steps = fetchedSteps.map { $0.1 }
-////            print("7days steps: \(steps)")
-//            group.leave()
-//        }
-//        
-//        // Fetch last 7 days daylight
-//        group.enter()
-//        healthManager.fetchLast7DaysDaylight { fetchedDaylight in
-//            daylight = fetchedDaylight.map { $0.1 }
-////            print("7days daylight: \(daylight)")
-//            group.leave()
-//        }
-//        
-//        // Once both steps and daylight are fetched
-//        group.notify(queue: .main) {
-//            // Fetch green space times for last 7 days
-//            
-////            let greenSpace = locationManager.getGreenSpaceTimes(forLastNDays: 7)
-//            let greenSpace = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-//            
-//            // Retrieve user objectives
-//            let objectives = self.objectiveViewModel.objectives
-//            
-//            
-//            var newPercentages: [Double] = []
-//            for day in 0..<7 {
-//                var percentage = 0.0
-//                var dailyScore = 0.0
-//                let group = DispatchGroup() // Create a new group for each day
-//                
-//                // Fetch sleep data
-//                group.enter()
-//                healthManager.fetchSleepOnDay(day) { sleepHours, error in
-//                    if let sleepHours = sleepHours {
-//                        let sleepScore = min((sleepHours / 7.0) * 18.0, 50.0 / 3.0) // Cap to max of ~16.67
-//                        dailyScore += sleepScore
-//                        print("Sleep dailyScore: \(dailyScore), sleepHours: \(sleepScore)")
-//                    }
-//                    group.leave()
-//                }
-//
-//                // Fetch HRV data
-//                group.enter()
-//                healthManager.fetchHRVOnDay(day) { hrvValue, error in
-//                    if let hrvValue = hrvValue {
-//                        let stressScore: Double
-//                        if hrvValue <= 20 {
-//                            stressScore = 5.0
-//                        } else if hrvValue <= 40 {
-//                            stressScore = 15.0
-//                        } else {
-//                            stressScore = 20.0
-//                        }
-//                        print("HRV stressScore: \(stressScore), dailyScore: \(dailyScore)")
-//                        dailyScore += min(stressScore, 50.0 / 3.0) // Cap to max of ~16.67
-//                    }
-//                    group.leave()
-//                }
-//
-//                // Fetch noise levels
-//                group.enter()
-//                healthManager.fetchNoiseLevelsOnDay(day) { noiseLevel, error in
-//                    if let noiseLevel = noiseLevel {
-//                        let noiseScore: Double
-//                        if noiseLevel < 50 {
-//                            noiseScore = 17.0
-//                        } else if noiseLevel < 60 {
-//                            noiseScore = 10.0
-//                        } else if noiseLevel < 70 {
-//                            noiseScore = 7.0
-//                        } else {
-//                            noiseScore = 0.0
-//                        }
-//                        print("NoiseScore: \(noiseScore), dailyScore: \(dailyScore)")
-//                        dailyScore += min(noiseScore, 50.0 / 3.0) // Cap to max of ~16.67
-//                    }
-//                    group.leave()
-//                }
-//
-//                // Notify when all tasks are finished for the current day
-//                group.notify(queue: .main) {
-//                    let green = min(greenSpace[day] / Double(objectives.greenAreaActivityDuration), 1.0) * (50.0 / 3.0)
-//                    let sunlight = min(daylight[day] / Double(objectives.sunlightDuration), 1.0) * (50.0 / 3.0)
-//                    let stepCount = min(steps[day] / Double(objectives.stepCount), 1.0) * (50.0 / 3.0)
-//
-//                    // Check for NaN and set to 0 if needed
-//                    let safeGreen = green.isNaN ? 0.0 : green
-//                    let safeSunlight = sunlight.isNaN ? 0.0 : sunlight
-//                    let safeStepCount = stepCount.isNaN ? 0.0 : stepCount
-//
-//                    percentage = (safeGreen + safeSunlight + safeStepCount) + dailyScore
-//                    print("safeGreen: \(safeGreen), safeSunlight: \(safeSunlight), safeStepCount: \(safeStepCount), percentage: \(percentage)")
-//                    
-//                    if day == 6 {
-//                        score = percentage > 0 ? Double(percentage) : 0.0
-//                    }
-//                    newPercentages.append(Double(percentage))
-//                    print("newPercentages \(newPercentages)")
-//                }
-//            }
-//
-//            
-//            // Update the state with calculated percentages
-//            self.percentages = newPercentages
-//            self.loading = false
-//        }
-//    }
 }
 
 

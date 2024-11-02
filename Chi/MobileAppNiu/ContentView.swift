@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var score: Double = 0.0
     @State private var averageScore : Double = 0.0
     @EnvironmentObject var healthManager: HealthManager
+    @StateObject var sharedDataModel = SharedData()
 
     var body: some View {
         if logStatus {
@@ -26,6 +27,7 @@ struct ContentView: View {
                         .navigationBarHidden(true)
                         .environmentObject(healthManager)
                         .environmentObject(LocationManager.shared)
+                        .environmentObject(sharedDataModel)
                 }
                 .tabItem {
                     Image(isReflectToggled ? .mindfulnessToggled : .mindfulUntoggled)
@@ -47,7 +49,7 @@ struct ContentView: View {
                 }
 
                 NavigationView {
-                    Insights().environmentObject(healthManager)
+                    Insights().environmentObject(healthManager).environmentObject(sharedDataModel)
                          //Inject HealthManager to let child see the health
                 }
                 .tabItem {
